@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://modu-sise.vercel.app/sitemap.xml
+
+# Crawl-delay (polite)
+Crawl-delay: 10
+
+# Disallow admin/private paths
+Disallow: /api/
+Disallow: /server.js
+Disallow: /package*.json
+Disallow: /node_modules/
+Disallow: /*.log
+Disallow: /*.md

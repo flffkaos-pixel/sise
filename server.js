@@ -149,11 +149,7 @@ const results = await Promise.allSettled(urls.map(u => fetchRss(u)));
     return financeKeywords.some(k => text.includes(k.toLowerCase()));
   });
   
-  res.json({ news: filtered.slice(0, 40) });
-});
-  
-console.log('[news] after filter:', filtered.length);
-  res.json({ news: filtered.slice(0, 40) });
+res.json({ news: filtered.slice(0, 40) });
 });
 
 function translateBatch(texts) {
@@ -235,6 +231,41 @@ function fetchNewsByQuery(query) {
 }
 
 setInterval(updateKrwRate, 60000);
+
+app.post('/api/contact', express.json(), (req, res) => {
+  const { type, email, subject, message } = req.body;
+  if (!type || !email || !subject || !message) return res.status(400).json({ error: '필수 항목 누락' });
+  console.log('[CONTACT]', new Date().toISOString(), { type, email, subject: subject.substring(0, 50) });
+  res.json({ ok: true });
+});
+
+app.get('/sitemap.xml', (req, res) => {
+  const base = 'https://modu-sise.vercel.app';
+  const urls = [
+    { url: base + '/', changefreq: 'hourly', priority: 1.0 },
+    { url: base + '/privacy.html', changefreq: 'monthly', priority: 0.5 },
+    { url: base + '/terms.html', changefreq: 'monthly', priority: 0.5 },
+    { url: base + '/contact.html', changefreq: 'monthly', priority: 0.5 }
+  ];
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(u => `  <url>\n    <loc>${u.url}</loc>\n    <changefreq>${u.changefreq}</changefreq>\n    <priority>${u.priority}</priority>\n    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>\n  </url>`).join('\n')}\n</urlset>`;
+  res.set('Content-Type', 'application/xml').send(xml);
+});
+
+app.get('/robots.txt', (req, res) => {
+  res.set('Content-Type', 'text/plain').send(`User-agent: *
+Allow: /
+
+Sitemap: https://modu-sise.vercel.app/sitemap.xml
+
+Crawl-delay: 10
+
+Disallow: /api/
+Disallow: /server.js
+Disallow: /package*.json
+Disallow: /node_modules/
+Disallow: /*.log
+Disallow: /*.md`);
+});
 
 app.listen(3000, async () => {
   await updateKrwRate();

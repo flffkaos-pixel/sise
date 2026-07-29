@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>문의하기 | 모두의 시세</title>
+<meta name="description" content="모두의 시세 문의하기 - 서비스 오류 신고, 데이터 오류 제보, 제휴 제안, 개인정보 관련 문의">
+<link rel="canonical" href="https://modu-sise.vercel.app/contact.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:#0C0C0C;font-family:'Kanit',sans-serif;color:#FFFFFF;min-height:100vh;line-height:1.7}
+.wrap{max-width:640px;margin:0 auto;padding:40px 24px}
+header{text-align:center;padding:40px 0 24px}
+h1{font-size:clamp(2rem,5vw,3rem);font-weight:700;margin-bottom:16px}
+p{font-weight:300;font-size:clamp(.95rem,2vw,1.05rem);color:#DDDDDD;margin:12px 0}
+a{color:#88CCFF;text-decoration:none}
+a:hover{text-decoration:underline}
+footer{text-align:center;padding:40px 0 24px;color:rgba(255,255,255,.3);font-size:.9rem}
+nav a{margin:0 12px;color:rgba(255,255,255,.6)}
+nav a:hover{color:#FFF}
+.form-group{margin-bottom:24px}
+label{display:block;font-weight:500;margin-bottom:8px;color:#FFF}
+input,select,textarea{width:100%;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px 16px;color:#FFF;font-family:'Kanit',sans-serif;font-size:1rem;transition:border-color .2s,box-shadow .2s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#88CCFF;box-shadow:0 0 0 3px rgba(136,204,255,.15)}
+input::placeholder,textarea::placeholder{color:rgba(255,255,255,.3)}
+textarea{min-height:140px;resize:vertical}
+.btn{width:100%;background:linear-gradient(135deg,#88CCFF,#5AA3E0);border:none;border-radius:12px;padding:16px;font-family:'Kanit',sans-serif;font-weight:600;font-size:1rem;color:#0C0C0C;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(136,204,255,.3)}
+.btn:active{transform:translateY(0)}
+.required{color:#FF6B6B}
+.msg{padding:16px;border-radius:12px;margin-top:24px;display:none}
+.msg.success{background:rgba(63,185,80,.15);border:1px solid #3FB950;color:#3FB950;display:block}
+.msg.error{background:rgba(248,81,73,.15);border:1px solid #F85149;color:#F85149;display:block}
+.contact-info{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:24px;margin-top:40px}
+.contact-info h3{font-weight:500;margin-bottom:16px}
+.contact-info p{margin:8px 0;font-size:.95rem}
+@media(max-width:600px){.wrap{padding:24px 16px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<h1>문의하기</h1>
+<p>서비스 이용 중 오류, 데이터 문제, 제휴 제안, 개인정보 관련 문의는 아래 폼을 이용해 주세요.</p>
+</header>
+
+<form id="contactForm" novalidate>
+<div class="form-group">
+<label for="type">문의 유형 <span class="required">*</span></label>
+<select id="type" name="type" required>
+<option value="">선택하세요</option>
+<option value="bug">서비스 오류/버그 신고</option>
+<option value="data">데이터 오류/누락 제보</option>
+<option value="feature">기능 제안/개선 요청</option>
+<option value="partnership">제휴/광고 문의</option>
+<option value="privacy">개인정보 관련 문의</option>
+<option value="other">기타</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="email">이메일 (답변 수신용) <span class="required">*</span></label>
+<input type="email" id="email" name="email" placeholder="name@example.com" required>
+</div>
+
+<div class="form-group">
+<label for="subject">제목 <span class="required">*</span></label>
+<input type="text" id="subject" name="subject" placeholder="간단히 요약해 주세요" required maxlength="100">
+</div>
+
+<div class="form-group">
+<label for="message">내용 <span class="required">*</span></label>
+<textarea id="message" name="message" placeholder="자세히 적어 주세요 (오류 화면 캡처, 발생 시간, 브라우저 환경 등 포함 시 빠른 처리 가능)" required maxlength="3000"></textarea>
+</div>
+
+<button type="submit" class="btn">보내기</button>
+</form>
+
+<div id="formMsg" class="msg"></div>
+
+<div class="contact-info">
+<h3>기타 연락 채널</h3>
+<p><strong>이메일:</strong> <a href="mailto:contact@modu-sise.example.com">contact@modu-sise.example.com</a></p>
+<p><strong>개인정보 보호책임자:</strong> <a href="mailto:privacy@modu-sise.example.com">privacy@modu-sise.example.com</a></p>
+<p><strong>GitHub Issues:</strong> <a href="https://github.com/flffkaos-pixel/sise/issues" target="_blank" rel="noopener">버그·기능 요청 등록</a></p>
+<p><strong>응답 시간:</strong> 평일 기준 1~2일 이내 (주말·공휴일 제외)</p>
+</div>
+</div>
+<footer>
+<nav>
+<a href="/">홈</a>
+<a href="/privacy.html">개인정보처리방침</a>
+<a href="/terms.html">이용약관</a>
+</nav>
+<p>© 2025 모두의 시세</p>
+</footer>
+
+<script>
+document.getElementById('contactForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const msgEl = document.getElementById('formMsg');
+  msgEl.className = 'msg';
+  msgEl.textContent = '전송 중...';
+  msgEl.style.display = 'block';
+
+  const formData = new FormData(e.target);
+  const data = Object.fromEntries(formData);
+
+  try {
+    const res = await fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    if (res.ok) {
+      msgEl.className = 'msg success';
+      msgEl.textContent = '문의가 접수되었습니다. 영업일 기준 1~2일 내 답변 드리겠습니다.';
+      e.target.reset();
+    } else {
+      msgEl.className = 'msg error';
+      msgEl.textContent = result.error || '전송 실패. 다시 시도해 주세요.';
+    }
+  } catch (err) {
+    msgEl.className = 'msg error';
+    msgEl.textContent = '네트워크 오류. 잠시 후 다시 시도해 주세요.';
+  }
+});
+</script>
+</body>
+</html>

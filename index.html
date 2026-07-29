@@ -3,8 +3,111 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>모두의 시세</title>
+<meta name="theme-color" content="#0C0C0C">
+<meta name="color-scheme" content="dark">
+<title>모두의 시세 — 실시간 글로벌 금융 시세 (원화 기준)</title>
+<meta name="description" content="20개 글로벌 자산(환율, 금, 원유, 지수, 암호화폐) 실시간 시세를 원화(₩)로 한눈에. 30초 자동갱신, 차트·예측·금융뉴스까지 무료 제공.">
+<meta name="keywords" content="실시간 시세, 환율, 금시세, 원유가격, 주가지수, 비트코인, 이더리움, 코스피, 나스닥, S&P500, 금융뉴스, 원화환산">
+<link rel="canonical" href="https://modu-sise.vercel.app/">
+<link rel="alternate" hreflang="ko" href="https://modu-sise.vercel.app/">
+<link rel="alternate" hreflang="x-default" href="https://modu-sise.vercel.app/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://modu-sise.vercel.app/">
+<meta property="og:title" content="모두의 시세 — 실시간 글로벌 금융 시세 (원화 기준)">
+<meta property="og:description" content="환율·금·원유·지수·코인 20종목 실시간 시세, 원화 환산, 차트·예측·뉴스 무료 제공">
+<meta property="og:image" content="https://modu-sise.vercel.app/og-image.png">
+<meta property="og:site_name" content="모두의 시세">
+<meta property="og:locale" content="ko_KR">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="모두의 시세 — 실시간 글로벌 금융 시세">
+<meta name="twitter:description" content="20개 자산 실시간 시세, 원화 기준, 차트·예측·뉴스 무료">
+<meta name="twitter:image" content="https://modu-sise.vercel.app/og-image.png">
+
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "모두의 시세",
+  "url": "https://modu-sise.vercel.app/",
+  "description": "실시간 글로벌 금융 시세 대시보드 — 환율, 금, 원유, 지수, 암호화폐 20종목을 원화(₩)로 실시간 제공",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://modu-sise.vercel.app/?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  },
+  "inLanguage": "ko-KR"
+}
+</script>
+
+<script type="application/ld+json>
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "모두의 시세 - 메인 대시보드",
+  "description": "20개 글로벌 금융 자산 실시간 시세 (환율, 금, 은, 원유, 천연가스, S&P500, 다우존스, 나스닥, VIX, 미10년금리, 코스피, 코스닥, 닛케이, 항셍, 비트코인, 이더리움, 리플)",
+  "url": "https://modu-sise.vercel.app/",
+  "isPartOf": { "@id": "https://modu-sise.vercel.app/#website" },
+  "about": {
+    "@type": "FinancialProduct",
+    "name": "실시간 금융 시세",
+    "category": "Financial Data"
+  },
+  "mainEntity": {
+    "@type": "ItemList",
+    "itemListElement": [
+      {"@type":"ListItem","position":1,"name":"USD/KRW 환율"},
+      {"@type":"ListItem","position":2,"name":"EUR/KRW 환율"},
+      {"@type":"ListItem","position":3,"name":"JPY/KRW (100엔)"},
+      {"@type":"ListItem","position":4,"name":"CNY/KRW 환율"},
+      {"@type":"ListItem","position":5,"name":"금 (Gold)"},
+      {"@type":"ListItem","position":6,"name":"은 (Silver)"},
+      {"@type":"ListItem","position":7,"name":"WTI 원유"},
+      {"@type":"ListItem","position":8,"name":"천연가스"},
+      {"@type":"ListItem","position":9,"name":"S&P 500"},
+      {"@type":"ListItem","position":10,"name":"다우존스"},
+      {"@type":"ListItem","position":11,"name":"나스닥"},
+      {"@type":"ListItem","position":12,"name":"VIX 공포지수"},
+      {"@type":"ListItem","position":13,"name":"미국 10년물 금리"},
+      {"@type":"ListItem","position":14,"name":"코스피"},
+      {"@type":"ListItem","position":15,"name":"코스닥"},
+      {"@type":"ListItem","position":16,"name":"닛케이 225"},
+      {"@type":"ListItem","position":17,"name":"항셍지수"},
+      {"@type":"ListItem","position":18,"name":"비트코인"},
+      {"@type":"ListItem","position":19,"name":"이더리움"},
+      {"@type":"ListItem","position":20,"name":"리플"}
+    ]
+  }
+}
+</script>
+
+<script type="application/ld+json>
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type":"Question","name":"모두의 시세는 어떤 서비스인가요?","acceptedAnswer":{"@type":"Answer","text":"야후 파이낸스 데이터를 기반으로 20개 글로벌 금융 자산(환율 4종, 귀금속 2종, 에너지 2종, 지수 8종, 암호화폐 3종)의 실시간 시세를 원화(₩)로 환산해 제공하는 무료 대시보드입니다."}},
+    {"@type":"Question","name":"시세는 얼마나 자주 갱신되나요?","acceptedAnswer":{"@type":"Answer","text":"자동으로 30초마다 갱신되며, 수동 새로고침 버튼으로 즉시 최신 데이터를 불러올 수 있습니다."}},
+    {"@type":"Question","name":"JPY/KRW가 100엔당 가격으로 나오는 이유는?","acceptedAnswer":{"@type":"Answer","text":"엔화 가치가 낮아 1엔당 원화 환율이 소수점 단위라 가독성을 위해 100엔당 가격(×100)으로 표시합니다."}},
+    {"@type":"Question","name":"차트와 예측 기능은 어떻게 이용하나요?","acceptedAnswer":{"@type":"Answer","text":"각 시세 카드를 클릭하면 상세 페이지로 이동해 30일 차트(Chart.js)와 선형회귀 기반 내일 가격 예측(R² 신뢰도 포함)을 볼 수 있습니다."}},
+    {"@type":"Question","name":"금융 뉴스는 어디서 가져오나요?","acceptedAnswer":{"@type":"Answer","text":"연합뉴스, 전자신문, 구글 뉴스 등 6개 무료 RSS 소스에서 실시간 수집하며, 금융 키워드 필터링으로 관련 기사만 표시합니다."}}
+  ]
+}
+</script>
+
+<!-- Preload & DNS Prefetch -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="dns-prefetch" href="https://query1.finance.yahoo.com">
+<link rel="dns-prefetch" href="https://news.google.com">
+<link rel="dns-prefetch" href="https://www.yna.co.kr">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800;900&display=swap">
+<link rel="preload" as="script" href="https://cdn.jsdelivr.net/npm/chart.js">
+
 <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -52,28 +155,80 @@ header p{font-weight:300;font-size:clamp(.9rem,1.6vw,1.25rem);color:#BBBBBB;text
 </style>
 </head>
 <body>
-<div class="wrap">
-  <nav>
-    <a>원/달러</a><a>금</a><a>유가</a><a>지수</a><a>비트코인</a>
-  </nav>
-  <header>
-    <h1 class="hero-heading">모두의 시세</h1>
-    <p>실시간 글로벌 경제지표 · 원화 기준</p>
-    <p style="font-weight:300;font-size:clamp(.65rem,.9vw,.75rem);color:rgba(255,255,255,.3);margin-top:10px;letter-spacing:.05em">30초 자동갱신</p>
-  </header>
-  <div class="status-bar">
-    <span class="time" id="tb">불러오는 중...</span>
-    <span class="badge">Yahoo Finance</span>
+<!-- Google AdSense (placeholder - replace ca-pub-XXXXXXXXXXXXXXXX with your publisher ID) -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-XXXXXXXXXXXXXXXX",
+    enable_page_level_ads: true
+  });
+</script>
+
+<header class="site-header" role="banner">
+  <div class="wrap">
+    <nav class="main-nav" aria-label="주요 메뉴">
+      <a href="/">홈</a>
+      <a href="/privacy.html">개인정보처리방침</a>
+      <a href="/terms.html">이용약관</a>
+      <a href="/contact.html">문의하기</a>
+    </nav>
+    <div class="hero">
+      <h1 class="hero-heading">모두의 시세</h1>
+      <p>실시간 글로벌 경제지표 · 원화 기준</p>
+      <p class="auto-refresh" aria-live="polite">30초 자동갱신</p>
+    </div>
   </div>
-  <div id="news-box" class="news-box" style="display:none">
-    <h2>금융 뉴스</h2>
-    <div id="news-list" class="ns-list"></div>
+</header>
+
+<main class="main-content" role="main">
+  <div class="wrap">
+    <div class="status-bar" role="status" aria-live="polite" aria-label="마지막 갱신 시간">
+      <span class="time" id="tb">불러오는 중...</span>
+      <span class="badge">Yahoo Finance</span>
+    </div>
+
+    <section aria-labelledby="news-heading" class="news-section">
+      <div id="news-box" class="news-box" style="display:none" role="region" aria-label="금융 뉴스">
+        <h2 id="news-heading">금융 뉴스</h2>
+        <div id="news-list" class="ns-list"></div>
+      </div>
+    </section>
+
+    <section aria-labelledby="quotes-heading" class="quotes-section">
+      <h2 id="quotes-heading" class="visually-hidden">실시간 시세</h2>
+      <div id="app" role="feed" aria-label="실시간 금융 시세">
+        <div class="ld" role="status" aria-label="데이터 로딩 중">
+          <div class="sp" aria-hidden="true"></div>
+          <p>데이터 로딩중...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- AdSense Slot (Article Middle) -->
+    <div class="ad-slot ad-slot-middle" aria-hidden="true">
+      <ins class="adsbygoogle"
+           style="display:block; text-align:center;"
+           data-ad-format="fluid"
+           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+           data-ad-slot="XXXXXXXXXX"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
   </div>
-  <div id="app"><div class="ld"><div class="sp"></div><p style="margin-top:16px;font-weight:300;font-size:.85rem">데이터 로딩중...</p></div></div>
-  <div class="ft">
-    <button class="btn" onclick="f()">새로고침</button>
+</main>
+
+<footer class="site-footer" role="contentinfo">
+  <div class="wrap">
+    <nav aria-label="푸터 링크">
+      <a href="/privacy.html">개인정보처리방침</a>
+      <a href="/terms.html">이용약관</a>
+      <a href="/contact.html">문의하기</a>
+      <a href="/sitemap.xml">사이트맵</a>
+    </nav>
+    <p>© 2025 모두의 시세. 데이터 출처: Yahoo Finance, 연합뉴스, 전자신문, Google News.</p>
+    <p class="disclaimer">본 정보는 투자 참고용이며, 투자 판단과 책임은 이용자에게 있습니다.</p>
   </div>
-</div>
+</footer>
+
 <script>
 const S=[{l:"원/달러",t:"USDKRW=X",e:"💵"},{l:"유로/원",t:"EURKRW=X",e:"💶"},{l:"엔/원 (100엔당)",t:"JPYKRW=X",e:"💴",h:100},{l:"위안/원",t:"CNYKRW=X",e:"💷"},{l:"금",t:"GC=F",e:"🥇"},{l:"은",t:"SI=F",e:"🥈"},{l:"WTI 원유",t:"CL=F",e:"🛢️"},{l:"천연가스",t:"NG=F",e:"🔥"},{l:"S&P 500",t:"^GSPC",e:"📈"},{l:"다우존스",t:"^DJI",e:"🏛️"},{l:"나스닥",t:"^IXIC",e:"💻"},{l:"VIX 공포지수",t:"^VIX",e:"😨"},{l:"美 10년물 금리",t:"^TNX",e:"🏦"},{l:"코스피",t:"^KS11",e:"🇰🇷"},{l:"코스닥",t:"^KQ11",e:"📋"},{l:"닛케이",t:"^N225",e:"🇯🇵"},{l:"항셍지수",t:"^HSI",e:"🇭🇰"},{l:"비트코인",t:"BTC-USD",e:"₿"},{l:"이더리움",t:"ETH-USD",e:"💎"},{l:"리플",t:"XRP-USD",e:"✖️"}];
 function fmt(n){return Math.round(n).toLocaleString()}
