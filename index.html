@@ -267,6 +267,7 @@ nb.style.display='none';
 try{
 const [qRes,nRes,dRes]=await Promise.all([fetch("/api/quotes"),fetch("/api/news/headlines"),fetch("/api/dram")]);
 const j=await qRes.json(),rs=j.quoteResponse?.result||[];
+const dData=await dRes.json();
 if(!rs.length)throw Error("no data");
 let idx=0;
 CATS.forEach(cat=>{
@@ -274,21 +275,17 @@ const sec=document.createElement("section");sec.className="cat-section";
 sec.innerHTML='<h3 class="cat-title"><span class="cat-icon">'+cat.icon+'</span>'+cat.name+'</h3><div class="grid"></div>';
 const grid=sec.querySelector(".grid");
 if(cat.id==="dram"){
-// DRAM/NAND section - render as table
-const d=await dRes.json();
-if(d.tables&&d.tables.length){
+if(dData.categories&&dData.categories.length){
 const tableWrap=document.createElement("div");
 tableWrap.className="dram-table-wrap";
-let html='<table class="dram-table"><thead><tr>';
-d.tables[0][0].forEach(h=>html+='<th>'+h+'</th>');
-html+='</tr></thead><tbody>';
-d.tables[0].slice(1).forEach(r=>{
-html+='<tr>';
-r.forEach(c=>html+='<td>'+c+'</td>');
-html+='</tr>';
+let html='<div class="dram-categories">';
+dData.categories.forEach(cat=>{
+html+='<div class="dram-category"><strong>'+cat.name+'</strong>';
+if(cat.updateTime) html+=' <small>'+cat.updateTime+'</small>';
+html+=' <span style="color:rgba(255,255,255,.4);font-size:.8em">'+cat.note+'</span></div>';
 });
-html+='</tbody></table>';
-if(d.updateTime) html+='<div class="dram-update">'+d.updateTime+'</div>';
+html+='</div>';
+if(dData.globalUpdate) html+='<div class="dram-update">'+dData.globalUpdate+'</div>';
 tableWrap.innerHTML=html;
 sec.appendChild(tableWrap);
 }

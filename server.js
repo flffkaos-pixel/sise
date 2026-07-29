@@ -312,6 +312,8 @@ Disallow: /*.log
 Disallow: /*.md`);
 });
 
+app.get('/favicon.ico', (req, res) => res.status(204).end());
+
 app.listen(3000, async () => {
   await updateKrwRate();
   console.log('http://localhost:3000');
