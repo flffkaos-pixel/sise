@@ -99,14 +99,11 @@
 }
 </script>
 
-<!-- Preload & DNS Prefetch -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- DNS Prefetch -->
 <link rel="dns-prefetch" href="https://query1.finance.yahoo.com">
 <link rel="dns-prefetch" href="https://news.google.com">
 <link rel="dns-prefetch" href="https://www.yna.co.kr">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800;900&display=swap">
-<link rel="preload" as="script" href="https://cdn.jsdelivr.net/npm/chart.js">
 
 <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -158,10 +155,8 @@ header p{font-weight:300;font-size:clamp(.9rem,1.6vw,1.25rem);color:#BBBBBB;text
 <!-- Google AdSense (placeholder - replace ca-pub-XXXXXXXXXXXXXXXX with your publisher ID) -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
 <script>
-  (adsbygoogle = window.adsbygoogle || []).push({
-    google_ad_client: "ca-pub-XXXXXXXXXXXXXXXX",
-    enable_page_level_ads: true
-  });
+  window.adsbygoogle = window.adsbygoogle || [];
+  // enable_page_level_ads is deprecated, using auto ads via data-ad-client on ad slots instead
 </script>
 
 <header class="site-header" role="banner">
