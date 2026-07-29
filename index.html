@@ -59,6 +59,7 @@ header p{font-weight:300;font-size:clamp(.9rem,1.6vw,1.25rem);color:#BBBBBB;text
   <header>
     <h1 class="hero-heading">모두의 시세</h1>
     <p>실시간 글로벌 경제지표 · 원화 기준</p>
+    <p style="font-weight:300;font-size:clamp(.65rem,.9vw,.75rem);color:rgba(255,255,255,.3);margin-top:10px;letter-spacing:.05em">30초 자동갱신</p>
   </header>
   <div class="status-bar">
     <span class="time" id="tb">불러오는 중...</span>
@@ -71,12 +72,12 @@ header p{font-weight:300;font-size:clamp(.9rem,1.6vw,1.25rem);color:#BBBBBB;text
   <div id="app"><div class="ld"><div class="sp"></div><p style="margin-top:16px;font-weight:300;font-size:.85rem">데이터 로딩중...</p></div></div>
   <div class="ft">
     <button class="btn" onclick="f()">새로고침</button>
-    <p>30초 자동갱신</p>
   </div>
 </div>
 <script>
 const S=[{l:"원/달러",t:"USDKRW=X",e:"💵"},{l:"유로/원",t:"EURKRW=X",e:"💶"},{l:"엔/원 (100엔당)",t:"JPYKRW=X",e:"💴",h:100},{l:"위안/원",t:"CNYKRW=X",e:"💷"},{l:"금",t:"GC=F",e:"🥇"},{l:"은",t:"SI=F",e:"🥈"},{l:"WTI 원유",t:"CL=F",e:"🛢️"},{l:"천연가스",t:"NG=F",e:"🔥"},{l:"S&P 500",t:"^GSPC",e:"📈"},{l:"다우존스",t:"^DJI",e:"🏛️"},{l:"나스닥",t:"^IXIC",e:"💻"},{l:"VIX 공포지수",t:"^VIX",e:"😨"},{l:"美 10년물 금리",t:"^TNX",e:"🏦"},{l:"코스피",t:"^KS11",e:"🇰🇷"},{l:"코스닥",t:"^KQ11",e:"📋"},{l:"닛케이",t:"^N225",e:"🇯🇵"},{l:"항셍지수",t:"^HSI",e:"🇭🇰"},{l:"비트코인",t:"BTC-USD",e:"₿"},{l:"이더리움",t:"ETH-USD",e:"💎"},{l:"리플",t:"XRP-USD",e:"✖️"}];
 function fmt(n){return Math.round(n).toLocaleString()}
+function tf(ts){if(!ts)return '';const d=new Date(ts*1000),n=new Date(),s=(n-d)/1000;if(s<60)return'방금';if(s<3600)return Math.floor(s/60)+'분 전';if(s<86400)return Math.floor(s/3600)+'시간 전';return d.toLocaleDateString('ko-KR',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}
 async function f(){
 const a=document.getElementById("app"),tb=document.getElementById("tb"),nb=document.getElementById("news-box"),nl=document.getElementById("news-list");
 tb.innerHTML='<span style="opacity:.5">갱신중...</span>';
@@ -96,7 +97,7 @@ const h=x.h||1,p=d.priceKrw*h,ch=d.changeKrw*h,cp=d.changePercentKrw,pc=d.previo
 c.innerHTML='<div class="label">'+x.e+' '+x.l+'</div><div class="price"><span class="won">₩</span>'+fmt(p)+'</div><div class="change '+(ch>=0?"up":"down")+'">'+(ch>=0?"▲":"▼")+' '+(ch>=0?"+":"")+fmt(ch)+' ('+(cp>=0?"+":"")+cp.toFixed(2)+'%)</div><div class="prev">전일: ₩'+(pc?fmt(pc):"-")+'</div>';
 g.appendChild(c)});
  tb.innerHTML='<span>'+new Date().toLocaleTimeString("ko-KR")+'</span>';
- if(nRes.ok){const nd=await nRes.json();if(nd.news&&nd.news.length){nl.innerHTML=nd.news.slice(0,7).map(n=>'<div class="news-item"><a class="n-title" href="'+(n.link||'#')+'" target="_blank" rel="noopener">'+(n.title||'')+'</a><div class="n-meta">'+(n.publisher||'')+'</div></div>').join('');nb.style.display='block'}}
+ if(nRes.ok){const nd=await nRes.json();if(nd.news&&nd.news.length){nl.innerHTML=nd.news.slice(0,7).map(n=>'<div class="news-item"><a class="n-title" href="'+(n.link||'#')+'" target="_blank" rel="noopener">'+(n.title||'')+'</a><div class="n-meta">'+(n.publisher||'')+' · '+tf(n.time)+'</div></div>').join('');nb.style.display='block'}}
  a.innerHTML="";a.appendChild(g);
 }catch(e){a.innerHTML='<div class="ld"><p style="color:#f85149;font-weight:500">불러오기 실패</p><p style="margin-top:8px;font-weight:300;font-size:.85rem">'+e.message+'</p><button class="btn" style="margin-top:20px" onclick="f()">다시시도</button></div>';tb.innerHTML='<span style="opacity:.5">오류</span>'}
 }

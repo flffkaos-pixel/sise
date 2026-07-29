@@ -175,7 +175,8 @@ function fetchNewsByQuery(query) {
           const j = JSON.parse(d);
           ok((j.news || []).map(n => ({
             title: n.title, link: n.link, publisher: n.publisher || n.provider?.displayName || '',
-            summary: n.summary || '', uuid: n.uuid
+            summary: n.summary || '', uuid: n.uuid,
+            time: n.providerPublishTime
           })));
         } catch { ok([]); }
       });
