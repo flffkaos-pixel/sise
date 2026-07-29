@@ -140,6 +140,11 @@ header p{font-weight:300;font-size:clamp(.9rem,1.6vw,1.25rem);color:#BBBBBB;text
 .ns-list{max-height:360px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.08) transparent}
 .ns-list::-webkit-scrollbar{width:4px}.ns-list::-webkit-scrollbar-track{background:transparent}.ns-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:4px}
 .news-empty{padding:40px 0;text-align:center;font-weight:300;font-size:clamp(.8rem,1.1vw,.9rem);color:rgba(255,255,255,.25)}
+.ad-slot{display:block;min-height:0}
+.ad-slot ins{display:block;width:100%}
+.ad-slot iframe{display:block;width:100%;min-height:0;border:none;background:transparent}
+.ad-slot iframe[style*="background-color:transparent"]{display:block !important}
+.ad-slot iframe body{background:transparent !important;margin:0 !important;padding:0 !important}
 .ft{text-align:center;padding:48px 0 24px;animation:fadeUp .7s cubic-bezier(.25,.1,.25,1) both;animation-delay:.8s}
 .btn{font-family:'Kanit',sans-serif;font-weight:500;text-transform:uppercase;letter-spacing:.12em;padding:10px 32px;background:rgba(255,255,255,.03);color:#FFFFFF;border:1px solid rgba(255,255,255,.1);border-radius:999px;cursor:pointer;font-size:clamp(.7rem,1vw,.8rem);transition:all .3s}
 .btn:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.25)}
