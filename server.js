@@ -136,7 +136,6 @@ app.get('/api/news/headlines', async (req, res) => {
     'https://news.naver.com/main/rss.nhn?sid1=101',
     'https://news.naver.com/main/rss.nhn?sid1=259',
     'https://news.naver.com/main/rss.nhn?sid1=258',
-    'https://news.naver.com/main/rss.nhn?sid1=260',
     'https://news.daum.net/rss/economy.xml',
     'https://news.daum.net/rss/stock.xml',
     'https://www.yna.co.kr/rss/economy.xml',
@@ -153,7 +152,15 @@ app.get('/api/news/headlines', async (req, res) => {
   const seen = new Set();
   const all = results.filter(r => r.status === 'fulfilled').flatMap(r => r.value);
   const deduped = all.filter(n => { const k = n.link; if (seen.has(k)) return false; seen.add(k); return true; });
-  res.json({ news: deduped.slice(0, 40) });
+  
+  // 금융 키워드 필터링
+  const financeKeywords = ['주식','증권','코스피','코스닥','나스닥','다우','S&P','환율','달러','엔화','위안','유로','금리','기준금리','한은','연준','Fed','채권','국채','회사채','펀드','ETF','공모주','IPO','유상증자','무상증자','배당','자사주','매수','매도','보유','지분','인수','합병','M&A','실적','영업이익','순이익','매출','어닝','실적발표','컨센서스','목표가','투자의견','매수','보유','매도','상승','하락','급등','급락','상한가','하한가','시가총액','시총','PER','PBR','ROE','배당률','배당금','금','은','원유','WTI','브렌트','구리','비철','비트코인','이더리움','리플','코인','가상자산','암호화폐','블록체인','디파이','NFT','은행','카드','보험','증권사','자산운용','신탁','연금','ISA','연금저축','IRP','퇴직연금','공모','사모','헤지','파생','선물','옵션','ELS','DLS','ELW','워런트','커버드워런트','스왑','CDS','신용부도스왑','부도','부실','구조조정','워크아웃','회생','파산','PF','프로젝트파이낸싱','부동산PF','건설','시공','분양','청약','아파트','주택','전세','월세','임대','갭투자','전세사기','보증금','HUG','주택도시보증'];
+  const filtered = deduped.filter(n => {
+    const text = (n.title + ' ' + (n.summary || '')).toLowerCase();
+    return financeKeywords.some(k => text.includes(k.toLowerCase()));
+  });
+  
+  res.json({ news: filtered.slice(0, 40) });
 });
 
 function translateBatch(texts) {
