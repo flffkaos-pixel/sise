@@ -119,11 +119,14 @@ app.get('/api/dram', async (req, res) => {
         const timeCell = $table.find('.tab_time, .tab_time_right').first();
         const updateTime = timeCell.text().trim() || '';
         if (title) {
-          categories.push({
-            name: title.replace(/[<>]/g, '').trim(),
-            updateTime: updateTime,
-            note: '상세 가격은 Dramexchange 구독 필요'
-          });
+          // Use name as key to deduplicate
+          if (!categories.find(c => c.name === title)) {
+            categories.push({
+              name: title.replace(/[<>]/g, '').trim(),
+              updateTime: updateTime,
+              note: '상세 가격은 Dramexchange 구독 필요'
+            });
+          }
         }
       }
     });
