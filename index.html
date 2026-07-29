@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>모두의 시세</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body,#root{background:#0C0C0C;font-family:'Kanit',sans-serif;color:#D7E2EA;min-height:100vh;overflow-x:clip}
+.wrap{max-width:1280px;margin:0 auto;padding:32px 24px}
+.hero-heading{background:linear-gradient(180deg,#646973 0%,#BBCCD7 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+nav{display:flex;justify-content:flex-end;gap:clamp(16px,3vw,40px);padding:8px 0 24px;animation:fadeUp .7s cubic-bezier(.25,.1,.25,1) both;animation-delay:0s}
+nav a{color:#D7E2EA;font-weight:500;text-transform:uppercase;letter-spacing:.1em;font-size:clamp(.7rem,1.1vw,.9rem);text-decoration:none;transition:opacity .2s;cursor:default}
+nav a:hover{opacity:.6}
+header{text-align:center;padding:clamp(20px,4vw,48px) 0 clamp(12px,2vw,24px)}
+header h1{font-size:clamp(2.5rem,10vw,7rem);font-weight:900;text-transform:uppercase;letter-spacing:-2px;line-height:.9;animation:fadeUp .7s cubic-bezier(.25,.1,.25,1) both;animation-delay:.1s}
+header p{font-weight:300;font-size:clamp(.8rem,1.5vw,1.15rem);color:#8b949e;text-transform:uppercase;letter-spacing:.15em;margin-top:8px;animation:fadeUp .7s cubic-bezier(.25,.1,.25,1) both;animation-delay:.2s}
+.status-bar{display:flex;justify-content:space-between;align-items:center;padding:16px 0 20px;border-bottom:1px solid rgba(215,226,234,.06);margin-bottom:32px;animation:fadeUp .7s cubic-bezier(.25,.1,.25,1) both;animation-delay:.3s}
+.status-bar .time{font-weight:300;font-size:clamp(.75rem,1.2vw,.9rem);color:#8b949e;letter-spacing:.02em}
+.status-bar .badge{font-weight:500;font-size:clamp(.6rem,.9vw,.7rem);text-transform:uppercase;letter-spacing:.12em;padding:4px 14px;border:1px solid rgba(215,226,234,.12);border-radius:999px;color:rgba(215,226,234,.5)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.card{background:rgba(255,255,255,.025);border:1px solid rgba(215,226,234,.06);border-radius:20px;padding:clamp(18px,2vw,28px);transition:border-color .4s,transform .4s,box-shadow .4s;backdrop-filter:blur(6px);animation:fadeUp .6s cubic-bezier(.25,.1,.25,1) both;cursor:pointer;text-decoration:none;display:block;color:inherit}
+.card:hover{border-color:rgba(215,226,234,.2);transform:translateY(-4px);box-shadow:0 8px 40px rgba(0,0,0,.3)}
+.card .label{font-size:clamp(.65rem,1vw,.75rem);font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:rgba(215,226,234,.35);margin-bottom:10px}
+.card .price{font-size:clamp(1.3rem,2.8vw,2rem);font-weight:700;letter-spacing:-.5px;line-height:1.2;color:#BBCCD7}
+.card .price .won{font-weight:300;font-size:.6em;color:rgba(215,226,234,.3);margin-right:2px}
+.card .change{font-size:clamp(.8rem,1.3vw,1rem);font-weight:500;margin-top:6px}
+.card .prev{font-size:clamp(.6rem,.9vw,.7rem);font-weight:300;color:rgba(215,226,234,.25);margin-top:14px;border-top:1px solid rgba(215,226,234,.05);padding-top:10px}
+.up{color:#3fb950}.down{color:#f85149}
+.ft{text-align:center;padding:48px 0 24px;animation:fadeUp .7s cubic-bezier(.25,.1,.25,1) both;animation-delay:.8s}
+.btn{font-family:'Kanit',sans-serif;font-weight:500;text-transform:uppercase;letter-spacing:.12em;padding:10px 32px;background:rgba(255,255,255,.03);color:#D7E2EA;border:1px solid rgba(215,226,234,.1);border-radius:999px;cursor:pointer;font-size:clamp(.65rem,.9vw,.75rem);transition:all .3s}
+.btn:hover{background:rgba(255,255,255,.07);border-color:rgba(215,226,234,.25)}
+.ft p{font-weight:300;font-size:clamp(.6rem,.8vw,.7rem);color:rgba(215,226,234,.2);margin-top:14px;letter-spacing:.05em}
+.ld{text-align:center;padding:100px 0;color:rgba(215,226,234,.3)}
+.sp{width:28px;height:28px;border:2px solid rgba(215,226,234,.06);border-top-color:#BBCCD7;border-radius:50%;animation:spin .8s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){.wrap{padding:20px 14px}.grid{grid-template-columns:1fr 1fr;gap:8px}.card{padding:14px;border-radius:16px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <a>원/달러</a><a>금</a><a>유가</a><a>지수</a><a>비트코인</a>
+  </nav>
+  <header>
+    <h1 class="hero-heading">모두의 시세</h1>
+    <p>실시간 글로벌 경제지표 · 원화 기준</p>
+  </header>
+  <div class="status-bar">
+    <span class="time" id="tb">불러오는 중...</span>
+    <span class="badge">Yahoo Finance</span>
+  </div>
+  <div id="app"><div class="ld"><div class="sp"></div><p style="margin-top:16px;font-weight:300;font-size:.85rem">데이터 로딩중...</p></div></div>
+  <div class="ft">
+    <button class="btn" onclick="f()">새로고침</button>
+    <p>30초 자동갱신</p>
+  </div>
+</div>
+<script>
+const S=[{l:"원/달러",t:"USDKRW=X",e:"💵"},{l:"유로/원",t:"EURKRW=X",e:"💶"},{l:"엔/원",t:"JPYKRW=X",e:"💴"},{l:"위안/원",t:"CNYKRW=X",e:"💷"},{l:"금",t:"GC=F",e:"🥇"},{l:"은",t:"SI=F",e:"🥈"},{l:"WTI 원유",t:"CL=F",e:"🛢️"},{l:"천연가스",t:"NG=F",e:"🔥"},{l:"S&P 500",t:"^GSPC",e:"📈"},{l:"다우존스",t:"^DJI",e:"🏛️"},{l:"나스닥",t:"^IXIC",e:"💻"},{l:"VIX 공포지수",t:"^VIX",e:"😨"},{l:"美 10년물 금리",t:"^TNX",e:"🏦"},{l:"코스피",t:"^KS11",e:"🇰🇷"},{l:"코스닥",t:"^KQ11",e:"📋"},{l:"닛케이",t:"^N225",e:"🇯🇵"},{l:"항셍지수",t:"^HSI",e:"🇭🇰"},{l:"비트코인",t:"BTC-USD",e:"₿"},{l:"이더리움",t:"ETH-USD",e:"💎"},{l:"리플",t:"XRP-USD",e:"✖️"}];
+function fmt(n){return Math.round(n).toLocaleString()}
+async function f(){
+const a=document.getElementById("app"),tb=document.getElementById("tb");
+tb.innerHTML='<span style="opacity:.5">갱신중...</span>';
+a.innerHTML='<div class="ld"><div class="sp"></div><p style="margin-top:16px;font-weight:300;font-size:.85rem">로딩중...</p></div>';
+try{
+const r=await fetch("/api/quotes"),j=await r.json(),rs=j.quoteResponse?.result||[];
+if(!rs.length)throw Error("no data");
+const g=document.createElement("div");g.className="grid";
+S.forEach((x,i)=>{
+const d=rs.find(r=>r.symbol===x.t||r.symbol===x.t.replace("^","%5E"));
+const c=document.createElement("a");c.className="card";c.href="detail.html?s="+encodeURIComponent(x.t);
+c.style.animationDelay=(0.06*i+0.4)+'s';
+if(!d){c.innerHTML='<div class="label">'+x.e+' '+x.l+'</div><div style="color:rgba(215,226,234,.2)">-</div>';g.appendChild(c);return}
+const p=d.priceKrw,ch=d.changeKrw,cp=d.changePercentKrw,pc=d.previousCloseKrw;
+c.innerHTML='<div class="label">'+x.e+' '+x.l+'</div><div class="price"><span class="won">₩</span>'+fmt(p)+'</div><div class="change '+(ch>=0?"up":"down")+'">'+(ch>=0?"▲":"▼")+' '+(ch>=0?"+":"")+fmt(ch)+' ('+(cp>=0?"+":"")+cp.toFixed(2)+'%)</div><div class="prev">전일: ₩'+(pc?fmt(pc):"-")+'</div>';
+g.appendChild(c)});
+a.innerHTML="";a.appendChild(g);
+tb.innerHTML='<span>'+new Date().toLocaleTimeString("ko-KR")+'</span>';
+}catch(e){a.innerHTML='<div class="ld"><p style="color:#f85149;font-weight:500">불러오기 실패</p><p style="margin-top:8px;font-weight:300;font-size:.85rem">'+e.message+'</p><button class="btn" style="margin-top:20px" onclick="f()">다시시도</button></div>';tb.innerHTML='<span style="opacity:.5">오류</span>'}
+}
+f();setInterval(f,30000);
+</script>
+</body>
+</html>
