@@ -128,13 +128,62 @@ function fetchFinanceNews(symbol) {
 }
 
 app.get('/api/news/headlines', async (req, res) => {
-  const queries = ['BTC-USD','^KS11','USDKRW=X','GC=F','^GSPC','^IXIC','CL=F','ETH-USD'];
-  const results = await Promise.allSettled(queries.map(q => fetchFinanceNews(q)));
+  const queries = ['비트코인','코스피','원달러 환율','금 가격','S&P 500','나스닥','원유','이더리움','달러','코스닥'];
+  const results = await Promise.allSettled(queries.map(q => fetchNewsByQuery(q)));
   const seen = new Set();
   const all = results.filter(r => r.status === 'fulfilled').flatMap(r => r.value);
   const deduped = all.filter(n => { if (seen.has(n.uuid)) return false; seen.add(n.uuid); return true; });
-  res.json({ news: deduped.slice(0, 20) });
+  const sliced = deduped.slice(0, 20);
+  const titles = sliced.map(n => n.title).filter(Boolean);
+  const translations = titles.length ? await translateBatch(titles) : [];
+  const news = sliced.map((n, i) => ({ ...n, title: translations[i] || n.title }));
+  res.json({ news });
 });
+
+function translateBatch(texts) {
+  return new Promise((ok) => {
+    if (!texts.length) return ok([]);
+    const joined = texts.join('\n');
+    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ko&dt=t&q=${encodeURIComponent(joined)}`;
+    const req = https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0' }, timeout: 15000 }, (r) => {
+      let d = '';
+      r.on('data', c => d += c);
+      r.on('end', () => {
+        try {
+          const j = JSON.parse(d);
+          const parts = j[0];
+          if (!Array.isArray(parts)) return ok([]);
+          const lines = parts.filter(p => Array.isArray(p)).map(p => p[0] || '');
+          while (lines.length < texts.length) lines.push('');
+          ok(lines.slice(0, texts.length));
+        } catch { ok([]); }
+      });
+    });
+    req.on('error', () => ok([]));
+    req.on('timeout', () => { req.destroy(); ok([]); });
+  });
+}
+
+function fetchNewsByQuery(query) {
+  return new Promise((ok) => {
+    const url = `https://query1.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(query)}&quotesCount=0&newsCount=5`;
+    const req = https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0' }, timeout: 10000 }, (r) => {
+      let d = '';
+      r.on('data', c => d += c);
+      r.on('end', () => {
+        try {
+          const j = JSON.parse(d);
+          ok((j.news || []).map(n => ({
+            title: n.title, link: n.link, publisher: n.publisher || n.provider?.displayName || '',
+            summary: n.summary || '', uuid: n.uuid
+          })));
+        } catch { ok([]); }
+      });
+    });
+    req.on('error', () => ok([]));
+    req.on('timeout', () => { req.destroy(); ok([]); });
+  });
+}
 
 setInterval(updateKrwRate, 60000);
 

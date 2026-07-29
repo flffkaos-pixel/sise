@@ -29,7 +29,7 @@ header p{font-weight:300;font-size:clamp(.9rem,1.6vw,1.25rem);color:#BBBBBB;text
 .card .change{font-size:clamp(.9rem,1.5vw,1.15rem);font-weight:500;margin-top:8px}
 .card .prev{font-size:clamp(.7rem,1vw,.8rem);font-weight:300;color:rgba(255,255,255,.3);margin-top:16px;border-top:1px solid rgba(255,255,255,.06);padding-top:12px}
 .up{color:#3fb950}.down{color:#f85149}
-.news-box{background:rgba(255,255,255,.015);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:clamp(16px,2vw,28px);margin:32px 0;animation:fadeUp .7s cubic-bezier(.25,.1,.25,1) both;animation-delay:.7s}
+.news-box{background:rgba(255,255,255,.015);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:clamp(16px,2vw,28px);margin:0 0 32px;animation:fadeUp .7s cubic-bezier(.25,.1,.25,1) both;animation-delay:.4s}
 .news-box h2{font-weight:500;font-size:clamp(.8rem,1.2vw,.9rem);text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.4);margin-bottom:16px}
 .news-item{padding:14px 0;border-bottom:1px solid rgba(255,255,255,.05)}
 .news-item:last-child{border-bottom:none;padding-bottom:0}
@@ -37,6 +37,8 @@ header p{font-weight:300;font-size:clamp(.9rem,1.6vw,1.25rem);color:#BBBBBB;text
 .news-item .n-title:hover{opacity:.7}
 .news-item .n-meta{font-weight:300;font-size:clamp(.65rem,.9vw,.75rem);color:rgba(255,255,255,.35);margin-top:6px}
 .news-item .n-summary{font-weight:300;font-size:clamp(.7rem,1vw,.8rem);color:rgba(255,255,255,.45);margin-top:4px;line-height:1.3}
+.ns-list{max-height:360px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.08) transparent}
+.ns-list::-webkit-scrollbar{width:4px}.ns-list::-webkit-scrollbar-track{background:transparent}.ns-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:4px}
 .news-empty{padding:40px 0;text-align:center;font-weight:300;font-size:clamp(.8rem,1.1vw,.9rem);color:rgba(255,255,255,.25)}
 .ft{text-align:center;padding:48px 0 24px;animation:fadeUp .7s cubic-bezier(.25,.1,.25,1) both;animation-delay:.8s}
 .btn{font-family:'Kanit',sans-serif;font-weight:500;text-transform:uppercase;letter-spacing:.12em;padding:10px 32px;background:rgba(255,255,255,.03);color:#FFFFFF;border:1px solid rgba(255,255,255,.1);border-radius:999px;cursor:pointer;font-size:clamp(.7rem,1vw,.8rem);transition:all .3s}
@@ -62,11 +64,11 @@ header p{font-weight:300;font-size:clamp(.9rem,1.6vw,1.25rem);color:#BBBBBB;text
     <span class="time" id="tb">불러오는 중...</span>
     <span class="badge">Yahoo Finance</span>
   </div>
-  <div id="app"><div class="ld"><div class="sp"></div><p style="margin-top:16px;font-weight:300;font-size:.85rem">데이터 로딩중...</p></div></div>
   <div id="news-box" class="news-box" style="display:none">
-    <h2>최신 금융 뉴스</h2>
-    <div id="news-list"></div>
+    <h2>금융 뉴스</h2>
+    <div id="news-list" class="ns-list"></div>
   </div>
+  <div id="app"><div class="ld"><div class="sp"></div><p style="margin-top:16px;font-weight:300;font-size:.85rem">데이터 로딩중...</p></div></div>
   <div class="ft">
     <button class="btn" onclick="f()">새로고침</button>
     <p>30초 자동갱신</p>
@@ -93,9 +95,9 @@ if(!d){c.innerHTML='<div class="label">'+x.e+' '+x.l+'</div><div style="color:rg
 const h=x.h||1,p=d.priceKrw*h,ch=d.changeKrw*h,cp=d.changePercentKrw,pc=d.previousCloseKrw*h;
 c.innerHTML='<div class="label">'+x.e+' '+x.l+'</div><div class="price"><span class="won">₩</span>'+fmt(p)+'</div><div class="change '+(ch>=0?"up":"down")+'">'+(ch>=0?"▲":"▼")+' '+(ch>=0?"+":"")+fmt(ch)+' ('+(cp>=0?"+":"")+cp.toFixed(2)+'%)</div><div class="prev">전일: ₩'+(pc?fmt(pc):"-")+'</div>';
 g.appendChild(c)});
-a.innerHTML="";a.appendChild(g);
-tb.innerHTML='<span>'+new Date().toLocaleTimeString("ko-KR")+'</span>';
-if(nRes.ok){const nd=await nRes.json();if(nd.news&&nd.news.length){nl.innerHTML=nd.news.map(n=>'<div class="news-item"><a class="n-title" href="'+(n.link||'#')+'" target="_blank" rel="noopener">'+(n.title||'')+'</a><div class="n-meta">'+(n.publisher||'')+'</div>'+(n.summary?'<div class="n-summary">'+n.summary+'</div>':'')+'</div>').join('');nb.style.display='block'}}
+ tb.innerHTML='<span>'+new Date().toLocaleTimeString("ko-KR")+'</span>';
+ if(nRes.ok){const nd=await nRes.json();if(nd.news&&nd.news.length){nl.innerHTML=nd.news.slice(0,7).map(n=>'<div class="news-item"><a class="n-title" href="'+(n.link||'#')+'" target="_blank" rel="noopener">'+(n.title||'')+'</a><div class="n-meta">'+(n.publisher||'')+'</div></div>').join('');nb.style.display='block'}}
+ a.innerHTML="";a.appendChild(g);
 }catch(e){a.innerHTML='<div class="ld"><p style="color:#f85149;font-weight:500">불러오기 실패</p><p style="margin-top:8px;font-weight:300;font-size:.85rem">'+e.message+'</p><button class="btn" style="margin-top:20px" onclick="f()">다시시도</button></div>';tb.innerHTML='<span style="opacity:.5">오류</span>'}
 }
 f();setInterval(f,30000);
