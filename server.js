@@ -131,7 +131,21 @@ function fetchFinanceNews(symbol) {
 
 app.get('/api/news/headlines', async (req, res) => {
   const urls = [
-    'https://news.google.com/rss/search?q=%EA%B8%88%EC%9C%B5+%EC%8B%9C%EC%84%B8+%EC%A3%BC%EC%8B%9D&hl=ko&gl=KR&ceid=KR:ko',
+    'https://finance.naver.com/rss/news_section.rss',
+    'https://finance.naver.com/rss/news_main.rss',
+    'https://news.naver.com/main/rss.nhn?sid1=101',
+    'https://news.naver.com/main/rss.nhn?sid1=259',
+    'https://news.naver.com/main/rss.nhn?sid1=258',
+    'https://news.naver.com/main/rss.nhn?sid1=260',
+    'https://news.daum.net/rss/economy.xml',
+    'https://news.daum.net/rss/stock.xml',
+    'https://www.yna.co.kr/rss/economy.xml',
+    'https://www.yna.co.kr/rss/stock.xml',
+    'https://www.edaily.co.kr/rss/economy.xml',
+    'https://www.mk.co.kr/rss/30000001/',
+    'https://www.hankyung.com/rss/finance.xml',
+    'https://www.sedaily.com/rss/finance.xml',
+    'https://news.google.com/rss/search?q=%EA%B8%88%EC%9C%B5+%EC%A3%BC%EC%8B%9D&hl=ko&gl=KR&ceid=KR:ko',
     'https://news.google.com/rss/search?q=%EB%B9%84%ED%8A%B8%EC%BD%94%EC%9D%B8+%EC%BD%94%EC%8A%A4%ED%94%BC+%ED%99%98%EC%9C%A8&hl=ko&gl=KR&ceid=KR:ko',
     'https://news.google.com/rss/search?q=%EA%B8%80%EB%A1%9C%EB%B2%8C+%EC%A6%9D%EC%8B%9C+%EC%98%A4%EB%8A%98+%EA%B8%88&hl=ko&gl=KR&ceid=KR:ko'
   ];
@@ -139,7 +153,7 @@ app.get('/api/news/headlines', async (req, res) => {
   const seen = new Set();
   const all = results.filter(r => r.status === 'fulfilled').flatMap(r => r.value);
   const deduped = all.filter(n => { const k = n.link; if (seen.has(k)) return false; seen.add(k); return true; });
-  res.json({ news: deduped.slice(0, 20) });
+  res.json({ news: deduped.slice(0, 40) });
 });
 
 function translateBatch(texts) {
