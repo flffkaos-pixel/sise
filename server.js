@@ -127,6 +127,15 @@ function fetchFinanceNews(symbol) {
   });
 }
 
+app.get('/api/news/headlines', async (req, res) => {
+  const queries = ['BTC-USD','^KS11','USDKRW=X','GC=F','^GSPC','^IXIC','CL=F','ETH-USD'];
+  const results = await Promise.allSettled(queries.map(q => fetchFinanceNews(q)));
+  const seen = new Set();
+  const all = results.filter(r => r.status === 'fulfilled').flatMap(r => r.value);
+  const deduped = all.filter(n => { if (seen.has(n.uuid)) return false; seen.add(n.uuid); return true; });
+  res.json({ news: deduped.slice(0, 20) });
+});
+
 setInterval(updateKrwRate, 60000);
 
 app.listen(3000, async () => {
