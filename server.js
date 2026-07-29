@@ -93,55 +93,7 @@ app.get('/api/history', async (req, res) => {
     close: (data.closes?.[i] || 0) * rate,
     volume: data.volumes?.[i] || 0,
   })).filter(h => h.close > 0);
-  res.json({ symbol: data.symbol, shortName: data.shortName, icon: data.icon, currentPrice: data.regularMarketPrice * rate, change: data.regularMarketChange * rate, changePercent: data.regularMarketChangePercent, previousClose: data.regularMarketPreviousClose * rate, krwRate, history });
-});
-
-app.get('/api/dram', async (req, res) => {
-  try {
-    const url = 'https://www.dramexchange.com/';
-    const html = await new Promise((ok, fail) => {
-      https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0' }, timeout: 10000 }, (r) => {
-        let d = '';
-        r.on('data', c => d += c);
-        r.on('end', () => ok(d));
-      }).on('error', fail).on('timeout', () => fail(new Error('timeout')));
-    });
-    
-    const $ = cheerio.load(html);
-    const categories = [];
-    
-    // 메인페이지 테이블에서 카테고리명과 최종 업데이트 시간 추출
-    $('table').each((_, table) => {
-      const $table = $(table);
-      const titleCell = $table.find('.title_left, .title_right').first();
-      const title = titleCell.text().trim();
-      if (title && (title.includes('Spot Price') || title.includes('Contract Price') || title.includes('Street Price') || title.includes('Wafer') || title.includes('SSD'))) {
-        const timeCell = $table.find('.tab_time, .tab_time_right').first();
-        const updateTime = timeCell.text().trim() || '';
-        if (title) {
-          // Use name as key to deduplicate
-          if (!categories.find(c => c.name === title)) {
-            categories.push({
-              name: title.replace(/[<>]/g, '').trim(),
-              updateTime: updateTime,
-              note: '상세 가격은 Dramexchange 구독 필요'
-            });
-          }
-        }
-      }
-    });
-    
-    // 업데이트 시간 전체 페이지에서 찾기
-    let globalUpdate = '';
-    const pageText = $('body').text();
-    const timeMatch = pageText.match(/(Last Update|LastUpdate|更新時間)[:\s]*([\d\w\s.,:]+)/i);
-    if (timeMatch) globalUpdate = timeMatch[0];
-    
-    res.json({ categories: categories.slice(0, 8), globalUpdate, note: 'Dramexchange 현물가는 로그인 구독 필요. 메인페이지 카테고리/업데이트 시간만 표시.' });
-  } catch (e) {
-    console.error('[dram] error:', e.message);
-    res.json({ categories: [], globalUpdate: '', error: e.message, note: '데이터 불러오기 실패' });
-  }
+res.json({ symbol: data.symbol, shortName: data.shortName, icon: data.icon, currentPrice: data.regularMarketPrice * rate, change: data.regularMarketChange * rate, changePercent: data.regularMarketChangePercent, previousClose: data.regularMarketPreviousClose * rate, krwRate, history });
 });
 
 app.get('/api/news', async (req, res) => {
