@@ -94,6 +94,39 @@ app.get('/api/history', async (req, res) => {
   res.json({ symbol: data.symbol, shortName: data.shortName, icon: data.icon, currentPrice: data.regularMarketPrice * rate, change: data.regularMarketChange * rate, changePercent: data.regularMarketChangePercent, previousClose: data.regularMarketPreviousClose * rate, krwRate, history });
 });
 
+app.get('/api/news', async (req, res) => {
+  const symbol = req.query.symbol;
+  if (!symbol) return res.status(400).json({ error: 'missing symbol' });
+  try {
+    const data = await fetchFinanceNews(symbol);
+    res.json({ symbol, news: data.slice(0, 15) });
+  } catch (e) {
+    res.status(502).json({ error: 'news fetch failed' });
+  }
+});
+
+function fetchFinanceNews(symbol) {
+  return new Promise((ok) => {
+    const s = symbol.replace('^', '%5E');
+    const url = `https://query1.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(s)}&quotesCount=0&newsCount=15`;
+    const req = https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0' }, timeout: 10000 }, (r) => {
+      let d = '';
+      r.on('data', c => d += c);
+      r.on('end', () => {
+        try {
+          const j = JSON.parse(d);
+          ok((j.news || []).map(n => ({
+            title: n.title, link: n.link, publisher: n.publisher || n.provider?.displayName || '',
+            summary: n.summary || '', uuid: n.uuid
+          })));
+        } catch { ok([]); }
+      });
+    });
+    req.on('error', () => ok([]));
+    req.on('timeout', () => { req.destroy(); ok([]); });
+  });
+}
+
 setInterval(updateKrwRate, 60000);
 
 app.listen(3000, async () => {
