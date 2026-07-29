@@ -36,6 +36,10 @@ header p{font-weight:300;font-size:clamp(.9rem,1.6vw,1.25rem);color:#BBBBBB;text
 .news-item .n-title{font-weight:500;font-size:clamp(.85rem,1.3vw,1rem);color:#FFFFFF;text-decoration:none;display:block;line-height:1.4;transition:opacity .2s}
 .news-item .n-title:hover{opacity:.7}
 .news-item .n-meta{font-weight:300;font-size:clamp(.65rem,.9vw,.75rem);color:rgba(255,255,255,.35);margin-top:6px}
+.news-item .n-body-btn{font-family:'Kanit',sans-serif;background:none;border:none;color:rgba(255,255,255,.3);font-size:clamp(.6rem,.85vw,.7rem);cursor:pointer;padding:0;margin-top:6px;transition:color .2s;text-transform:uppercase;letter-spacing:.05em}
+.news-item .n-body-btn:hover{color:rgba(255,255,255,.6)}
+.news-item .n-body{font-weight:300;font-size:clamp(.75rem,1.1vw,.85rem);color:rgba(255,255,255,.6);line-height:1.6;margin-top:10px;padding:14px;background:rgba(255,255,255,.02);border-radius:12px;display:none;white-space:pre-wrap}
+.news-item .n-body.loading{display:block;color:rgba(255,255,255,.25);font-size:clamp(.65rem,.85vw,.7rem)}
 .news-item .n-summary{font-weight:300;font-size:clamp(.7rem,1vw,.8rem);color:rgba(255,255,255,.45);margin-top:4px;line-height:1.3}
 .ns-list{max-height:360px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.08) transparent}
 .ns-list::-webkit-scrollbar{width:4px}.ns-list::-webkit-scrollbar-track{background:transparent}.ns-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:4px}
@@ -97,10 +101,20 @@ const h=x.h||1,p=d.priceKrw*h,ch=d.changeKrw*h,cp=d.changePercentKrw,pc=d.previo
 c.innerHTML='<div class="label">'+x.e+' '+x.l+'</div><div class="price"><span class="won">₩</span>'+fmt(p)+'</div><div class="change '+(ch>=0?"up":"down")+'">'+(ch>=0?"▲":"▼")+' '+(ch>=0?"+":"")+fmt(ch)+' ('+(cp>=0?"+":"")+cp.toFixed(2)+'%)</div><div class="prev">전일: ₩'+(pc?fmt(pc):"-")+'</div>';
 g.appendChild(c)});
  tb.innerHTML='<span>'+new Date().toLocaleTimeString("ko-KR")+'</span>';
- if(nRes.ok){const nd=await nRes.json();if(nd.news&&nd.news.length){nl.innerHTML=nd.news.slice(0,7).map(n=>'<div class="news-item"><a class="n-title" href="'+(n.link||'#')+'" target="_blank" rel="noopener">'+(n.title||'')+'</a><div class="n-meta">'+(n.publisher||'')+' · '+tf(n.time)+'</div></div>').join('');nb.style.display='block'}}
+ if(nRes.ok){const nd=await nRes.json();if(nd.news&&nd.news.length){nl.innerHTML=nd.news.slice(0,7).map((n,i)=>'<div class="news-item" data-url="'+n.link+'"><a class="n-title" href="'+(n.link||'#')+'" target="_blank" rel="noopener">'+(n.title||'')+'</a><div class="n-meta">'+(n.publisher||'')+' · '+tf(n.time)+'</div>'+(n.summary?'<div class="n-summary">'+n.summary+'</div>':'')+'<button class="n-body-btn" onclick="toggleArticle(this,'+i+')">본문</button><div class="n-body" id="nb'+i+'"></div></div>').join('');nb.style.display='block'}}
  a.innerHTML="";a.appendChild(g);
 }catch(e){a.innerHTML='<div class="ld"><p style="color:#f85149;font-weight:500">불러오기 실패</p><p style="margin-top:8px;font-weight:300;font-size:.85rem">'+e.message+'</p><button class="btn" style="margin-top:20px" onclick="f()">다시시도</button></div>';tb.innerHTML='<span style="opacity:.5">오류</span>'}
 }
+async function toggleArticle(btn, idx){
+const body=document.getElementById('nb'+idx),item=btn.closest('.news-item'),url=item?.dataset.url;
+if(!url||!body)return;
+if(body.style.display==='block'){body.style.display='none';btn.textContent='본문';return}
+body.className='n-body loading';body.textContent='불러오는 중...';body.style.display='block';
+try{
+const r=await fetch('/api/article?url='+encodeURIComponent(url)),j=await r.json();
+if(j.korean){body.textContent=j.korean;body.className='n-body'}else{body.textContent='본문을 불러올 수 없습니다';body.className='n-body'}
+}catch(e){body.textContent='오류: '+e.message;body.className='n-body'}
+btn.textContent='접기'}
 f();setInterval(f,30000);
 </script>
 </body>
