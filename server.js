@@ -1,5 +1,7 @@
 ﻿const express = require('express');
 const https = require('https');
+const http = require('http');
+const cheerio = require('cheerio');
 const app = express();
 app.use(express.static(__dirname));
 
@@ -128,16 +130,16 @@ function fetchFinanceNews(symbol) {
 }
 
 app.get('/api/news/headlines', async (req, res) => {
-  const queries = ['비트코인','코스피','원달러 환율','금 가격','S&P 500','나스닥','원유','이더리움','달러','코스닥'];
-  const results = await Promise.allSettled(queries.map(q => fetchNewsByQuery(q)));
+  const urls = [
+    'https://news.google.com/rss/search?q=%EA%B8%88%EC%9C%B5+%EC%8B%9C%EC%84%B8+%EC%A3%BC%EC%8B%9D&hl=ko&gl=KR&ceid=KR:ko',
+    'https://news.google.com/rss/search?q=%EB%B9%84%ED%8A%B8%EC%BD%94%EC%9D%B8+%EC%BD%94%EC%8A%A4%ED%94%BC+%ED%99%98%EC%9C%A8&hl=ko&gl=KR&ceid=KR:ko',
+    'https://news.google.com/rss/search?q=%EA%B8%80%EB%A1%9C%EB%B2%8C+%EC%A6%9D%EC%8B%9C+%EC%98%A4%EB%8A%98+%EA%B8%88&hl=ko&gl=KR&ceid=KR:ko'
+  ];
+  const results = await Promise.allSettled(urls.map(u => fetchRss(u)));
   const seen = new Set();
   const all = results.filter(r => r.status === 'fulfilled').flatMap(r => r.value);
-  const deduped = all.filter(n => { if (seen.has(n.uuid)) return false; seen.add(n.uuid); return true; });
-  const sliced = deduped.slice(0, 20);
-  const titles = sliced.map(n => n.title).filter(Boolean);
-  const translations = titles.length ? await translateBatch(titles) : [];
-  const news = sliced.map((n, i) => ({ ...n, title: translations[i] || n.title }));
-  res.json({ news });
+  const deduped = all.filter(n => { const k = n.link; if (seen.has(k)) return false; seen.add(k); return true; });
+  res.json({ news: deduped.slice(0, 20) });
 });
 
 function translateBatch(texts) {
@@ -156,6 +158,38 @@ function translateBatch(texts) {
           const lines = parts.filter(p => Array.isArray(p)).map(p => p[0] || '');
           while (lines.length < texts.length) lines.push('');
           ok(lines.slice(0, texts.length));
+        } catch { ok([]); }
+      });
+    });
+    req.on('error', () => ok([]));
+    req.on('timeout', () => { req.destroy(); ok([]); });
+  });
+}
+
+function fetchRss(url) {
+  return new Promise((ok) => {
+    const mod = url.startsWith('https') ? https : http;
+    const req = mod.get(url, { headers: { 'User-Agent': 'Mozilla/5.0' }, timeout: 10000 }, (r) => {
+      let d = '';
+      r.on('data', c => d += c);
+      r.on('end', () => {
+        try {
+          const $ = cheerio.load(d, { xmlMode: true });
+          const items = [];
+          $('item').each((_, el) => {
+            const $el = $(el);
+            const desc = $el.find('description').text();
+            const summary = desc ? desc.replace(/<[^>]*>/g, '').trim().slice(0, 300) : '';
+            items.push({
+              title: $el.find('title').text().trim(),
+              link: $el.find('link').text().trim(),
+              publisher: $el.find('source').text().trim() || new URL($el.find('link').text().trim()).hostname.replace('www.', ''),
+              summary,
+              time: Math.floor(new Date($el.find('pubDate').text()).getTime() / 1000),
+              uuid: $el.find('guid').text() || $el.find('link').text()
+            });
+          });
+          ok(items);
         } catch { ok([]); }
       });
     });
