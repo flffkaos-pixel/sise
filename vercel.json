@@ -4,7 +4,7 @@
   "functions": {
     "api/index.js": {
       "maxDuration": 30,
-      "includeFiles": "{index.html,detail.html,privacy.html,terms.html,contact.html,robots.txt,llms.txt}"
+      "includeFiles": "{index.html,detail.html,privacy.html,terms.html,contact.html,robots.txt,llms.txt,favicon.svg,og-image.svg}"
     }
   },
   "routes": [
