@@ -1,13 +1,13 @@
-﻿const express = require('express');
+const express = require('express');
 const https = require('https');
 const http = require('http');
 const cheerio = require('cheerio');
 const app = express();
-app.use(express.static(__dirname));
+app.use(express.static(process.cwd()));
 
 const T = ['USDKRW=X','EURKRW=X','JPYKRW=X','CNYKRW=X','GC=F','SI=F','CL=F','NG=F','^GSPC','^DJI','^IXIC','^VIX','^TNX','^KS11','^KQ11','^N225','^HSI','BTC-USD','ETH-USD','XRP-USD'];
 const NAMES = {
-  'USDKRWX':'원/달러','EURKRW=X':'유로/원','JPYKRW=X':'엔/원','CNYKRW=X':'위안/원',
+  'USDKRW=X':'원/달러','EURKRW=X':'유로/원','JPYKRW=X':'엔/원','CNYKRW=X':'위안/원',
   'GC=F':'금','SI=F':'은','CL=F':'WTI 원유','NG=F':'천연가스',
   '^GSPC':'S&P 500','^DJI':'다우존스','^IXIC':'나스닥','^VIX':'VIX 공포지수','^TNX':'美 10년물 금리',
   '^KS11':'코스피','^KQ11':'코스닥','^N225':'닛케이','^HSI':'항셍지수',
@@ -73,6 +73,8 @@ function toKrw(item) {
 }
 
 app.get('/api/quotes', async (req, res) => {
+  const now = Date.now();
+  if (now - lastKrwFetch > 60000) { await updateKrwRate(); lastKrwFetch = now; }
   const results = await Promise.allSettled(T.map(t => fetchQ(t)));
   const data = results.filter(r => r.status === 'fulfilled' && r.value).map(r => toKrw(r.value));
   res.json({ quoteResponse: { result: data } });
@@ -142,13 +144,13 @@ const results = await Promise.allSettled(urls.map(u => fetchRss(u)));
   const seen = new Set();
   const all = results.filter(r => r.status === 'fulfilled').flatMap(r => r.value);
   const deduped = all.filter(n => { const k = n.link; if (seen.has(k)) return false; seen.add(k); return true; });
-  
+
   const financeKeywords = ['주식','증권','코스피','코스닥','나스닥','다우','S&P','환율','달러','엔화','위안','유로','금리','기준금리','한은','연준','Fed','채권','국채','회사채','펀드','ETF','공모주','IPO','유상증자','무상증자','배당','자사주','매수','매도','보유','지분','인수','합병','M&A','실적','영업이익','순이익','매출','어닝','실적발표','컨센서스','목표가','투자의견','상승','하락','급등','급락','상한가','하한가','시가총액','시총','PER','PBR','ROE','배당률','배당금','금','은','원유','WTI','브렌트','구리','비철','비트코인','이더리움','리플','코인','가상자산','암호화폐','블록체인','디파이','NFT','은행','카드','보험','증권사','자산운용','신탁','연금','ISA','연금저축','IRP','퇴직연금','공모','사모','헤지','파생','선물','옵션','ELS','DLS','ELW','워런트','커버드워런트','스왑','CDS','신용부도스왑','부도','부실','구조조정','워크아웃','회생','파산','PF','프로젝트파이낸싱','부동산PF','건설','시공','분양','청약','아파트','주택','전세','월세','임대','갭투자','전세사기','보증금','HUG','주택도시보증'];
   const filtered = deduped.filter(n => {
     const text = (n.title + ' ' + (n.summary || '')).toLowerCase();
     return financeKeywords.some(k => text.includes(k.toLowerCase()));
   });
-  
+
 res.json({ news: filtered.slice(0, 40) });
 });
 
@@ -230,8 +232,6 @@ function fetchNewsByQuery(query) {
   });
 }
 
-setInterval(updateKrwRate, 60000);
-
 app.post('/api/contact', express.json(), (req, res) => {
   const { type, email, subject, message } = req.body;
   if (!type || !email || !subject || !message) return res.status(400).json({ error: '필수 항목 누락' });
@@ -240,21 +240,9 @@ app.post('/api/contact', express.json(), (req, res) => {
 });
 
 app.get('/sitemap.xml', (req, res) => {
-  const base = 'https://modu-sise.vercel.app';
+  const base = `https://${req.headers.host || 'modu-sise.vercel.app'}`;
   const detailSymbols = ['USDKRW=X','EURKRW=X','JPYKRW=X','CNYKRW=X','GC=F','SI=F','CL=F','NG=F','%5EGSPC','%5EDJI','%5EIXIC','%5EVIX','%5ETNX','%5EKS11','%5EKQ11','%5EN225','%5EHSI','BTC-USD','ETH-USD','XRP-USD'];
   const today = new Date().toISOString().split('T')[0];
-  const pages = [
-    { loc: base + '/', changefreq: 'hourly', priority: '1.0' },
-    { loc: base + '/detail.html', changefreq: 'hourly', priority: '0.9' },
-    { loc: base + '/privacy.html', changefreq: 'monthly', priority: '0.3' },
-    { loc: base + '/terms.html', changefreq: 'monthly', priority: '0.3' },
-    { loc: base + '/contact.html', changefreq: 'monthly', priority: '0.4' },
-  ];
-  const detailPages = detailSymbols.map(s => ({
-    loc: `${base}/detail.html?s=${s}`,
-    changefreq: 'hourly',
-    priority: '0.8'
-  }));
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
@@ -298,6 +286,7 @@ app.get('/sitemap.xml', (req, res) => {
 });
 
 app.get('/robots.txt', (req, res) => {
+  const base = `https://${req.headers.host || 'modu-sise.vercel.app'}`;
   res.set('Content-Type', 'text/plain').send(`User-agent: *
 Allow: /
 Crawl-delay: 10
@@ -308,7 +297,7 @@ Disallow: /node_modules/
 Disallow: /*.log
 Disallow: /*.md
 
-# AI 크롤러 - GPT, Claude, Perplexity 등
+# AI 크롤러
 User-agent: GPTBot
 Allow: /
 Crawl-delay: 30
@@ -337,7 +326,7 @@ User-agent: anthropic-ai
 Allow: /
 Crawl-delay: 30
 
-# Naver 검색 로봇
+# Naver
 User-agent: Yeti
 Allow: /
 Crawl-delay: 10
@@ -346,7 +335,7 @@ User-agent: NaverBot
 Allow: /
 Crawl-delay: 10
 
-Sitemap: https://modu-sise.vercel.app/sitemap.xml`);
+Sitemap: ${base}/sitemap.xml`);
 });
 
 app.get('/llms.txt', (req, res) => {
@@ -396,7 +385,4 @@ app.get('/llms.txt', (req, res) => {
 
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 
-app.listen(3000, async () => {
-  await updateKrwRate();
-  console.log('http://localhost:3000');
-});
+module.exports = app;

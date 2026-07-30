@@ -5,9 +5,19 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="theme-color" content="#0C0C0C">
 <meta name="color-scheme" content="dark">
-<title>모두의 시세 — 실시간 글로벌 금융 시세 (원화 기준)</title>
-<meta name="description" content="20개 글로벌 자산(환율, 금, 원유, 지수, 암호화폐) 실시간 시세를 원화(₩)로 한눈에. 30초 자동갱신, 차트·예측·금융뉴스까지 무료 제공.">
-<meta name="keywords" content="실시간 시세, 환율, 금시세, 원유가격, 주가지수, 비트코인, 이더리움, 코스피, 나스닥, S&P500, 금융뉴스, 원화환산">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<!-- Naver SEO -->
+<meta name="NaverBot" content="All">
+<meta name="Yeti" content="All">
+<meta name="naver-site-verification" content="YOUR_NAVER_SITE_VERIFICATION_CODE">
+<meta name="NaverSearch" content="YetiBot">
+<meta name="referrer" content="always">
+
+<!-- GEO/SEO/AEO Meta -->
+<title>모두의 시세 — 실시간 글로벌 금융 시세 (원화 기준) | 20종목 환율·금·지수·코인</title>
+<meta name="description" content="20개 글로벌 자산(환율 4종, 귀금속 2종, 에너지 2종, 지수 9종, 암호화폐 3종) 실시간 시세를 원화(₩)로 한눈에 확인하세요. 30초 자동갱신, 30일 차트, 선형회귀 예측, 금융뉴스까지 무료 제공.">
+<meta name="keywords" content="실시간 시세,환율,금시세,원유가격,주가지수,비트코인,이더리움,코스피,나스닥,S&P500,금융뉴스,원화환산,USDKRW,WTI,VIX,코스닥,닛케이,항셍지수">
 <link rel="canonical" href="https://modu-sise.vercel.app/">
 <link rel="alternate" hreflang="ko" href="https://modu-sise.vercel.app/">
 <link rel="alternate" hreflang="x-default" href="https://modu-sise.vercel.app/">
@@ -40,11 +50,30 @@
     "target": "https://modu-sise.vercel.app/?q={search_term_string}",
     "query-input": "required name=search_term_string"
   },
-  "inLanguage": "ko-KR"
+  "inLanguage": "ko-KR",
+  "publisher": {
+    "@type": "Organization",
+    "name": "모두의 시세",
+    "url": "https://modu-sise.vercel.app/",
+    "description": "실시간 글로벌 금융 시세 서비스 — Yahoo Finance 기반 원화 환산 시세 제공",
+    "foundingDate": "2025",
+    "knowsLanguage": "ko",
+    "knowsAbout": ["Finance", "Currency Exchange", "Stock Market", "Cryptocurrency"]
+  }
 }
 </script>
 
-<script type="application/ld+json>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type":"ListItem","position":1,"name":"홈","item":"https://modu-sise.vercel.app/"}
+  ]
+}
+</script>
+
+<script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "WebPage",
@@ -85,7 +114,7 @@
 }
 </script>
 
-<script type="application/ld+json>
+<script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "FAQPage",
@@ -182,20 +211,32 @@ header p{font-weight:300;font-size:clamp(.9rem,1.6vw,1.25rem);color:#BBBBBB;text
 
 <main class="main-content" role="main">
   <div class="wrap">
+    <!-- AEO: 상태 표시줄 + GEO 통계 -->
     <div class="status-bar" role="status" aria-live="polite" aria-label="마지막 갱신 시간">
       <span class="time" id="tb">불러오는 중...</span>
-      <span class="badge">Yahoo Finance</span>
+      <span class="badge">Yahoo Finance · 20종목 · 원화기준</span>
     </div>
 
+    <!-- GEO: 신뢰 신호 - 통계 인용 -->
+    <div class="geo-stats" style="display:none;text-align:center;padding:0 0 24px;animation:fadeUp .7s both;animation-delay:.25s" aria-label="서비스 통계">
+      <p style="font-weight:300;font-size:clamp(.75rem,1vw,.85rem);color:rgba(255,255,255,.35);letter-spacing:.02em">
+        Yahoo Finance 실시간 데이터 · 20종목 자산 · 6개 금융 뉴스 소스 · 30초 갱신 · 30일 차트 · AI 예측
+      </p>
+    </div>
+
+    <!-- AEO: 질문 기반 뉴스 섹션 -->
     <section aria-labelledby="news-heading" class="news-section">
       <div id="news-box" class="news-box" style="display:none" role="region" aria-label="금융 뉴스">
-        <h2 id="news-heading">금융 뉴스</h2>
+        <h2 id="news-heading">오늘의 주요 금융 뉴스 — 어떤 일이 있었나요?</h2>
+        <p style="font-weight:300;font-size:clamp(.75rem,1vw,.85rem);color:rgba(255,255,255,.35);margin:-8px 0 16px">연합뉴스·전자신문·Google News 6개 소스에서 금융 키워드(80+개)로 필터링한 주요 뉴스입니다.</p>
         <div id="news-list" class="ns-list"></div>
       </div>
     </section>
 
+    <!-- AEO: 질문 기반 시세 섹션 -->
     <section aria-labelledby="quotes-heading" class="quotes-section">
-      <h2 id="quotes-heading" class="visually-hidden">실시간 시세</h2>
+      <h2 id="quotes-heading" style="font-weight:500;font-size:clamp(1.1rem,1.8vw,1.4rem);margin-bottom:4px;color:#FFFFFF">실시간 글로벌 시세, 지금 얼마인가요?</h2>
+      <p style="font-weight:300;font-size:clamp(.75rem,1vw,.85rem);color:rgba(255,255,255,.35);margin:0 0 20px">환율·귀금속·에너지·주가지수·암호화폐 20종목을 Yahoo Finance 실시간 데이터로 원화(₩) 환산하여 제공합니다.</p>
       <div id="app" role="feed" aria-label="실시간 금융 시세">
         <div class="ld" role="status" aria-label="데이터 로딩 중">
           <div class="sp" aria-hidden="true"></div>
@@ -218,14 +259,40 @@ header p{font-weight:300;font-size:clamp(.9rem,1.6vw,1.25rem);color:#BBBBBB;text
 
 <footer class="site-footer" role="contentinfo">
   <div class="wrap">
+    <!-- E-E-A-T: 작성자/운영자 정보 -->
+    <div class="eeat-info" style="max-width:600px;margin:0 auto 32px;padding:20px;background:rgba(255,255,255,.015);border:1px solid rgba(255,255,255,.06);border-radius:16px;text-align:center">
+      <p style="font-weight:500;font-size:clamp(.75rem,1vw,.85rem);letter-spacing:.05em;color:rgba(255,255,255,.5);margin-bottom:8px">운영자 정보 · E-E-A-T</p>
+      <p style="font-weight:300;font-size:clamp(.7rem,.9vw,.8rem);color:rgba(255,255,255,.35);line-height:1.6">
+        모두의 시세(Modu Sise)는 Yahoo Finance의 실시간 금융 데이터와 6개 공개 RSS(연합뉴스, 전자신문, Google News)를 기반으로 
+        20개 글로벌 금융 자산의 시세를 원화(KRW) 기준으로 제공하는 독립 서비스입니다. 
+        모든 데이터는 Yahoo Finance v8 chart API를 통해 30초 간격으로 갱신되며, 
+        예측값은 30일 선형회귀 분석 기반으로 투자 참고용입니다.
+      </p>
+      <p style="font-weight:300;font-size:clamp(.65rem,.85vw,.75rem);color:rgba(255,255,255,.2);margin-top:8px">
+        문의: <a href="/contact.html" style="color:rgba(255,255,255,.4);text-decoration:underline">문의하기</a> · 
+        <a href="https://github.com/flffkaos-pixel/sise" style="color:rgba(255,255,255,.4);text-decoration:underline" rel="external nofollow">GitHub</a>
+      </p>
+    </div>
+
+    <!-- GEO: 출처 표시 -->
+    <div style="text-align:center;padding:0 0 20px">
+      <p style="font-weight:300;font-size:clamp(.6rem,.8vw,.7rem);color:rgba(255,255,255,.15);letter-spacing:.03em">
+        데이터 출처: <a href="https://finance.yahoo.com" style="color:rgba(255,255,255,.3);text-decoration:underline" rel="external nofollow">Yahoo Finance</a> · 
+        <a href="https://www.yna.co.kr" style="color:rgba(255,255,255,.3);text-decoration:underline" rel="external nofollow">연합뉴스</a> · 
+        <a href="https://www.etnews.com" style="color:rgba(255,255,255,.3);text-decoration:underline" rel="external nofollow">전자신문</a> · 
+        <a href="https://news.google.com" style="color:rgba(255,255,255,.3);text-decoration:underline" rel="external nofollow">Google News</a>
+      </p>
+    </div>
+
     <nav aria-label="푸터 링크">
       <a href="/privacy.html">개인정보처리방침</a>
       <a href="/terms.html">이용약관</a>
       <a href="/contact.html">문의하기</a>
       <a href="/sitemap.xml">사이트맵</a>
+      <a href="/llms.txt">llms.txt</a>
     </nav>
-    <p>© 2025 모두의 시세. 데이터 출처: Yahoo Finance, 연합뉴스, 전자신문, Google News.</p>
-    <p class="disclaimer">본 정보는 투자 참고용이며, 투자 판단과 책임은 이용자에게 있습니다.</p>
+    <p>© 2025 모두의 시세. 본 서비스는 Yahoo Finance API를 활용하며, Yahoo와 제휴 관계가 아닙니다.</p>
+    <p class="disclaimer">본 정보는 투자 참고용이며, 투자 판단과 책임은 이용자에게 있습니다. 과거 데이터 기반 예측은 실제 결과와 다를 수 있습니다.</p>
   </div>
 </footer>
 
@@ -259,9 +326,12 @@ const [qRes,nRes]=await Promise.all([fetch("/api/quotes"),fetch("/api/news/headl
 const j=await qRes.json(),rs=j.quoteResponse?.result||[];
 if(!rs.length)throw Error("no data");
 let idx=0;
+a.innerHTML='';
+const aeoQ = {fx:'현재 원/달러·엔·위안 환율은 얼마인가요?',metal:'금과 은의 오늘 시세는?',energy:'WTI 원유와 천연가스 가격 동향은?',index:'S&P500·코스피·닛케이 등 주요 지수 흐름은?',crypto:'비트코인·이더리움·리플 현재 가격은?'};
+const aeoA = {fx:'Yahoo Finance 실시간 환율 데이터를 기반으로 원/달러(USD/KRW), 유로/원(EUR/KRW), 엔/원(JPY/KRW, 100엔 기준), 위안/원(CNY/KRW)의 현재 시세를 원화로 환산한 가격입니다.',metal:'국제 금(GC=F) 및 은(SI=F) 선물 가격을 원화(KRW)로 환산한 실시간 시세입니다. 귀금속 가격은 USD/KRW 환율 변동에 따라 지속 갱신됩니다.',energy:'서부텍사스산중질유 WTI(CL=F)와 천연가스(NG=F) 선물 가격을 원화로 환산하여 제공합니다. 에너지 가격은 지정학적 리스크와 수급에 영향을 받습니다.',index:'미국(S&P500·다우·나스닥·VIX·10년물 금리), 한국(코스피·코스닥), 일본(닛케이), 홍콩(항셍) 등 글로벌 9개 주요 주가지수 실시간 시세를 원화 기준으로 제공합니다.',crypto:'비트코인(BTC-USD), 이더리움(ETH-USD), 리플(XRP-USD)의 달러 표시 가격을 원화(₩)로 환산한 실시간 암호화폐 시세입니다.'};
 CATS.forEach(cat=>{
-const sec=document.createElement("section");sec.className="cat-section";
-sec.innerHTML='<h3 class="cat-title"><span class="cat-icon">'+cat.icon+'</span>'+cat.name+'</h3><div class="grid"></div>';
+const sec=document.createElement("section");sec.className="cat-section";sec.setAttribute("aria-label",cat.name);
+sec.innerHTML='<h3 class="cat-title" style="font-weight:600;font-size:clamp(1rem,1.5vw,1.15rem);margin-bottom:4px"><span class="cat-icon">'+cat.icon+'</span> '+aeoQ[cat.id]+'</h3><p style="font-weight:300;font-size:clamp(.7rem,.9vw,.8rem);color:rgba(255,255,255,.3);margin:0 0 14px">'+aeoA[cat.id]+'</p><div class="grid"></div>';
 const grid=sec.querySelector(".grid");
 cat.items.forEach(x=>{
 const d=rs.find(r=>r.symbol===x.t||r.symbol===x.t.replace("^","%5E"));

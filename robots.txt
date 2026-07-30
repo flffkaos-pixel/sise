@@ -1,16 +1,46 @@
 User-agent: *
 Allow: /
-
-# Sitemap
-Sitemap: https://modu-sise.vercel.app/sitemap.xml
-
-# Crawl-delay (polite)
 Crawl-delay: 10
-
-# Disallow admin/private paths
 Disallow: /api/
-Disallow: /server.js
-Disallow: /package*.json
 Disallow: /node_modules/
 Disallow: /*.log
-Disallow: /*.md
+
+# AI 크롤러
+User-agent: GPTBot
+Allow: /
+Crawl-delay: 30
+
+User-agent: ClaudeBot
+Allow: /
+Crawl-delay: 30
+
+User-agent: Claude-Web
+Allow: /
+Crawl-delay: 30
+
+User-agent: CCBot
+Allow: /
+Crawl-delay: 30
+
+User-agent: PerplexityBot
+Allow: /
+Crawl-delay: 30
+
+User-agent: Google-Extended
+Allow: /
+Crawl-delay: 10
+
+User-agent: anthropic-ai
+Allow: /
+Crawl-delay: 30
+
+# Naver
+User-agent: Yeti
+Allow: /
+Crawl-delay: 10
+
+User-agent: NaverBot
+Allow: /
+Crawl-delay: 10
+
+Sitemap: https://modu-sise.vercel.app/sitemap.xml
