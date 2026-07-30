@@ -81,7 +81,7 @@ async function updateKrwRate() {
 
 function toKrw(item) {
   const s = item.symbol;
-  const isKrwAsset = s.endsWith('KRW=X') || s === '^KS11' || s === '^KQ11';
+  const isKrwAsset = s.endsWith('KRW=X') || s === '^KS11' || s === '^KQ11' || s.endsWith('.KS');
   const rate = isKrwAsset ? 1 : krwRate;
   return { ...item, priceKrw: item.regularMarketPrice * rate, changeKrw: item.regularMarketChange * rate, changePercentKrw: item.regularMarketChangePercent, previousCloseKrw: item.regularMarketPreviousClose * rate, krwRate };
 }
@@ -99,7 +99,7 @@ app.get('/api/history', async (req, res) => {
   if (!symbol) return res.status(400).json({ error: 'missing symbol' });
   const data = await fetchQ(symbol, '1mo', '1d');
   if (!data) return res.status(502).json({ error: 'fetch failed' });
-  const isKrwAsset = symbol.endsWith('KRW=X') || symbol === '^KS11' || symbol === '^KQ11';
+  const isKrwAsset = symbol.endsWith('KRW=X') || symbol === '^KS11' || symbol === '^KQ11' || symbol.endsWith('.KS');
   const rate = isKrwAsset ? 1 : krwRate;
   const history = (data.timestamps || []).map((t, i) => ({
     date: t,
