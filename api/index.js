@@ -97,14 +97,16 @@ app.get('/api/quotes', async (req, res) => {
 app.get('/api/history', async (req, res) => {
   const symbol = req.query.symbol;
   if (!symbol) return res.status(400).json({ error: 'missing symbol' });
-  let data = await fetchQ(symbol, '1mo', '1d');
+  let data = await fetchQ(symbol, '2y', '1d');
   if (!data) return res.status(502).json({ error: 'fetch failed' });
-  if (data.timestamps && !data.timestamps.length) {
-    const fallback = await fetchQ(symbol, 'max', '1d');
-    if (fallback && fallback.timestamps && fallback.timestamps.length) {
-      const idx = Math.max(0, fallback.timestamps.length - 35);
-      data = { ...data, timestamps: fallback.timestamps.slice(idx), opens: fallback.opens?.slice(idx), highs: fallback.highs?.slice(idx), lows: fallback.lows?.slice(idx), closes: fallback.closes?.slice(idx), volumes: fallback.volumes?.slice(idx) };
-    }
+  if (!data.timestamps || !data.timestamps.length) {
+    const fb = await fetchQ(symbol, 'max', '1d');
+    if (fb && fb.timestamps && fb.timestamps.length) data = fb;
+    else { const fb2 = await fetchQ(symbol, '5y', '1wk'); if (fb2 && fb2.timestamps && fb2.timestamps.length) data = fb2; }
+  }
+  if (data.timestamps && data.timestamps.length > 35) {
+    const start = data.timestamps.length - 35;
+    data = { ...data, timestamps: data.timestamps.slice(start), opens: data.opens?.slice(start), highs: data.highs?.slice(start), lows: data.lows?.slice(start), closes: data.closes?.slice(start), volumes: data.volumes?.slice(start) };
   }
   const isKrwAsset = symbol.endsWith('KRW=X') || symbol === '^KS11' || symbol === '^KQ11' || symbol.endsWith('.KS');
   const rate = isKrwAsset ? 1 : krwRate;
