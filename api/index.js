@@ -97,8 +97,15 @@ app.get('/api/quotes', async (req, res) => {
 app.get('/api/history', async (req, res) => {
   const symbol = req.query.symbol;
   if (!symbol) return res.status(400).json({ error: 'missing symbol' });
-  const data = await fetchQ(symbol, '1mo', '1d');
+  let data = await fetchQ(symbol, '1mo', '1d');
   if (!data) return res.status(502).json({ error: 'fetch failed' });
+  if (data.timestamps && !data.timestamps.length) {
+    const fallback = await fetchQ(symbol, 'max', '1d');
+    if (fallback && fallback.timestamps && fallback.timestamps.length) {
+      const idx = Math.max(0, fallback.timestamps.length - 35);
+      data = { ...data, timestamps: fallback.timestamps.slice(idx), opens: fallback.opens?.slice(idx), highs: fallback.highs?.slice(idx), lows: fallback.lows?.slice(idx), closes: fallback.closes?.slice(idx), volumes: fallback.volumes?.slice(idx) };
+    }
+  }
   const isKrwAsset = symbol.endsWith('KRW=X') || symbol === '^KS11' || symbol === '^KQ11' || symbol.endsWith('.KS');
   const rate = isKrwAsset ? 1 : krwRate;
   const history = (data.timestamps || []).map((t, i) => ({
