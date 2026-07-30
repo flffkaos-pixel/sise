@@ -133,14 +133,17 @@ async function load(){
     const histRes=await fetch('/api/history?symbol='+encodeURIComponent(symbol));
     if(!histRes.ok)throw Error('fetch failed');
     const d=await histRes.json();
-    if(!d.history||d.history.length<2)throw Error('insufficient data');
     const h=JPN?100:1;
-    const closes=d.history.map(hh=>hh.close*h).filter(c=>c>0);
-    const labels=d.history.map(hh=>{const dt=new Date(hh.date*1000);return dt.getMonth()+1+'/'+dt.getDate()});
-    const pred=predictLR(closes);
     const cur=d.currentPrice*h,chg=d.change*h,pc=d.previousClose*h;
     const isUp=d.change>=0;
     const assetLabel = d.shortName || symbol;
+    const hasChart = d.history && d.history.length > 1;
+    const closes = hasChart ? d.history.map(hh=>hh.close*h).filter(c=>c>0) : [];
+    const labels = hasChart ? d.history.map(hh=>{const dt=new Date(hh.date*1000);return dt.getMonth()+1+'/'+dt.getDate()}) : [];
+    const pred = hasChart ? predictLR(closes) : null;
+    const chartHtml = hasChart
+      ? '<div class="chart-wrap"><h2>30일 등락 추이 — '+(lb+(assetLabel))+' 가격은 어떻게 변했나요?</h2><p style="font-weight:300;font-size:clamp(.65rem,.85vw,.75rem);color:rgba(255,255,255,.25);margin:-8px 0 16px">최근 30일간 일별 종가 기준 (Chart.js 라인 차트)</p><canvas id="chart"></canvas></div>'
+      : '<div class="chart-wrap"><h2>30일 등락 추이 — '+(lb+(assetLabel))+'</h2><p style="font-weight:300;font-size:clamp(.65rem,.85vw,.75rem);color:rgba(255,255,255,.25);margin:-8px 0 16px">차트 데이터를 불러올 수 없습니다 (Yahoo Finance 데이터 제한)</p></div>';
     root.innerHTML=
       '<div class="price-box" itemscope itemtype="https://schema.org/FinancialProduct">'+
         '<div class="icon">'+(d.icon||'')+'</div>'+
@@ -150,11 +153,7 @@ async function load(){
         '<div class="change '+(isUp?'up':'down')+'">'+(isUp?'▲':'▼')+' '+fmt(Math.abs(chg))+' ('+(d.changePercent>=0?'+':'')+d.changePercent.toFixed(2)+'%)</div>'+
         '<div class="prev">전일: ₩'+fmt(pc)+'</div>'+
       '</div>'+
-      '<div class="chart-wrap">'+
-        '<h2>30일 등락 추이 — '+(lb+(assetLabel))+' 가격은 어떻게 변했나요?</h2>'+
-        '<p style="font-weight:300;font-size:clamp(.65rem,.85vw,.75rem);color:rgba(255,255,255,.25);margin:-8px 0 16px">최근 30일간 일별 종가 기준 (Chart.js 라인 차트)</p>'+
-        '<canvas id="chart"></canvas>'+
-      '</div>'+
+      chartHtml+
       (pred?'<div class="pred-box">'+
         '<h2>내일 예상 — '+(lb+(assetLabel))+' 내일 가격은 어떻게 될까요?</h2>'+
         '<p style="font-weight:300;font-size:clamp(.65rem,.85vw,.75rem);color:rgba(255,255,255,.25);margin:-8px 0 16px">30일 선형회귀 분석 기반 예측 (R² 신뢰도)</p>'+
@@ -166,6 +165,7 @@ async function load(){
       '<div class="ft" style="text-align:center;padding:40px 0 20px;animation:fadeUp .6s both;animation-delay:.6s">'+
         '<button class="btn" onclick="load()" style="font-family:Kanit,sans-serif;font-weight:500;text-transform:uppercase;letter-spacing:.12em;padding:10px 32px;background:rgba(255,255,255,.03);color:#FFFFFF;border:1px solid rgba(255,255,255,.1);border-radius:999px;cursor:pointer;font-size:clamp(.7rem,.9vw,.8rem);transition:all .3s">새로고침</button>'+
       '</div>';
+    if(!hasChart)return;
     const ctx=document.getElementById('chart').getContext('2d');
     new Chart(ctx,{
       type:'line',
