@@ -5,20 +5,34 @@ const cheerio = require('cheerio');
 const app = express();
 app.use(express.static(process.cwd()));
 
-const T = ['USDKRW=X','EURKRW=X','JPYKRW=X','CNYKRW=X','GC=F','SI=F','CL=F','NG=F','^GSPC','^DJI','^IXIC','^VIX','^TNX','^KS11','^KQ11','^N225','^HSI','BTC-USD','ETH-USD','XRP-USD'];
+const T = ['USDKRW=X','EURKRW=X','JPYKRW=X','CNYKRW=X','AUDKRW=X','GBPKRW=X','CADKRW=X','CHFKRW=X','HKDKRW=X','SGDKRW=X','GC=F','SI=F','PL=F','PA=F','CL=F','NG=F','HG=F','^2YR','^5YR','^TYX','^GSPC','^DJI','^IXIC','^VIX','^TNX','^KS11','^KQ11','^N225','^HSI','^FTSE','^GDAXI','^FCHI','^SSEC','^BSESN','^AXJO','^BVSP','BTC-USD','ETH-USD','XRP-USD','SOL-USD','DOGE-USD','ADA-USD','DOT-USD','AVAX-USD','LINK-USD','MATIC-USD','005930.KS','AAPL','MSFT','NVDA','TSLA','GOOGL','AMZN','META'];
 const NAMES = {
   'USDKRW=X':'원/달러','EURKRW=X':'유로/원','JPYKRW=X':'엔/원','CNYKRW=X':'위안/원',
-  'GC=F':'금','SI=F':'은','CL=F':'WTI 원유','NG=F':'천연가스',
+  'AUDKRW=X':'호주달러/원','GBPKRW=X':'파운드/원','CADKRW=X':'캐나다달러/원','CHFKRW=X':'스위스프랑/원','HKDKRW=X':'홍콩달러/원','SGDKRW=X':'싱가포르달러/원',
+  'GC=F':'금','SI=F':'은','PL=F':'백금','PA=F':'팔라듐',
+  'CL=F':'WTI 원유','NG=F':'천연가스',
+  'HG=F':'구리',
+  '^2YR':'美 2년물 금리','^5YR':'美 5년물 금리','^TYX':'美 30년물 금리',
   '^GSPC':'S&P 500','^DJI':'다우존스','^IXIC':'나스닥','^VIX':'VIX 공포지수','^TNX':'美 10년물 금리',
   '^KS11':'코스피','^KQ11':'코스닥','^N225':'닛케이','^HSI':'항셍지수',
-  'BTC-USD':'비트코인','ETH-USD':'이더리움','XRP-USD':'리플'
+  '^FTSE':'영국 FTSE','^GDAXI':'독일 DAX','^FCHI':'프랑스 CAC','^SSEC':'중국 상해종합','^BSESN':'인도 Sensex','^AXJO':'호주 ASX','^BVSP':'브라질 IBOVESPA',
+  'BTC-USD':'비트코인','ETH-USD':'이더리움','XRP-USD':'리플',
+  'SOL-USD':'솔라나','DOGE-USD':'도지코인','ADA-USD':'에이다','DOT-USD':'폴카닷','AVAX-USD':'아발란체','LINK-USD':'체인링크','MATIC-USD':'폴리곤',
+  '005930.KS':'삼성전자','AAPL':'애플','MSFT':'마이크로소프트','NVDA':'엔비디아','TSLA':'테슬라','GOOGL':'구글','AMZN':'아마존','META':'메타'
 };
 const ICONS = {
   'USDKRW=X':'💵','EURKRW=X':'💶','JPYKRW=X':'💴','CNYKRW=X':'💷',
-  'GC=F':'🥇','SI=F':'🥈','CL=F':'🛢️','NG=F':'🔥',
+  'AUDKRW=X':'🇦🇺','GBPKRW=X':'🇬🇧','CADKRW=X':'🇨🇦','CHFKRW=X':'🇨🇭','HKDKRW=X':'🇭🇰','SGDKRW=X':'🇸🇬',
+  'GC=F':'🥇','SI=F':'🥈','PL=F':'💎','PA=F':'🔬',
+  'CL=F':'🛢️','NG=F':'🔥',
+  'HG=F':'🔌',
+  '^2YR':'📅','^5YR':'📅','^TYX':'📅',
   '^GSPC':'📈','^DJI':'🏛️','^IXIC':'💻','^VIX':'😨','^TNX':'🏦',
   '^KS11':'🇰🇷','^KQ11':'📋','^N225':'🇯🇵','^HSI':'🇭🇰',
-  'BTC-USD':'₿','ETH-USD':'💎','XRP-USD':'✖️'
+  '^FTSE':'🇬🇧','^GDAXI':'🇩🇪','^FCHI':'🇫🇷','^SSEC':'🇨🇳','^BSESN':'🇮🇳','^AXJO':'🇦🇺','^BVSP':'🇧🇷',
+  'BTC-USD':'₿','ETH-USD':'💎','XRP-USD':'✖️',
+  'SOL-USD':'◎','DOGE-USD':'🐕','ADA-USD':'🪙','DOT-USD':'●','AVAX-USD':'🔺','LINK-USD':'🔗','MATIC-USD':'⬡',
+  '005930.KS':'📱','AAPL':'🍎','MSFT':'🪟','NVDA':'🟢','TSLA':'🚗','GOOGL':'🔍','AMZN':'📦','META':'👤'
 };
 let krwRate = 1350;
 let lastKrwFetch = 0;
@@ -241,7 +255,7 @@ app.post('/api/contact', express.json(), (req, res) => {
 
 app.get('/sitemap.xml', (req, res) => {
   const base = `https://${req.headers.host || 'modu-sise.vercel.app'}`;
-  const detailSymbols = ['USDKRW=X','EURKRW=X','JPYKRW=X','CNYKRW=X','GC=F','SI=F','CL=F','NG=F','%5EGSPC','%5EDJI','%5EIXIC','%5EVIX','%5ETNX','%5EKS11','%5EKQ11','%5EN225','%5EHSI','BTC-USD','ETH-USD','XRP-USD'];
+  const detailSymbols = ['USDKRW=X','EURKRW=X','JPYKRW=X','CNYKRW=X','AUDKRW=X','GBPKRW=X','CADKRW=X','CHFKRW=X','HKDKRW=X','SGDKRW=X','GC=F','SI=F','PL=F','PA=F','CL=F','NG=F','HG=F','%5E2YR','%5E5YR','%5ETYX','%5EGSPC','%5EDJI','%5EIXIC','%5EVIX','%5ETNX','%5EKS11','%5EKQ11','%5EN225','%5EHSI','%5EFTSE','%5EGDAXI','%5EFCHI','%5ESSEC','%5EBSESN','%5EAXJO','%5EBVSP','BTC-USD','ETH-USD','XRP-USD','SOL-USD','DOGE-USD','ADA-USD','DOT-USD','AVAX-USD','LINK-USD','MATIC-USD','005930.KS','AAPL','MSFT','NVDA','TSLA','GOOGL','AMZN','META'];
   const today = new Date().toISOString().split('T')[0];
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
