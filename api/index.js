@@ -74,6 +74,37 @@ function fetchQ(symbol, range = '1d', interval = '1d') {
   });
 }
 
+function fetchBinanceHistory(yahooSymbol) {
+  return new Promise((ok) => {
+    if (!yahooSymbol.endsWith('-USD')) return ok(null);
+    const bs = yahooSymbol.replace('-USD', 'USDT');
+    const url = `https://api.binance.com/api/v3/klines?symbol=${bs}&interval=1d&limit=30`;
+    const req = https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0' }, timeout: 10000 }, (r) => {
+      let d = ''; r.on('data', c => d += c);
+      r.on('end', () => {
+        try {
+          const j = JSON.parse(d);
+          if (!Array.isArray(j) || !j.length) return ok(null);
+          const timestamps = j.map(k => Math.floor(k[0] / 1000));
+          const opens = j.map(k => parseFloat(k[1]));
+          const highs = j.map(k => parseFloat(k[2]));
+          const lows = j.map(k => parseFloat(k[3]));
+          const closes = j.map(k => parseFloat(k[4]));
+          const volumes = j.map(k => parseFloat(k[5]));
+          const price = closes[closes.length - 1];
+          const prev = closes.length > 1 ? closes[closes.length - 2] : price;
+          ok({
+            symbol: yahooSymbol, shortName: NAMES[yahooSymbol] || yahooSymbol, icon: ICONS[yahooSymbol] || '',
+            regularMarketPrice: price, regularMarketChange: price - prev, regularMarketChangePercent: ((price - prev) / prev) * 100,
+            regularMarketPreviousClose: prev, timestamps, opens, highs, lows, closes, volumes,
+          });
+        } catch { ok(null); }
+      });
+    });
+    req.on('error', () => ok(null));
+    req.on('timeout', () => { req.destroy(); ok(null); });
+  });
+}
 async function updateKrwRate() {
   const r = await fetchQ('USDKRW=X');
   if (r && r.regularMarketPrice > 0) krwRate = r.regularMarketPrice;
@@ -103,6 +134,10 @@ app.get('/api/history', async (req, res) => {
     const fb = await fetchQ(symbol, 'max', '1d');
     if (fb && fb.timestamps && fb.timestamps.length) data = fb;
     else { const fb2 = await fetchQ(symbol, '5y', '1wk'); if (fb2 && fb2.timestamps && fb2.timestamps.length) data = fb2; }
+  }
+  if (!data.timestamps || !data.timestamps.length) {
+    const binance = await fetchBinanceHistory(symbol);
+    if (binance && binance.timestamps && binance.timestamps.length) data = binance;
   }
   if (data.timestamps && data.timestamps.length > 35) {
     const start = data.timestamps.length - 35;
