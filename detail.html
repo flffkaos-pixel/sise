@@ -125,7 +125,7 @@ const params=new URLSearchParams(window.location.search);
 const symbol=params.get('s');
 const JPN=symbol==='JPYKRW=X';
 const lb=JPN?'100엔당':'';
-const iy=['^2YR','^5YR','^TYX','^TNX','^VIX'].includes(symbol);
+const iy=['^TYX','^TNX','^VIX'].includes(symbol);
 if(!symbol){document.getElementById('root').innerHTML='<div class="ld"><p style="color:#f85149;font-weight:500">잘못된 접근</p><p style="margin-top:8px;font-weight:300;font-size:.85rem">시세를 선택해주세요</p><a href="/" class="btn" style="display:inline-block;margin-top:20px;font-family:Kanit,sans-serif;font-weight:500;text-transform:uppercase;letter-spacing:.12em;padding:10px 32px;background:rgba(255,255,255,.03);color:#D7E2EA;border:1px solid rgba(215,226,234,.1);border-radius:999px;cursor:pointer;font-size:clamp(.65rem,.9vw,.75rem);text-decoration:none">돌아가기</a></div>'}else load();
 
 async function load(){
