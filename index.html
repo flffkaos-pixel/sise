@@ -16,8 +16,8 @@
 <meta name="referrer" content="always">
 
 <!-- GEO/SEO/AEO Meta -->
-<title>모두의 시세 — 실시간 글로벌 금융 시세 (원화 기준) | 50종목 환율·금·지수·코인</title>
-<meta name="description" content="50개 글로벌 자산(환율 10종, 귀금속 5종, 에너지 2종, 채권 1종, 지수 15종, 암호화폐 9종, 글로벌 주식 8종) 실시간 시세를 원화(₩)로 한눈에 확인하세요. 30초 자동갱신, 30일 차트, 선형회귀 예측, 금융뉴스까지 무료 제공.">
+<title>모두의 시세 — 실시간 글로벌 금융 시세 (원화 기준) | 51종목 환율·금·지수·코인</title>
+<meta name="description" content="51개 글로벌 자산(환율 10종, 귀금속 5종, 에너지 2종, 채권 1종, 지수 15종, 암호화폐 9종, 글로벌 주식 9종) 실시간 시세를 원화(₩)로 한눈에 확인하세요. 30초 자동갱신, 30일 차트, 선형회귀 예측, 금융뉴스까지 무료 제공.">
 <meta name="keywords" content="실시간 시세,환율,금시세,원유가격,주가지수,비트코인,이더리움,코스피,나스닥,S&P500,금융뉴스,원화환산,USDKRW,WTI,VIX,코스닥,닛케이,항셍지수">
 <link rel="canonical" href="https://modu-sise.vercel.app/">
 <link rel="alternate" hreflang="ko" href="https://modu-sise.vercel.app/">
@@ -144,7 +144,8 @@
       {"@type":"ListItem","position":47,"name":"테슬라"},
       {"@type":"ListItem","position":48,"name":"구글"},
       {"@type":"ListItem","position":49,"name":"아마존"},
-      {"@type":"ListItem","position":50,"name":"메타"}
+      {"@type":"ListItem","position":50,"name":"메타"},
+      {"@type":"ListItem","position":51,"name":"SK하이닉스"}
     ]
   }
 }
@@ -155,7 +156,7 @@
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
-    {"@type":"Question","name":"모두의 시세는 어떤 서비스인가요?","acceptedAnswer":{"@type":"Answer","text":"야후 파이낸스 데이터를 기반으로 50개 글로벌 금융 자산(환율 10종, 귀금속 5종, 에너지 2종, 채권 1종, 지수 15종, 암호화폐 9종, 글로벌 주식 8종)의 실시간 시세를 원화(₩)로 환산해 제공하는 무료 대시보드입니다."}},
+    {"@type":"Question","name":"모두의 시세는 어떤 서비스인가요?","acceptedAnswer":{"@type":"Answer","text":"야후 파이낸스 데이터를 기반으로 51개 글로벌 금융 자산(환율 10종, 귀금속 5종, 에너지 2종, 채권 1종, 지수 15종, 암호화폐 9종, 글로벌 주식 9종)의 실시간 시세를 원화(₩)로 환산해 제공하는 무료 대시보드입니다."}},
     {"@type":"Question","name":"시세는 얼마나 자주 갱신되나요?","acceptedAnswer":{"@type":"Answer","text":"자동으로 30초마다 갱신되며, 수동 새로고침 버튼으로 즉시 최신 데이터를 불러올 수 있습니다."}},
     {"@type":"Question","name":"JPY/KRW가 100엔당 가격으로 나오는 이유는?","acceptedAnswer":{"@type":"Answer","text":"엔화 가치가 낮아 1엔당 원화 환율이 소수점 단위라 가독성을 위해 100엔당 가격(×100)으로 표시합니다."}},
     {"@type":"Question","name":"차트와 예측 기능은 어떻게 이용하나요?","acceptedAnswer":{"@type":"Answer","text":"각 시세 카드를 클릭하면 상세 페이지로 이동해 30일 차트(Chart.js)와 선형회귀 기반 내일 가격 예측(R² 신뢰도 포함)을 볼 수 있습니다."}},
@@ -270,7 +271,7 @@ header p{font-weight:300;font-size:clamp(.9rem,1.6vw,1.25rem);color:#BBBBBB;text
     <!-- AEO: 질문 기반 시세 섹션 -->
     <section aria-labelledby="quotes-heading" class="quotes-section">
       <h2 id="quotes-heading" style="font-weight:500;font-size:clamp(1.1rem,1.8vw,1.4rem);margin-bottom:4px;color:#FFFFFF">실시간 글로벌 시세, 지금 얼마인가요?</h2>
-      <p style="font-weight:300;font-size:clamp(.75rem,1vw,.85rem);color:rgba(255,255,255,.35);margin:0 0 20px">환율·귀금속·에너지·채권·주가지수·암호화폐·글로벌 주식 50종목을 Yahoo Finance 실시간 데이터로 원화(₩) 환산하여 제공합니다.</p>
+      <p style="font-weight:300;font-size:clamp(.75rem,1vw,.85rem);color:rgba(255,255,255,.35);margin:0 0 20px">환율·귀금속·에너지·채권·주가지수·암호화폐·글로벌 주식 51종목을 Yahoo Finance 실시간 데이터로 원화(₩) 환산하여 제공합니다.</p>
       <div id="app" role="feed" aria-label="실시간 금융 시세">
         <div class="ld" role="status" aria-label="데이터 로딩 중">
           <div class="sp" aria-hidden="true"></div>
@@ -354,7 +355,7 @@ const CATS=[
 {l:"솔라나",t:"SOL-USD",e:"◎"},{l:"도지코인",t:"DOGE-USD",e:"🐕"},{l:"에이다",t:"ADA-USD",e:"🪙"},{l:"폴카닷",t:"DOT-USD",e:"●"},{l:"아발란체",t:"AVAX-USD",e:"🔺"},{l:"체인링크",t:"LINK-USD",e:"🔗"}
 ]},
 {id:"stock",name:"글로벌 주식",icon:"🏢",items:[
-{l:"삼성전자",t:"005930.KS",e:"📱"},{l:"애플",t:"AAPL",e:"🍎"},{l:"마이크로소프트",t:"MSFT",e:"🪟"},{l:"엔비디아",t:"NVDA",e:"🟢"},{l:"테슬라",t:"TSLA",e:"🚗"},{l:"구글",t:"GOOGL",e:"🔍"},{l:"아마존",t:"AMZN",e:"📦"},{l:"메타",t:"META",e:"👤"}
+{l:"삼성전자",t:"005930.KS",e:"📱"},{l:"SK하이닉스",t:"000660.KS",e:"🔴"},{l:"애플",t:"AAPL",e:"🍎"},{l:"마이크로소프트",t:"MSFT",e:"🪟"},{l:"엔비디아",t:"NVDA",e:"🟢"},{l:"테슬라",t:"TSLA",e:"🚗"},{l:"구글",t:"GOOGL",e:"🔍"},{l:"아마존",t:"AMZN",e:"📦"},{l:"메타",t:"META",e:"👤"}
 ]}
 ];
 function fmt(n){return Math.round(n).toLocaleString()}
@@ -372,7 +373,7 @@ if(!rs.length)throw Error("no data");
 if(isInit){
 let idx=0;a.innerHTML='';
 const aeoQ={fx:'현재 원/달러·엔·위안 등 주요 환율은 얼마인가요?',metal:'금·은·백금·팔라듐·구리 오늘 시세는?',energy:'WTI 원유와 천연가스 가격 동향은?',bond:'미국 국채 금리는 얼마인가요?',index:'S&P500·코스피·닛케이 등 주요 지수 흐름은?',crypto:'비트코인·이더리움·리플 등 코인 가격은?',stock:'애플·삼성전자·엔비디아 등 글로벌 주가?'};
-const aeoA={fx:'Yahoo Finance 실시간 데이터 기반으로 10개 통화쌍(USD, EUR, JPY(100엔), CNY, AUD, GBP, CAD, CHF, HKD, SGD)의 원화 환산 시세입니다.',metal:'국제 금(GC=F), 은(SI=F), 백금(PL=F), 팔라듐(PA=F), 구리(HG=F) 선물 가격을 원화(KRW)로 환산한 실시간 금속 시세입니다. 구리는 산업용 금속으로 경기 선행지표로 활용됩니다.',energy:'서부텍사스산중질유 WTI(CL=F)와 천연가스(NG=F) 선물 가격을 원화 환산하여 제공합니다. 에너지 가격은 지정학적 리스크와 수급에 영향을 받습니다.',bond:'미국 30년물(^TYX) 국채 금리를 실시간 제공합니다.',index:'미국(S&P500·다우·나스닥·VIX·10년물), 한국(코스피·코스닥), 일본(닛케이), 홍콩(항셍), 유럽(FTSE·DAX·CAC), 인도·호주·브라질까지 15개국 지수.',crypto:'비트코인·이더리움·리플·솔라나·도지코인·에이다·폴카닷·아발란체·체인링크 등 9개 암호화폐 시세를 원화 환산 제공합니다.',stock:'삼성전자·애플·마이크로소프트·엔비디아·테슬라·구글·아마존·메타 등 글로벌 대형 기술주 실시간 주가를 원화 환산합니다.'};
+const aeoA={fx:'Yahoo Finance 실시간 데이터 기반으로 10개 통화쌍(USD, EUR, JPY(100엔), CNY, AUD, GBP, CAD, CHF, HKD, SGD)의 원화 환산 시세입니다.',metal:'국제 금(GC=F), 은(SI=F), 백금(PL=F), 팔라듐(PA=F), 구리(HG=F) 선물 가격을 원화(KRW)로 환산한 실시간 금속 시세입니다. 구리는 산업용 금속으로 경기 선행지표로 활용됩니다.',energy:'서부텍사스산중질유 WTI(CL=F)와 천연가스(NG=F) 선물 가격을 원화 환산하여 제공합니다. 에너지 가격은 지정학적 리스크와 수급에 영향을 받습니다.',bond:'미국 30년물(^TYX) 국채 금리를 실시간 제공합니다.',index:'미국(S&P500·다우·나스닥·VIX·10년물), 한국(코스피·코스닥), 일본(닛케이), 홍콩(항셍), 유럽(FTSE·DAX·CAC), 인도·호주·브라질까지 15개국 지수.',crypto:'비트코인·이더리움·리플·솔라나·도지코인·에이다·폴카닷·아발란체·체인링크 등 9개 암호화폐 시세를 원화 환산 제공합니다.',stock:'삼성전자·SK하이닉스·애플·마이크로소프트·엔비디아·테슬라·구글·아마존·메타 등 글로벌 대형 기술주 실시간 주가를 원화 환산합니다.'};
 CATS.forEach(cat=>{
 const sec=document.createElement("section");sec.className="cat-section";sec.setAttribute("aria-label",cat.name);
 sec.innerHTML='<h3 class="cat-title" style="font-weight:600;font-size:clamp(1rem,1.5vw,1.15rem);margin-bottom:4px"><span class="cat-icon">'+cat.icon+'</span> '+aeoQ[cat.id]+'</h3><p style="font-weight:300;font-size:clamp(.7rem,.9vw,.8rem);color:rgba(255,255,255,.3);margin:0 0 14px">'+aeoA[cat.id]+'</p><div class="grid"></div>';
