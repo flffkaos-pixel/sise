@@ -372,48 +372,48 @@ Sitemap: https://modu-sise.vercel.app/sitemap.xml`);
 });
 
 app.get('/llms.txt', (req, res) => {
-  res.set('Content-Type', 'text/plain; charset=utf-8').send(`# ����� �ü� - AI ũ�ѷ��� ���� ����Ʈ ���
+  res.set('Content-Type', 'text/plain; charset=utf-8').send(`# 모두의 시세 - AI 크롤러를 위한 사이트 요약
 ## Modu Sise - Real-time Global Financial Dashboard (KRW)
 
-### ����Ʈ ����
-- ���񽺸�: ����� �ü� (Modu Sise)
+### 사이트 개요
+- 서비스명: 모두의 시세 (Modu Sise)
 - URL: https://modu-sise.vercel.app/
-- ���: �ѱ��� (ko-KR)
-- ����: 20�� �۷ι� ���� �ڻ�(ȯ�� 4��, �ͱݼ� 2��, ������ 2��, ���� 9��, ��ȣȭ�� 3��)�� �ǽð� �ü��� ��ȭ(\)�� ȯ���� ���� ��ú���
+- 언어: 한국어 (ko-KR)
+- 설명: 50종목 글로벌 금융 자산의 실시간 시세를 원화(₩)로 환산한 무료 대시보드 (환율 10종, 귀금속 4종, 에너지 2종, 원자재 1종, 채권 1종, 지수 15종, 암호화폐 9종, 주식 8종)
 
-### �ٽ� ������
-- ������ �ҽ�: Yahoo Finance v8 chart API
-- ���� �ֱ�: 30�� �ڵ� ���� (USD/KRW ȯ�� 60��)
-- ȯ��: USD/KRW, EUR/KRW, JPY/KRW(100����), CNY/KRW
-- �ͱݼ�: ��(GC=F), ��(SI=F)
-- ������: WTI ����(CL=F), õ������(NG=F)
-- ����: S&P500, �ٿ�����, ������, VIX, ڸ10�⹰�ݸ�, �ڽ���, �ڽ���, ������225, �׼�����
-- ��ȣȭ��: ��Ʈ����(BTC-USD), �̴�����(ETH-USD), ����(XRP-USD)
-- ����: ���մ��� ����/���� RSS, ���ڽŹ� Section902, Google News 3�� �ǵ� (���� Ű���� 80+ ���͸�)
+### 핵심 데이터
+- 데이터 소스: Yahoo Finance v8 chart API
+- 갱신 주기: 30초 자동 갱신 (USD/KRW 환율 60초)
+- 환율: USD/KRW, EUR/KRW, JPY/KRW(100엔당), CNY/KRW, AUD/KRW, GBP/KRW, CAD/KRW, CHF/KRW, HKD/KRW, SGD/KRW
+- 귀금속: 금(GC=F), 은(SI=F), 백금(PL=F), 팔라듐(PA=F)
+- 에너지: WTI 원유(CL=F), 천연가스(NG=F)
+- 원자재: 구리(HG=F)
+- 채권: 미 30년물 금리(^TYX)
+- 지수: S&P500, 다우존스, 나스닥, VIX, 미10년물금리, 코스피, 코스닥, 닛케이225, 항셍지수, 영국FTSE, 독일DAX, 프랑스CAC, 인도Sensex, 호주ASX, 브라질IBOVESPA
+- 암호화폐: 비트코인(BTC-USD), 이더리움(ETH-USD), 리플(XRP-USD), 솔라나(SOL-USD), 도지코인(DOGE-USD), 에이다(ADA-USD), 폴카닷(DOT-USD), 아발란체(AVAX-USD), 체인링크(LINK-USD)
+- 주식: 삼성전자, 애플, 마이크로소프트, 엔비디아, 테슬라, 구글, 아마존, 메타
+- 뉴스: 연합뉴스 경제/증권 RSS, 전자신문 Section902, Google News 3개 피드 (금융 키워드 80+ 필터링)
 
-### API ��������Ʈ
-- GET /api/quotes - ��ü 20���� �ǽð� �ü� (��ȭ ȯ��)
-- GET /api/history?symbol=SYMBOL - 30�� OHLC ������
-- GET /api/news/headlines - ���� ���� ������
-- GET /api/article?url=URL - ��� ���� ���� + ����
+### API 엔드포인트
+- GET /api/quotes - 전체 50종목 실시간 시세 (원화 환산)
 
-### ���
-- �ǽð� �ü� ��ú��� (ī�װ�����: ȯ��/�ͱݼ�/������/����/��ȣȭ��)
-- 30�� ��Ʈ (Chart.js)
-- ����ȸ�� ��� ���� ���� ���� (R�� �ŷڵ�)
-- ���� ���� (��� �ð� ǥ�� + ���� ����)
+### 기능
+- 실시간 시세 대시보드 (카테고리별: 환율/귀금속/에너지/원자재/채권/지수/암호화폐/주식)
+- 30일 차트 (Chart.js)
+- 선형회귀 기반 내일 가격 예측 (R² 신뢰도)
+- 금융 뉴스 (상대 시간 표시 + 본문 보기)
 
-### ������
-- /index.html - ���� ��ú���
-- /detail.html?s=SYMBOL - ���� �ڻ� �� (��Ʈ + ����)
-- /privacy.html - ��������ó����ħ
-- /terms.html - �̿���
-- /contact.html - �����ϱ�
-- /sitemap.xml - ����Ʈ��
-- /llms.txt - �� ����
+### 페이지
+- /index.html - 메인 대시보드
+- /detail.html?s=SYMBOL - 개별 자산 상세 (차트 + 예측)
+- /privacy.html - 개인정보처리방침
+- /terms.html - 이용약관
+- /contact.html - 문의하기
+- /sitemap.xml - 사이트맵
+- /llms.txt - 이 파일
 
-### ��å
-�� ������ ���� �������Դϴ�. ���� �Ǵܰ� å���� �̿��ڿ��� �ֽ��ϴ�.`);
+### 면책
+본 정보는 투자 참고용입니다. 투자 판단과 책임은 이용자에게 있습니다.`);
 });
 
 app.get('/favicon.ico', (req, res) => res.status(204).end());
