@@ -81,7 +81,7 @@ async function updateKrwRate() {
 
 function toKrw(item) {
   const s = item.symbol;
-  const isKrwAsset = s.endsWith('KRW=X') || s === '^KS11' || s === '^KQ11' || s.endsWith('.KS');
+  const isKrwAsset = s.endsWith('KRW=X') || s === '^KS11' || s === '^KQ11' || s.endsWith('.KS') || ['^2YR','^5YR','^TYX','^TNX','^VIX'].includes(s);
   const rate = isKrwAsset ? 1 : krwRate;
   return { ...item, priceKrw: item.regularMarketPrice * rate, changeKrw: item.regularMarketChange * rate, changePercentKrw: item.regularMarketChangePercent, previousCloseKrw: item.regularMarketPreviousClose * rate, krwRate };
 }
@@ -108,7 +108,7 @@ app.get('/api/history', async (req, res) => {
     const start = data.timestamps.length - 35;
     data = { ...data, timestamps: data.timestamps.slice(start), opens: data.opens?.slice(start), highs: data.highs?.slice(start), lows: data.lows?.slice(start), closes: data.closes?.slice(start), volumes: data.volumes?.slice(start) };
   }
-  const isKrwAsset = symbol.endsWith('KRW=X') || symbol === '^KS11' || symbol === '^KQ11' || symbol.endsWith('.KS');
+  const isKrwAsset = symbol.endsWith('KRW=X') || symbol === '^KS11' || symbol === '^KQ11' || symbol.endsWith('.KS') || ['^2YR','^5YR','^TYX','^TNX','^VIX'].includes(symbol);
   const rate = isKrwAsset ? 1 : krwRate;
   const history = (data.timestamps || []).map((t, i) => ({
     date: t,

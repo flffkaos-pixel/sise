@@ -125,6 +125,7 @@ const params=new URLSearchParams(window.location.search);
 const symbol=params.get('s');
 const JPN=symbol==='JPYKRW=X';
 const lb=JPN?'100엔당':'';
+const iy=['^2YR','^5YR','^TYX','^TNX','^VIX'].includes(symbol);
 if(!symbol){document.getElementById('root').innerHTML='<div class="ld"><p style="color:#f85149;font-weight:500">잘못된 접근</p><p style="margin-top:8px;font-weight:300;font-size:.85rem">시세를 선택해주세요</p><a href="/" class="btn" style="display:inline-block;margin-top:20px;font-family:Kanit,sans-serif;font-weight:500;text-transform:uppercase;letter-spacing:.12em;padding:10px 32px;background:rgba(255,255,255,.03);color:#D7E2EA;border:1px solid rgba(215,226,234,.1);border-radius:999px;cursor:pointer;font-size:clamp(.65rem,.9vw,.75rem);text-decoration:none">돌아가기</a></div>'}else load();
 
 async function load(){
@@ -149,16 +150,16 @@ async function load(){
         '<div class="icon">'+(d.icon||'')+'</div>'+
         '<div class="label" itemprop="name">'+(lb+(assetLabel))+'</div>'+
         '<h2 style="font-size:0;position:absolute;visibility:hidden">'+assetLabel+' 현재 시세는 얼마인가요?</h2>'+
-        '<div class="price"><span class="won">₩</span>'+fmt(cur)+'</div>'+
+        '<div class="price">'+(iy?'':'<span class="won">₩</span>')+fmt(cur)+'</div>'+
         '<div class="change '+(isUp?'up':'down')+'">'+(isUp?'▲':'▼')+' '+fmt(Math.abs(chg))+' ('+(d.changePercent>=0?'+':'')+d.changePercent.toFixed(2)+'%)</div>'+
-        '<div class="prev">전일: ₩'+fmt(pc)+'</div>'+
+        '<div class="prev">전일: '+(iy?'':'₩')+fmt(pc)+'</div>'+
       '</div>'+
       chartHtml+
       (pred?'<div class="pred-box">'+
         '<h2>내일 예상 — '+(lb+(assetLabel))+' 내일 가격은 어떻게 될까요?</h2>'+
         '<p style="font-weight:300;font-size:clamp(.65rem,.85vw,.75rem);color:rgba(255,255,255,.25);margin:-8px 0 16px">30일 선형회귀 분석 기반 예측 (R² 신뢰도)</p>'+
         '<div class="pred-dir '+(pred.direction==='up'?'up':'down')+'">'+(pred.direction==='up'?'▲ 상승 예상':'▼ 하락 예상')+'</div>'+
-        '<div class="pred-price"><span class="won">₩</span>'+fmt(pred.pred)+'</div>'+
+        '<div class="pred-price">'+(iy?'':'<span class="won">₩</span>')+fmt(pred.pred)+'</div>'+
         '<div class="pred-detail">'+(pred.change>=0?'+':'')+fmt(pred.change)+' ('+(pred.changePct>=0?'+':'')+pred.changePct.toFixed(2)+'%) · 신뢰도 '+(pred.r2*100).toFixed(0)+'%</div>'+
         '<div class="pred-bar-wrap"><div class="pred-bar"><div class="pred-bar-fill" style="width:'+(pred.r2*100)+'%;background:'+(pred.direction==='up'?'#3fb950':'#f85149')+'"></div></div></div>'+
       '</div>':'')+
@@ -185,10 +186,10 @@ async function load(){
       options:{
         responsive:true,
         maintainAspectRatio:false,
-        plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(12,12,12,.9)',titleColor:'#8b949e',bodyColor:'#D7E2EA',borderColor:'rgba(215,226,234,.1)',borderWidth:1,padding:12,cornerRadius:8,callbacks:{label:ctx=>'₩'+fmt(ctx.parsed.y)}}},
+        plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(12,12,12,.9)',titleColor:'#8b949e',bodyColor:'#D7E2EA',borderColor:'rgba(215,226,234,.1)',borderWidth:1,padding:12,cornerRadius:8,callbacks:{label:ctx=>(iy?'':'₩')+fmt(ctx.parsed.y)}}},
         scales:{
           x:{display:true,grid:{color:'rgba(215,226,234,.03)'},ticks:{color:'rgba(215,226,234,.2)',font:{family:'Kanit',size:10},maxTicksLimit:8}},
-          y:{display:true,grid:{color:'rgba(215,226,234,.05)'},ticks:{color:'rgba(215,226,234,.2)',font:{family:'Kanit',size:10},callback:v=>'₩'+fmt(v)}}
+          y:{display:true,grid:{color:'rgba(215,226,234,.05)'},ticks:{color:'rgba(215,226,234,.2)',font:{family:'Kanit',size:10},callback:v=>(iy?'':'₩')+fmt(v)}}
         },
         interaction:{mode:'index',intersect:false}
       }

@@ -1,4 +1,4 @@
-ï»¿const express = require('express');
+const express = require('express');
 const https = require('https');
 const http = require('http');
 const cheerio = require('cheerio');
@@ -7,32 +7,32 @@ app.use(express.static(__dirname));
 
 const T = ['USDKRW=X','EURKRW=X','JPYKRW=X','CNYKRW=X','AUDKRW=X','GBPKRW=X','CADKRW=X','CHFKRW=X','HKDKRW=X','SGDKRW=X','GC=F','SI=F','PL=F','PA=F','CL=F','NG=F','HG=F','^2YR','^5YR','^TYX','^GSPC','^DJI','^IXIC','^VIX','^TNX','^KS11','^KQ11','^N225','^HSI','^FTSE','^GDAXI','^FCHI','^SSEC','^BSESN','^AXJO','^BVSP','BTC-USD','ETH-USD','XRP-USD','SOL-USD','DOGE-USD','ADA-USD','DOT-USD','AVAX-USD','LINK-USD','005930.KS','AAPL','MSFT','NVDA','TSLA','GOOGL','AMZN','META'];
 const NAMES = {
-  'USDKRW=X':'ì›/ë‹¬ëŸ¬','EURKRW=X':'ìœ ë¡œ/ì›','JPYKRW=X':'ì—”/ì›','CNYKRW=X':'ìœ„ì•ˆ/ì›',
-  'AUDKRW=X':'í˜¸ì£¼ë‹¬ëŸ¬/ì›','GBPKRW=X':'íŒŒìš´ë“œ/ì›','CADKRW=X':'ìºë‚˜ë‹¤ë‹¬ëŸ¬/ì›','CHFKRW=X':'ìŠ¤ìœ„ìŠ¤í”„ë‘/ì›','HKDKRW=X':'í™ì½©ë‹¬ëŸ¬/ì›','SGDKRW=X':'ì‹±ê°€í¬ë¥´ë‹¬ëŸ¬/ì›',
-  'GC=F':'ê¸ˆ','SI=F':'ì€','PL=F':'ë°±ê¸ˆ','PA=F':'íŒ”ë¼ë“',
-  'CL=F':'WTI ì›ìœ ','NG=F':'ì²œì—°ê°€ìŠ¤',
-  'HG=F':'êµ¬ë¦¬',
-  '^2YR':'ç¾ 2ë…„ë¬¼ ê¸ˆë¦¬','^5YR':'ç¾ 5ë…„ë¬¼ ê¸ˆë¦¬','^TYX':'ç¾ 30ë…„ë¬¼ ê¸ˆë¦¬',
-  '^GSPC':'S&P 500','^DJI':'ë‹¤ìš°ì¡´ìŠ¤','^IXIC':'ë‚˜ìŠ¤ë‹¥','^VIX':'VIX ê³µí¬ì§€ìˆ˜','^TNX':'ç¾ 10ë…„ë¬¼ ê¸ˆë¦¬',
-  '^KS11':'ì½”ìŠ¤í”¼','^KQ11':'ì½”ìŠ¤ë‹¥','^N225':'ë‹›ì¼€ì´','^HSI':'í•­ì…ì§€ìˆ˜',
-  '^FTSE':'ì˜êµ­ FTSE','^GDAXI':'ë…ì¼ DAX','^FCHI':'í”„ë‘ìŠ¤ CAC','^SSEC':'ì¤‘êµ­ ìƒí•´ì¢…í•©','^BSESN':'ì¸ë„ Sensex','^AXJO':'í˜¸ì£¼ ASX','^BVSP':'ë¸Œë¼ì§ˆ IBOVESPA',
-  'BTC-USD':'ë¹„íŠ¸ì½”ì¸','ETH-USD':'ì´ë”ë¦¬ì›€','XRP-USD':'ë¦¬í”Œ',
-  'SOL-USD':'ì†”ë¼ë‚˜','DOGE-USD':'ë„ì§€ì½”ì¸','ADA-USD':'ì—ì´ë‹¤','DOT-USD':'í´ì¹´ë‹·','AVAX-USD':'ì•„ë°œë€ì²´','LINK-USD':'ì²´ì¸ë§í¬',
-  '005930.KS':'ì‚¼ì„±ì „ì','AAPL':'ì• í”Œ','MSFT':'ë§ˆì´í¬ë¡œì†Œí”„íŠ¸','NVDA':'ì—”ë¹„ë””ì•„','TSLA':'í…ŒìŠ¬ë¼','GOOGL':'êµ¬ê¸€','AMZN':'ì•„ë§ˆì¡´','META':'ë©”íƒ€'
+  'USDKRW=X':'¿ø/´Ş·¯','EURKRW=X':'À¯·Î/¿ø','JPYKRW=X':'¿£/¿ø','CNYKRW=X':'À§¾È/¿ø',
+  'AUDKRW=X':'È£ÁÖ´Ş·¯/¿ø','GBPKRW=X':'ÆÄ¿îµå/¿ø','CADKRW=X':'Ä³³ª´Ù´Ş·¯/¿ø','CHFKRW=X':'½ºÀ§½ºÇÁ¶û/¿ø','HKDKRW=X':'È«Äá´Ş·¯/¿ø','SGDKRW=X':'½Ì°¡Æ÷¸£´Ş·¯/¿ø',
+  'GC=F':'±İ','SI=F':'Àº','PL=F':'¹é±İ','PA=F':'ÆÈ¶óµã',
+  'CL=F':'WTI ¿øÀ¯','NG=F':'Ãµ¿¬°¡½º',
+  'HG=F':'±¸¸®',
+  '^2YR':'Ú¸ 2³â¹° ±İ¸®','^5YR':'Ú¸ 5³â¹° ±İ¸®','^TYX':'Ú¸ 30³â¹° ±İ¸®',
+  '^GSPC':'S&P 500','^DJI':'´Ù¿ìÁ¸½º','^IXIC':'³ª½º´Ú','^VIX':'VIX °øÆ÷Áö¼ö','^TNX':'Ú¸ 10³â¹° ±İ¸®',
+  '^KS11':'ÄÚ½ºÇÇ','^KQ11':'ÄÚ½º´Ú','^N225':'´ÖÄÉÀÌ','^HSI':'Ç×¼ÄÁö¼ö',
+  '^FTSE':'¿µ±¹ FTSE','^GDAXI':'µ¶ÀÏ DAX','^FCHI':'ÇÁ¶û½º CAC','^SSEC':'Áß±¹ »óÇØÁ¾ÇÕ','^BSESN':'ÀÎµµ Sensex','^AXJO':'È£ÁÖ ASX','^BVSP':'ºê¶óÁú IBOVESPA',
+  'BTC-USD':'ºñÆ®ÄÚÀÎ','ETH-USD':'ÀÌ´õ¸®¿ò','XRP-USD':'¸®ÇÃ',
+  'SOL-USD':'¼Ö¶ó³ª','DOGE-USD':'µµÁöÄÚÀÎ','ADA-USD':'¿¡ÀÌ´Ù','DOT-USD':'ÆúÄ«´å','AVAX-USD':'¾Æ¹ß¶õÃ¼','LINK-USD':'Ã¼ÀÎ¸µÅ©',
+  '005930.KS':'»ï¼ºÀüÀÚ','AAPL':'¾ÖÇÃ','MSFT':'¸¶ÀÌÅ©·Î¼ÒÇÁÆ®','NVDA':'¿£ºñµğ¾Æ','TSLA':'Å×½½¶ó','GOOGL':'±¸±Û','AMZN':'¾Æ¸¶Á¸','META':'¸ŞÅ¸'
 };
 const ICONS = {
-  'USDKRW=X':'ğŸ’µ','EURKRW=X':'ğŸ’¶','JPYKRW=X':'ğŸ’´','CNYKRW=X':'ğŸ’·',
-  'AUDKRW=X':'ğŸ‡¦ğŸ‡º','GBPKRW=X':'ğŸ‡¬ğŸ‡§','CADKRW=X':'ğŸ‡¨ğŸ‡¦','CHFKRW=X':'ğŸ‡¨ğŸ‡­','HKDKRW=X':'ğŸ‡­ğŸ‡°','SGDKRW=X':'ğŸ‡¸ğŸ‡¬',
-  'GC=F':'ğŸ¥‡','SI=F':'ğŸ¥ˆ','PL=F':'ğŸ’','PA=F':'ğŸ”¬',
-  'CL=F':'ğŸ›¢ï¸','NG=F':'ğŸ”¥',
-  'HG=F':'ğŸ”Œ',
-  '^2YR':'ğŸ“…','^5YR':'ğŸ“…','^TYX':'ğŸ“…',
-  '^GSPC':'ğŸ“ˆ','^DJI':'ğŸ›ï¸','^IXIC':'ğŸ’»','^VIX':'ğŸ˜¨','^TNX':'ğŸ¦',
-  '^KS11':'ğŸ‡°ğŸ‡·','^KQ11':'ğŸ“‹','^N225':'ğŸ‡¯ğŸ‡µ','^HSI':'ğŸ‡­ğŸ‡°',
-  '^FTSE':'ğŸ‡¬ğŸ‡§','^GDAXI':'ğŸ‡©ğŸ‡ª','^FCHI':'ğŸ‡«ğŸ‡·','^SSEC':'ğŸ‡¨ğŸ‡³','^BSESN':'ğŸ‡®ğŸ‡³','^AXJO':'ğŸ‡¦ğŸ‡º','^BVSP':'ğŸ‡§ğŸ‡·',
-  'BTC-USD':'â‚¿','ETH-USD':'ğŸ’','XRP-USD':'âœ–ï¸',
-  'SOL-USD':'â—','DOGE-USD':'ğŸ•','ADA-USD':'ğŸª™','DOT-USD':'â—','AVAX-USD':'ğŸ”º','LINK-USD':'ğŸ”—',
-  '005930.KS':'ğŸ“±','AAPL':'ğŸ','MSFT':'ğŸªŸ','NVDA':'ğŸŸ¢','TSLA':'ğŸš—','GOOGL':'ğŸ”','AMZN':'ğŸ“¦','META':'ğŸ‘¤'
+  'USDKRW=X':'??','EURKRW=X':'??','JPYKRW=X':'??','CNYKRW=X':'??',
+  'AUDKRW=X':'????','GBPKRW=X':'????','CADKRW=X':'????','CHFKRW=X':'????','HKDKRW=X':'????','SGDKRW=X':'????',
+  'GC=F':'??','SI=F':'??','PL=F':'??','PA=F':'??',
+  'CL=F':'???','NG=F':'??',
+  'HG=F':'??',
+  '^2YR':'??','^5YR':'??','^TYX':'??',
+  '^GSPC':'??','^DJI':'???','^IXIC':'??','^VIX':'??','^TNX':'??',
+  '^KS11':'????','^KQ11':'??','^N225':'????','^HSI':'????',
+  '^FTSE':'????','^GDAXI':'????','^FCHI':'????','^SSEC':'????','^BSESN':'????','^AXJO':'????','^BVSP':'????',
+  'BTC-USD':'?','ETH-USD':'??','XRP-USD':'??',
+  'SOL-USD':'¡İ','DOGE-USD':'??','ADA-USD':'??','DOT-USD':'¡Ü','AVAX-USD':'??','LINK-USD':'??',
+  '005930.KS':'??','AAPL':'??','MSFT':'??','NVDA':'??','TSLA':'??','GOOGL':'??','AMZN':'??','META':'??'
 };
 let krwRate = 1350;
 let lastKrwFetch = 0;
@@ -80,7 +80,7 @@ async function updateKrwRate() {
 
 function toKrw(item) {
   const s = item.symbol;
-  const isKrwAsset = s.endsWith('KRW=X') || s === '^KS11' || s === '^KQ11' || s.endsWith('.KS');
+  const isKrwAsset = s.endsWith('KRW=X') || s === '^KS11' || s === '^KQ11' || s.endsWith('.KS') || ['^2YR','^5YR','^TYX','^TNX','^VIX'].includes(s);
   const rate = isKrwAsset ? 1 : krwRate;
   return { ...item, priceKrw: item.regularMarketPrice * rate, changeKrw: item.regularMarketChange * rate, changePercentKrw: item.regularMarketChangePercent, previousCloseKrw: item.regularMarketPreviousClose * rate, krwRate };
 }
@@ -105,7 +105,7 @@ app.get('/api/history', async (req, res) => {
     const start = data.timestamps.length - 35;
     data = { ...data, timestamps: data.timestamps.slice(start), opens: data.opens?.slice(start), highs: data.highs?.slice(start), lows: data.lows?.slice(start), closes: data.closes?.slice(start), volumes: data.volumes?.slice(start) };
   }
-  const isKrwAsset = symbol.endsWith('KRW=X') || symbol === '^KS11' || symbol === '^KQ11' || symbol.endsWith('.KS');
+  const isKrwAsset = symbol.endsWith('KRW=X') || symbol === '^KS11' || symbol === '^KQ11' || symbol.endsWith('.KS') || ['^2YR','^5YR','^TYX','^TNX','^VIX'].includes(symbol);
   const rate = isKrwAsset ? 1 : krwRate;
   const history = (data.timestamps || []).map((t, i) => ({
     date: t,
@@ -165,7 +165,7 @@ const results = await Promise.allSettled(urls.map(u => fetchRss(u)));
   const all = results.filter(r => r.status === 'fulfilled').flatMap(r => r.value);
   const deduped = all.filter(n => { const k = n.link; if (seen.has(k)) return false; seen.add(k); return true; });
   
-  const financeKeywords = ['ì£¼ì‹','ì¦ê¶Œ','ì½”ìŠ¤í”¼','ì½”ìŠ¤ë‹¥','ë‚˜ìŠ¤ë‹¥','ë‹¤ìš°','S&P','í™˜ìœ¨','ë‹¬ëŸ¬','ì—”í™”','ìœ„ì•ˆ','ìœ ë¡œ','ê¸ˆë¦¬','ê¸°ì¤€ê¸ˆë¦¬','í•œì€','ì—°ì¤€','Fed','ì±„ê¶Œ','êµ­ì±„','íšŒì‚¬ì±„','í€ë“œ','ETF','ê³µëª¨ì£¼','IPO','ìœ ìƒì¦ì','ë¬´ìƒì¦ì','ë°°ë‹¹','ìì‚¬ì£¼','ë§¤ìˆ˜','ë§¤ë„','ë³´ìœ ','ì§€ë¶„','ì¸ìˆ˜','í•©ë³‘','M&A','ì‹¤ì ','ì˜ì—…ì´ìµ','ìˆœì´ìµ','ë§¤ì¶œ','ì–´ë‹','ì‹¤ì ë°œí‘œ','ì»¨ì„¼ì„œìŠ¤','ëª©í‘œê°€','íˆ¬ìì˜ê²¬','ìƒìŠ¹','í•˜ë½','ê¸‰ë“±','ê¸‰ë½','ìƒí•œê°€','í•˜í•œê°€','ì‹œê°€ì´ì•¡','ì‹œì´','PER','PBR','ROE','ë°°ë‹¹ë¥ ','ë°°ë‹¹ê¸ˆ','ê¸ˆ','ì€','ì›ìœ ','WTI','ë¸Œë ŒíŠ¸','êµ¬ë¦¬','ë¹„ì² ','ë¹„íŠ¸ì½”ì¸','ì´ë”ë¦¬ì›€','ë¦¬í”Œ','ì½”ì¸','ê°€ìƒìì‚°','ì•”í˜¸í™”í','ë¸”ë¡ì²´ì¸','ë””íŒŒì´','NFT','ì€í–‰','ì¹´ë“œ','ë³´í—˜','ì¦ê¶Œì‚¬','ìì‚°ìš´ìš©','ì‹ íƒ','ì—°ê¸ˆ','ISA','ì—°ê¸ˆì €ì¶•','IRP','í‡´ì§ì—°ê¸ˆ','ê³µëª¨','ì‚¬ëª¨','í—¤ì§€','íŒŒìƒ','ì„ ë¬¼','ì˜µì…˜','ELS','DLS','ELW','ì›ŒëŸ°íŠ¸','ì»¤ë²„ë“œì›ŒëŸ°íŠ¸','ìŠ¤ì™‘','CDS','ì‹ ìš©ë¶€ë„ìŠ¤ì™‘','ë¶€ë„','ë¶€ì‹¤','êµ¬ì¡°ì¡°ì •','ì›Œí¬ì•„ì›ƒ','íšŒìƒ','íŒŒì‚°','PF','í”„ë¡œì íŠ¸íŒŒì´ë‚¸ì‹±','ë¶€ë™ì‚°PF','ê±´ì„¤','ì‹œê³µ','ë¶„ì–‘','ì²­ì•½','ì•„íŒŒíŠ¸','ì£¼íƒ','ì „ì„¸','ì›”ì„¸','ì„ëŒ€','ê°­íˆ¬ì','ì „ì„¸ì‚¬ê¸°','ë³´ì¦ê¸ˆ','HUG','ì£¼íƒë„ì‹œë³´ì¦'];
+  const financeKeywords = ['ÁÖ½Ä','Áõ±Ç','ÄÚ½ºÇÇ','ÄÚ½º´Ú','³ª½º´Ú','´Ù¿ì','S&P','È¯À²','´Ş·¯','¿£È­','À§¾È','À¯·Î','±İ¸®','±âÁØ±İ¸®','ÇÑÀº','¿¬ÁØ','Fed','Ã¤±Ç','±¹Ã¤','È¸»çÃ¤','Æİµå','ETF','°ø¸ğÁÖ','IPO','À¯»óÁõÀÚ','¹«»óÁõÀÚ','¹è´ç','ÀÚ»çÁÖ','¸Å¼ö','¸Åµµ','º¸À¯','ÁöºĞ','ÀÎ¼ö','ÇÕº´','M&A','½ÇÀû','¿µ¾÷ÀÌÀÍ','¼øÀÌÀÍ','¸ÅÃâ','¾î´×','½ÇÀû¹ßÇ¥','ÄÁ¼¾¼­½º','¸ñÇ¥°¡','ÅõÀÚÀÇ°ß','»ó½Â','ÇÏ¶ô','±Şµî','±Ş¶ô','»óÇÑ°¡','ÇÏÇÑ°¡','½Ã°¡ÃÑ¾×','½ÃÃÑ','PER','PBR','ROE','¹è´ç·ü','¹è´ç±İ','±İ','Àº','¿øÀ¯','WTI','ºê·»Æ®','±¸¸®','ºñÃ¶','ºñÆ®ÄÚÀÎ','ÀÌ´õ¸®¿ò','¸®ÇÃ','ÄÚÀÎ','°¡»óÀÚ»ê','¾ÏÈ£È­Æó','ºí·ÏÃ¼ÀÎ','µğÆÄÀÌ','NFT','ÀºÇà','Ä«µå','º¸Çè','Áõ±Ç»ç','ÀÚ»ê¿î¿ë','½ÅÅ¹','¿¬±İ','ISA','¿¬±İÀúÃà','IRP','ÅğÁ÷¿¬±İ','°ø¸ğ','»ç¸ğ','ÇìÁö','ÆÄ»ı','¼±¹°','¿É¼Ç','ELS','DLS','ELW','¿ö·±Æ®','Ä¿¹öµå¿ö·±Æ®','½º¿Ò','CDS','½Å¿ëºÎµµ½º¿Ò','ºÎµµ','ºÎ½Ç','±¸Á¶Á¶Á¤','¿öÅ©¾Æ¿ô','È¸»ı','ÆÄ»ê','PF','ÇÁ·ÎÁ§Æ®ÆÄÀÌ³½½Ì','ºÎµ¿»êPF','°Ç¼³','½Ã°ø','ºĞ¾ç','Ã»¾à','¾ÆÆÄÆ®','ÁÖÅÃ','Àü¼¼','¿ù¼¼','ÀÓ´ë','°¸ÅõÀÚ','Àü¼¼»ç±â','º¸Áõ±İ','HUG','ÁÖÅÃµµ½Ãº¸Áõ'];
   const filtered = deduped.filter(n => {
     const text = (n.title + ' ' + (n.summary || '')).toLowerCase();
     return financeKeywords.some(k => text.includes(k.toLowerCase()));
@@ -256,7 +256,7 @@ setInterval(updateKrwRate, 60000);
 
 app.post('/api/contact', express.json(), (req, res) => {
   const { type, email, subject, message } = req.body;
-  if (!type || !email || !subject || !message) return res.status(400).json({ error: 'í•„ìˆ˜ í•­ëª© ëˆ„ë½' });
+  if (!type || !email || !subject || !message) return res.status(400).json({ error: 'ÇÊ¼ö Ç×¸ñ ´©¶ô' });
   console.log('[CONTACT]', new Date().toISOString(), { type, email, subject: subject.substring(0, 50) });
   res.json({ ok: true });
 });
@@ -330,7 +330,7 @@ Disallow: /node_modules/
 Disallow: /*.log
 Disallow: /*.md
 
-# AI í¬ë¡¤ëŸ¬ - GPT, Claude, Perplexity ë“±
+# AI Å©·Ñ·¯ - GPT, Claude, Perplexity µî
 User-agent: GPTBot
 Allow: /
 Crawl-delay: 30
@@ -359,7 +359,7 @@ User-agent: anthropic-ai
 Allow: /
 Crawl-delay: 30
 
-# Naver ê²€ìƒ‰ ë¡œë´‡
+# Naver °Ë»ö ·Îº¿
 User-agent: Yeti
 Allow: /
 Crawl-delay: 10
@@ -372,48 +372,48 @@ Sitemap: https://modu-sise.vercel.app/sitemap.xml`);
 });
 
 app.get('/llms.txt', (req, res) => {
-  res.set('Content-Type', 'text/plain; charset=utf-8').send(`# ëª¨ë‘ì˜ ì‹œì„¸ - AI í¬ë¡¤ëŸ¬ë¥¼ ìœ„í•œ ì‚¬ì´íŠ¸ ìš”ì•½
+  res.set('Content-Type', 'text/plain; charset=utf-8').send(`# ¸ğµÎÀÇ ½Ã¼¼ - AI Å©·Ñ·¯¸¦ À§ÇÑ »çÀÌÆ® ¿ä¾à
 ## Modu Sise - Real-time Global Financial Dashboard (KRW)
 
-### ì‚¬ì´íŠ¸ ê°œìš”
-- ì„œë¹„ìŠ¤ëª…: ëª¨ë‘ì˜ ì‹œì„¸ (Modu Sise)
+### »çÀÌÆ® °³¿ä
+- ¼­ºñ½º¸í: ¸ğµÎÀÇ ½Ã¼¼ (Modu Sise)
 - URL: https://modu-sise.vercel.app/
-- ì–¸ì–´: í•œêµ­ì–´ (ko-KR)
-- ì„¤ëª…: 20ê°œ ê¸€ë¡œë²Œ ê¸ˆìœµ ìì‚°(í™˜ìœ¨ 4ì¢…, ê·€ê¸ˆì† 2ì¢…, ì—ë„ˆì§€ 2ì¢…, ì§€ìˆ˜ 9ì¢…, ì•”í˜¸í™”í 3ì¢…)ì˜ ì‹¤ì‹œê°„ ì‹œì„¸ë¥¼ ì›í™”(â‚©)ë¡œ í™˜ì‚°í•œ ë¬´ë£Œ ëŒ€ì‹œë³´ë“œ
+- ¾ğ¾î: ÇÑ±¹¾î (ko-KR)
+- ¼³¸í: 20°³ ±Û·Î¹ú ±İÀ¶ ÀÚ»ê(È¯À² 4Á¾, ±Í±İ¼Ó 2Á¾, ¿¡³ÊÁö 2Á¾, Áö¼ö 9Á¾, ¾ÏÈ£È­Æó 3Á¾)ÀÇ ½Ç½Ã°£ ½Ã¼¼¸¦ ¿øÈ­(\)·Î È¯»êÇÑ ¹«·á ´ë½Ãº¸µå
 
-### í•µì‹¬ ë°ì´í„°
-- ë°ì´í„° ì†ŒìŠ¤: Yahoo Finance v8 chart API
-- ê°±ì‹  ì£¼ê¸°: 30ì´ˆ ìë™ ê°±ì‹  (USD/KRW í™˜ìœ¨ 60ì´ˆ)
-- í™˜ìœ¨: USD/KRW, EUR/KRW, JPY/KRW(100ì—”ë‹¹), CNY/KRW
-- ê·€ê¸ˆì†: ê¸ˆ(GC=F), ì€(SI=F)
-- ì—ë„ˆì§€: WTI ì›ìœ (CL=F), ì²œì—°ê°€ìŠ¤(NG=F)
-- ì§€ìˆ˜: S&P500, ë‹¤ìš°ì¡´ìŠ¤, ë‚˜ìŠ¤ë‹¥, VIX, ç¾10ë…„ë¬¼ê¸ˆë¦¬, ì½”ìŠ¤í”¼, ì½”ìŠ¤ë‹¥, ë‹›ì¼€ì´225, í•­ì…ì§€ìˆ˜
-- ì•”í˜¸í™”í: ë¹„íŠ¸ì½”ì¸(BTC-USD), ì´ë”ë¦¬ì›€(ETH-USD), ë¦¬í”Œ(XRP-USD)
-- ë‰´ìŠ¤: ì—°í•©ë‰´ìŠ¤ ê²½ì œ/ì¦ê¶Œ RSS, ì „ìì‹ ë¬¸ Section902, Google News 3ê°œ í”¼ë“œ (ê¸ˆìœµ í‚¤ì›Œë“œ 80+ í•„í„°ë§)
+### ÇÙ½É µ¥ÀÌÅÍ
+- µ¥ÀÌÅÍ ¼Ò½º: Yahoo Finance v8 chart API
+- °»½Å ÁÖ±â: 30ÃÊ ÀÚµ¿ °»½Å (USD/KRW È¯À² 60ÃÊ)
+- È¯À²: USD/KRW, EUR/KRW, JPY/KRW(100¿£´ç), CNY/KRW
+- ±Í±İ¼Ó: ±İ(GC=F), Àº(SI=F)
+- ¿¡³ÊÁö: WTI ¿øÀ¯(CL=F), Ãµ¿¬°¡½º(NG=F)
+- Áö¼ö: S&P500, ´Ù¿ìÁ¸½º, ³ª½º´Ú, VIX, Ú¸10³â¹°±İ¸®, ÄÚ½ºÇÇ, ÄÚ½º´Ú, ´ÖÄÉÀÌ225, Ç×¼ÄÁö¼ö
+- ¾ÏÈ£È­Æó: ºñÆ®ÄÚÀÎ(BTC-USD), ÀÌ´õ¸®¿ò(ETH-USD), ¸®ÇÃ(XRP-USD)
+- ´º½º: ¿¬ÇÕ´º½º °æÁ¦/Áõ±Ç RSS, ÀüÀÚ½Å¹® Section902, Google News 3°³ ÇÇµå (±İÀ¶ Å°¿öµå 80+ ÇÊÅÍ¸µ)
 
-### API ì—”ë“œí¬ì¸íŠ¸
-- GET /api/quotes - ì „ì²´ 20ì¢…ëª© ì‹¤ì‹œê°„ ì‹œì„¸ (ì›í™” í™˜ì‚°)
-- GET /api/history?symbol=SYMBOL - 30ì¼ OHLC ë°ì´í„°
-- GET /api/news/headlines - ê¸ˆìœµ ë‰´ìŠ¤ í—¤ë“œë¼ì¸
-- GET /api/article?url=URL - ê¸°ì‚¬ ë³¸ë¬¸ ì¶”ì¶œ + ë²ˆì—­
+### API ¿£µåÆ÷ÀÎÆ®
+- GET /api/quotes - ÀüÃ¼ 20Á¾¸ñ ½Ç½Ã°£ ½Ã¼¼ (¿øÈ­ È¯»ê)
+- GET /api/history?symbol=SYMBOL - 30ÀÏ OHLC µ¥ÀÌÅÍ
+- GET /api/news/headlines - ±İÀ¶ ´º½º Çìµå¶óÀÎ
+- GET /api/article?url=URL - ±â»ç º»¹® ÃßÃâ + ¹ø¿ª
 
-### ê¸°ëŠ¥
-- ì‹¤ì‹œê°„ ì‹œì„¸ ëŒ€ì‹œë³´ë“œ (ì¹´í…Œê³ ë¦¬ë³„: í™˜ìœ¨/ê·€ê¸ˆì†/ì—ë„ˆì§€/ì§€ìˆ˜/ì•”í˜¸í™”í)
-- 30ì¼ ì°¨íŠ¸ (Chart.js)
-- ì„ í˜•íšŒê·€ ê¸°ë°˜ ë‚´ì¼ ê°€ê²© ì˜ˆì¸¡ (RÂ² ì‹ ë¢°ë„)
-- ê¸ˆìœµ ë‰´ìŠ¤ (ìƒëŒ€ ì‹œê°„ í‘œì‹œ + ë³¸ë¬¸ ë³´ê¸°)
+### ±â´É
+- ½Ç½Ã°£ ½Ã¼¼ ´ë½Ãº¸µå (Ä«Å×°í¸®º°: È¯À²/±Í±İ¼Ó/¿¡³ÊÁö/Áö¼ö/¾ÏÈ£È­Æó)
+- 30ÀÏ Â÷Æ® (Chart.js)
+- ¼±ÇüÈ¸±Í ±â¹İ ³»ÀÏ °¡°İ ¿¹Ãø (R©÷ ½Å·Úµµ)
+- ±İÀ¶ ´º½º (»ó´ë ½Ã°£ Ç¥½Ã + º»¹® º¸±â)
 
-### í˜ì´ì§€
-- /index.html - ë©”ì¸ ëŒ€ì‹œë³´ë“œ
-- /detail.html?s=SYMBOL - ê°œë³„ ìì‚° ìƒì„¸ (ì°¨íŠ¸ + ì˜ˆì¸¡)
-- /privacy.html - ê°œì¸ì •ë³´ì²˜ë¦¬ë°©ì¹¨
-- /terms.html - ì´ìš©ì•½ê´€
-- /contact.html - ë¬¸ì˜í•˜ê¸°
-- /sitemap.xml - ì‚¬ì´íŠ¸ë§µ
-- /llms.txt - ì´ íŒŒì¼
+### ÆäÀÌÁö
+- /index.html - ¸ŞÀÎ ´ë½Ãº¸µå
+- /detail.html?s=SYMBOL - °³º° ÀÚ»ê »ó¼¼ (Â÷Æ® + ¿¹Ãø)
+- /privacy.html - °³ÀÎÁ¤º¸Ã³¸®¹æÄ§
+- /terms.html - ÀÌ¿ë¾à°ü
+- /contact.html - ¹®ÀÇÇÏ±â
+- /sitemap.xml - »çÀÌÆ®¸Ê
+- /llms.txt - ÀÌ ÆÄÀÏ
 
-### ë©´ì±…
-ë³¸ ì •ë³´ëŠ” íˆ¬ì ì°¸ê³ ìš©ì…ë‹ˆë‹¤. íˆ¬ì íŒë‹¨ê³¼ ì±…ì„ì€ ì´ìš©ìì—ê²Œ ìˆìŠµë‹ˆë‹¤.`);
+### ¸éÃ¥
+º» Á¤º¸´Â ÅõÀÚ Âü°í¿ëÀÔ´Ï´Ù. ÅõÀÚ ÆÇ´Ü°ú Ã¥ÀÓÀº ÀÌ¿ëÀÚ¿¡°Ô ÀÖ½À´Ï´Ù.`);
 });
 
 app.get('/favicon.ico', (req, res) => res.status(204).end());
