@@ -5,7 +5,7 @@ const cheerio = require('cheerio');
 const app = express();
 app.use(express.static(__dirname));
 
-const T = ['USDKRW=X','EURKRW=X','JPYKRW=X','CNYKRW=X','AUDKRW=X','GBPKRW=X','CADKRW=X','CHFKRW=X','HKDKRW=X','SGDKRW=X','GC=F','SI=F','PL=F','PA=F','CL=F','NG=F','HG=F','^TYX','^GSPC','^DJI','^IXIC','^VIX','^TNX','^KS11','^KQ11','^N225','^HSI','^FTSE','^GDAXI','^FCHI','^BSESN','^AXJO','^BVSP','BTC-USD','ETH-USD','XRP-USD','SOL-USD','DOGE-USD','ADA-USD','DOT-USD','AVAX-USD','LINK-USD','005930.KS','000660.KS','AAPL','MSFT','NVDA','TSLA','GOOGL','AMZN','META'];
+const T = ['USDKRW=X','EURKRW=X','JPYKRW=X','CNYKRW=X','AUDKRW=X','GBPKRW=X','CADKRW=X','CHFKRW=X','HKDKRW=X','SGDKRW=X','GC=F','SI=F','PL=F','PA=F','CL=F','NG=F','HG=F','^TYX','^GSPC','^DJI','^IXIC','^VIX','^TNX','^KS11','^KQ11','^N225','^HSI','^FTSE','^GDAXI','^FCHI','^BSESN','^AXJO','^BVSP','BTC-USD','ETH-USD','XRP-USD','SOL-USD','DOGE-USD','ADA-USD','DOT-USD','AVAX-USD','LINK-USD','005930.KS','000660.KS','035420.KS','005380.KS','373220.KS','207940.KS','005490.KS','035720.KS','068270.KS','V','JPM','WMT','DIS','NFLX','AMD','KO','AVGO','AAPL','MSFT','NVDA','TSLA','GOOGL','AMZN','META'];
 const NAMES = {
   'USDKRW=X':'��/�޷�','EURKRW=X':'����/��','JPYKRW=X':'��/��','CNYKRW=X':'����/��',
   'AUDKRW=X':'ȣ�ִ޷�/��','GBPKRW=X':'�Ŀ��/��','CADKRW=X':'ĳ���ٴ޷�/��','CHFKRW=X':'����������/��','HKDKRW=X':'ȫ��޷�/��','SGDKRW=X':'�̰������޷�/��',
@@ -263,7 +263,7 @@ app.post('/api/contact', express.json(), (req, res) => {
 
 app.get('/sitemap.xml', (req, res) => {
   const base = 'https://modu-sise.vercel.app';
-  const detailSymbols = ['USDKRW=X','EURKRW=X','JPYKRW=X','CNYKRW=X','AUDKRW=X','GBPKRW=X','CADKRW=X','CHFKRW=X','HKDKRW=X','SGDKRW=X','GC=F','SI=F','PL=F','PA=F','CL=F','NG=F','HG=F','%5ETYX','%5EGSPC','%5EDJI','%5EIXIC','%5EVIX','%5ETNX','%5EKS11','%5EKQ11','%5EN225','%5EHSI','%5EFTSE','%5EGDAXI','%5EFCHI','%5EBSESN','%5EAXJO','%5EBVSP','BTC-USD','ETH-USD','XRP-USD','SOL-USD','DOGE-USD','ADA-USD','DOT-USD','AVAX-USD','LINK-USD','005930.KS','000660.KS','AAPL','MSFT','NVDA','TSLA','GOOGL','AMZN','META'];
+  const detailSymbols = ['USDKRW=X','EURKRW=X','JPYKRW=X','CNYKRW=X','AUDKRW=X','GBPKRW=X','CADKRW=X','CHFKRW=X','HKDKRW=X','SGDKRW=X','GC=F','SI=F','PL=F','PA=F','CL=F','NG=F','HG=F','%5ETYX','%5EGSPC','%5EDJI','%5EIXIC','%5EVIX','%5ETNX','%5EKS11','%5EKQ11','%5EN225','%5EHSI','%5EFTSE','%5EGDAXI','%5EFCHI','%5EBSESN','%5EAXJO','%5EBVSP','BTC-USD','ETH-USD','XRP-USD','SOL-USD','DOGE-USD','ADA-USD','DOT-USD','AVAX-USD','LINK-USD','005930.KS','000660.KS','035420.KS','005380.KS','373220.KS','207940.KS','005490.KS','035720.KS','068270.KS','V','JPM','WMT','DIS','NFLX','AMD','KO','AVGO','AAPL','MSFT','NVDA','TSLA','GOOGL','AMZN','META'];
   const today = new Date().toISOString().split('T')[0];
   const pages = [
     { loc: base + '/', changefreq: 'hourly', priority: '1.0' },
@@ -379,7 +379,7 @@ app.get('/llms.txt', (req, res) => {
 - 서비스명: 모두의 시세 (Modu Sise)
 - URL: https://modu-sise.vercel.app/
 - 언어: 한국어 (ko-KR)
-- 설명: 51종목 글로벌 금융 자산의 실시간 시세를 원화(₩)로 환산한 무료 대시보드 (환율 10종, 귀금속 5종, 에너지 2종, 채권 1종, 지수 15종, 암호화폐 9종, 주식 9종)
+- 설명: 66종목 글로벌 금융 자산의 실시간 시세를 원화(₩)로 환산한 무료 대시보드 (환율 10종, 귀금속 5종, 에너지 2종, 채권 1종, 지수 15종, 암호화폐 9종, 주식 24종)
 
 ### 핵심 데이터
 - 데이터 소스: Yahoo Finance v8 chart API
@@ -391,11 +391,11 @@ app.get('/llms.txt', (req, res) => {
 - 채권: 미 30년물 금리(^TYX)
 - 지수: S&P500, 다우존스, 나스닥, VIX, 미10년물금리, 코스피, 코스닥, 닛케이225, 항셍지수, 영국FTSE, 독일DAX, 프랑스CAC, 인도Sensex, 호주ASX, 브라질IBOVESPA
 - 암호화폐: 비트코인(BTC-USD), 이더리움(ETH-USD), 리플(XRP-USD), 솔라나(SOL-USD), 도지코인(DOGE-USD), 에이다(ADA-USD), 폴카닷(DOT-USD), 아발란체(AVAX-USD), 체인링크(LINK-USD)
-- 주식: 삼성전자, SK하이닉스, 애플, 마이크로소프트, 엔비디아, 테슬라, 구글, 아마존, 메타
+- 주식: 삼성전자, SK하이닉스, NAVER, 현대차, LG에너지솔루션, 삼성바이오로직스, POSCO홀딩스, 카카오, 셀트리온, Visa, JP모건, 월마트, 디즈니, 넷플릭스, AMD, 코카콜라, 브로드컴, 애플, 마이크로소프트, 엔비디아, 테슬라, 구글, 아마존, 메타
 - 뉴스: 연합뉴스 경제/증권 RSS, 전자신문 Section902, Google News 3개 피드 (금융 키워드 80+ 필터링)
 
 ### API 엔드포인트
-- GET /api/quotes - 전체 51종목 실시간 시세 (원화 환산)
+- GET /api/quotes - 전체 66종목 실시간 시세 (원화 환산)
 
 ### 기능
 - 실시간 시세 대시보드 (카테고리별: 환율/귀금속/에너지/채권/지수/암호화폐/주식)
