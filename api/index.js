@@ -94,6 +94,33 @@ app.get('/api/quotes', async (req, res) => {
   res.json({ quoteResponse: { result: data } });
 });
 
+function fetchKrGold() {
+  return new Promise((ok) => {
+    const req = https.get('https://koreagoldx.co.kr/api/main', { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36', 'Accept': 'application/json, text/plain, */*', 'Accept-Language': 'ko-KR,ko;q=0.9,en;q=0.8', 'Referer': 'https://koreagoldx.co.kr/', 'Connection': 'keep-alive' }, timeout: 15000 }, (r) => {
+      let d = '';
+      r.on('data', c => d += c);
+      r.on('end', () => {
+        try {
+          const j = JSON.parse(d);
+          const o = j.officialPrice4 || {};
+          ok({ date: j.date || o.date || '', pureBuy: o.s_pure || 0, pureBuyChg: o.turm_s_pure || 0, pureBuyChgPct: o.per_s_pure || 0, pureSell: o.p_pure || 0, pureSellChg: o.turm_p_pure || 0, pureSellChgPct: o.per_p_pure || 0, k18Buy: o.s_18k || 0, k18BuyChg: o.turm_s_18k || 0, k18BuyChgPct: o.per_s_18k || 0, k18Sell: o.p_18k || 0, k18SellChg: o.turm_p_18k || 0, k18SellChgPct: o.per_p_18k || 0, k14Buy: o.s_14k || 0, k14BuyChg: o.turm_s_14k || 0, k14BuyChgPct: o.per_s_14k || 0, k14Sell: o.p_14k || 0, k14SellChg: o.turm_p_14k || 0, k14SellChgPct: o.per_p_14k || 0, silverBuy: o.s_silver || 0, silverBuyChg: o.turm_s_silver || 0, silverBuyChgPct: o.per_s_silver || 0, silverSell: o.p_silver || 0, silverSellChg: o.turm_p_silver || 0, silverSellChgPct: o.per_p_silver || 0 });
+        } catch (e) { ok(null); }
+      });
+    });
+    req.on('error', () => ok(null));
+    req.on('timeout', () => { req.destroy(); ok(null); });
+  });
+}
+
+let krGoldCache = null, krGoldCacheT = 0;
+app.get('/api/krgold', async (req, res) => {
+  if (!krGoldCache || Date.now() - krGoldCacheT > 300000) {
+    krGoldCache = await fetchKrGold();
+    krGoldCacheT = Date.now();
+  }
+  res.json(krGoldCache || { error: 'fetch failed' });
+});
+
 app.get('/api/history', async (req, res) => {
   const symbol = req.query.symbol;
   if (!symbol) return res.status(400).json({ error: 'missing symbol' });
@@ -369,13 +396,13 @@ app.get('/llms.txt', (req, res) => {
 - 서비스명: 모두의 시세 (Modu Sise)
 - URL: https://modu-sise.vercel.app/
 - 언어: 한국어 (ko-KR)
-- 설명: 66종목 글로벌 금융 자산의 실시간 시세를 원화(₩)로 환산한 무료 대시보드 (환율 10종, 귀금속 5종, 에너지 2종, 채권 1종, 지수 15종, 암호화폐 9종, 주식 24종)
+- 설명: 70종목 금융 자산의 실시간 시세를 원화(₩)로 환산한 무료 대시보드 (환율 10종, 귀금속 9종, 에너지 2종, 채권 1종, 지수 15종, 암호화폐 9종, 주식 24종)
 
 ### 핵심 데이터
-- 데이터 소스: Yahoo Finance v8 chart API
+- 데이터 소스: Yahoo Finance v8 chart API, 한국금거래소 고시(koreagoldx.co.kr)
 - 갱신 주기: 30초 자동 갱신 (USD/KRW 환율 60초)
 - 환율: USD/KRW, EUR/KRW, JPY/KRW(100엔당), CNY/KRW, AUD/KRW, GBP/KRW, CAD/KRW, CHF/KRW, HKD/KRW, SGD/KRW
-- 귀금속: 금(GC=F), 은(SI=F), 백금(PL=F), 팔라듐(PA=F), 구리(HG=F)
+- 귀금속: 국내 순금(1돈 살 때/팔 때), 국내 18K, 국내 14K, 금(GC=F), 은(SI=F), 백금(PL=F), 팔라듐(PA=F), 구리(HG=F)
 - 에너지: WTI 원유(CL=F), 천연가스(NG=F)
 - 채권: 미 30년물 금리(^TYX)
 - 지수: S&P500, 다우존스, 나스닥, VIX, 미10년물금리, 코스피, 코스닥, 닛케이225, 항셍지수, 영국FTSE, 독일DAX, 프랑스CAC, 인도Sensex, 호주ASX, 브라질IBOVESPA
@@ -385,6 +412,7 @@ app.get('/llms.txt', (req, res) => {
 
 ### API 엔드포인트
 - GET /api/quotes - 전체 66종목 실시간 시세 (원화 환산)
+- GET /api/krgold - 국내 금 시세 (한국금거래소 고시, 1돈 3.75g 살 때/팔 때, 5분 캐시)
 
 ### 기능
 - 실시간 시세 대시보드 (카테고리별: 환율/귀금속/에너지/채권/지수/암호화폐/주식)

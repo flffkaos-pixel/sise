@@ -79,6 +79,16 @@ html,body{background:#0C0C0C;font-family:'Kanit',sans-serif;color:#FFFFFF;min-he
 .pred-box .pred-bar-wrap{margin-top:16px;max-width:200px;margin-left:auto;margin-right:auto}
 .pred-box .pred-bar{height:4px;border-radius:4px;overflow:hidden;background:rgba(255,255,255,.08)}
 .pred-box .pred-bar-fill{height:100%;border-radius:4px;transition:width 1s cubic-bezier(.25,.1,.25,1)}
+.all-box{background:rgba(255,255,255,.015);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:clamp(16px,2vw,28px);margin:24px 0;animation:fadeUp .6s cubic-bezier(.25,.1,.25,1) both;animation-delay:.2s}
+.all-box h2{font-weight:500;font-size:clamp(.8rem,1.2vw,.9rem);text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.4);margin-bottom:16px}
+.kr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.kr-cell{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:12px 14px}
+.kr-cell .n{font-weight:500;font-size:.68rem;letter-spacing:.06em;color:rgba(255,255,255,.45);margin-bottom:6px}
+.kr-cell .r{font-size:.8rem;line-height:1.8}
+.kr-cell .r span{color:rgba(255,255,255,.4);font-weight:300;margin-right:4px}
+.kr-cell .r b{font-weight:600}
+.kr-badge{font-size:.58rem;font-weight:700;letter-spacing:.05em;color:#1a1a1a;background:#FFC400;border-radius:999px;padding:3px 9px;vertical-align:middle;margin-right:8px}
+.note-box{background:rgba(255,196,0,.05);border:1px solid rgba(255,196,0,.15);border-radius:20px;padding:clamp(16px,2vw,24px);margin:24px 0;animation:fadeUp .6s cubic-bezier(.25,.1,.25,1) both;animation-delay:.5s;font-weight:300;font-size:clamp(.75rem,1vw,.85rem);line-height:1.9;color:rgba(255,255,255,.65)}
 .ld{text-align:center;padding:100px 0;color:rgba(255,255,255,.3)}
 .sp{width:28px;height:28px;border:2px solid rgba(255,255,255,.08);border-top-color:#BBCCD7;border-radius:50%;animation:spin .8s linear infinite;display:inline-block}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -123,14 +133,63 @@ function truncate(s,n){return s&&s.length>n?s.slice(0,n)+'...':s||''}
 
 const params=new URLSearchParams(window.location.search);
 const symbol=params.get('s');
+const KR_ITEMS={
+  'KR_PURE_BUY':{label:'순금 1돈',field:'pureBuy',chg:'pureBuyChg',chgPct:'pureBuyChgPct',icon:'🥇',mode:'살 때'},
+  'KR_PURE_SELL':{label:'순금 1돈',field:'pureSell',chg:'pureSellChg',chgPct:'pureSellChgPct',icon:'🥇',mode:'팔 때'},
+  'KR_18K_BUY':{label:'18K 1돈',field:'k18Buy',chg:'k18BuyChg',chgPct:'k18BuyChgPct',icon:'💍',mode:'살 때'},
+  'KR_14K_BUY':{label:'14K 1돈',field:'k14Buy',chg:'k14BuyChg',chgPct:'k14BuyChgPct',icon:'💍',mode:'살 때'}
+};
+const krItem=KR_ITEMS[symbol]||null;
 const JPN=symbol==='JPYKRW=X';
 const lb=JPN?'100엔당':'';
 const iy=['^TYX','^TNX','^VIX'].includes(symbol);
 if(!symbol){document.getElementById('root').innerHTML='<div class="ld"><p style="color:#f85149;font-weight:500">잘못된 접근</p><p style="margin-top:8px;font-weight:300;font-size:.85rem">시세를 선택해주세요</p><a href="/" class="btn" style="display:inline-block;margin-top:20px;font-family:Kanit,sans-serif;font-weight:500;text-transform:uppercase;letter-spacing:.12em;padding:10px 32px;background:rgba(255,255,255,.03);color:#D7E2EA;border:1px solid rgba(215,226,234,.1);border-radius:999px;cursor:pointer;font-size:clamp(.65rem,.9vw,.75rem);text-decoration:none">돌아가기</a></div>'}else load();
 
+async function loadKr(root){
+  try{
+    const badge=document.querySelector('.top-bar .badge');if(badge)badge.textContent='한국금거래소 고시';
+    const [krRes,histRes]=await Promise.all([fetch('/api/krgold'),fetch('/api/history?symbol='+encodeURIComponent('GC=F')).catch(()=>null)]);
+    if(!krRes.ok)throw Error('fetch failed');
+    const g=await krRes.json();
+    if(!g||!g[krItem.field])throw Error('no data');
+    const v=g[krItem.field],ch=g[krItem.chg]||0,cp=g[krItem.chgPct]||0,pc=v-ch;
+    const isUp=ch>=0;
+    const d=histRes&&histRes.ok?await histRes.json():null;
+    const closes=(d&&d.history)?d.history.map(hh=>hh.close).filter(c=>c>0):[];
+    const labels=(d&&d.history)?d.history.map(hh=>{const dt=new Date(hh.date*1000);return dt.getMonth()+1+'/'+dt.getDate()}):[];
+    const hasChart=closes.length>1;
+    const pred=hasChart?predictLR(closes):null;
+    const intlPerGram=(d&&d.currentPrice)?d.currentPrice/31.1035:0;
+    const krPurePerGram=(g.pureBuy||0)/3.75;
+    const premium=intlPerGram&&krPurePerGram?((krPurePerGram/intlPerGram)-1)*100:null;
+    const allRows=[['순금','pureBuy','pureSell'],['18K','k18Buy','k18Sell'],['14K','k14Buy','k14Sell'],['은','silverBuy','silverSell']];
+    const allHtml='<div class="all-box"><h2>국내 귀금속 고시가 — 한눈에 보기</h2><p style="font-weight:300;font-size:clamp(.65rem,.85vw,.75rem);color:rgba(255,255,255,.25);margin:-8px 0 14px">한국금거래소 고시 · 1돈(3.75g) 기준 · '+(g.date?g.date.split(' ')[0]:'')+'</p><div class="kr-grid">'+allRows.map(r=>'<div class="kr-cell"><div class="n">'+r[0]+'</div><div class="r"><span>살 때</span><b>₩'+fmt(g[r[1]]||0)+'</b></div><div class="r"><span>팔 때</span><b>₩'+fmt(g[r[2]]||0)+'</b></div></div>').join('')+'</div></div>';
+    root.innerHTML=
+      '<div class="price-box" itemscope itemtype="https://schema.org/FinancialProduct">'+
+        '<div class="icon">'+krItem.icon+'</div>'+
+        '<div class="label" itemprop="name"><span class="kr-badge">한국시세</span>'+krItem.label+' ('+krItem.mode+')</div>'+
+        '<h2 style="font-size:0;position:absolute;visibility:hidden">국내 '+krItem.label+' '+krItem.mode+' 시세는 얼마인가요?</h2>'+
+        '<div class="price"><span class="won">₩</span>'+fmt(v)+'</div>'+
+        '<div class="change '+(isUp?'up':'down')+'">'+(isUp?'▲':'▼')+' '+fmt(Math.abs(ch))+' ('+(cp>=0?'+':'')+cp.toFixed(2)+'%)</div>'+
+        '<div class="prev">전일: ₩'+fmt(pc)+'</div>'+
+      '</div>'+
+      allHtml+
+      (hasChart?'<div class="chart-wrap"><h2>국제 금(GC=F) 30일 등락 추이 — 국내 고시가 방향 참고지표</h2><p style="font-weight:300;font-size:clamp(.65rem,.85vw,.75rem);color:rgba(255,255,255,.25);margin:-8px 0 16px">국내 금 고시가는 국제 금 가격과 밀접하게 연동됩니다. 최근 30일 국제 금(원/트로이온스) 추이입니다.</p><canvas id="chart"></canvas></div>':'')+
+      (pred?'<div class="pred-box"><h2>등락예상 — 국제 금 동향으로 본 내일 국내 고시가 전망</h2><p style="font-weight:300;font-size:clamp(.65rem,.85vw,.75rem);color:rgba(255,255,255,.25);margin:-8px 0 16px">국제 금(GC=F) 30일 선형회귀 기반 예측 (R² 신뢰도) — 국내 고시가 방향의 참고 지표</p><div class="pred-dir '+(pred.direction==='up'?'up':'down')+'">'+(pred.direction==='up'?'▲ 상승 예상':'▼ 하락 예상')+'</div><div class="pred-price"><span class="won">₩</span>'+fmt(pred.pred)+'</div><div class="pred-detail">'+(pred.change>=0?'+':'')+fmt(pred.change)+' ('+(pred.changePct>=0?'+':'')+pred.changePct.toFixed(2)+'%) · 신뢰도 '+(pred.r2*100).toFixed(0)+'%</div><div class="pred-bar-wrap"><div class="pred-bar"><div class="pred-bar-fill" style="width:'+(pred.r2*100)+'%;background:'+(pred.direction==='up'?'#3fb950':'#f85149')+'"></div></div></div></div>':'')+
+      (premium?'<div class="note-box"><b>국내 소매가 vs 국제가:</b> 국내 순금 1돈(3.75g) 살 때 가격은 국제 금(원/그램 환산) 대비 약 <b style="color:#FFC400">'+(premium>=0?'+':'')+premium.toFixed(0)+'%</b> 높습니다. 국내 소매가에는 부가세와 유통 프리미엄이 포함되어 국제 현물가보다 비싸게 책정됩니다.</div>':'')+
+      '<div class="ft" style="text-align:center;padding:40px 0 20px;animation:fadeUp .6s both;animation-delay:.6s"><button class="btn" onclick="load()" style="font-family:Kanit,sans-serif;font-weight:500;text-transform:uppercase;letter-spacing:.12em;padding:10px 32px;background:rgba(255,255,255,.03);color:#FFFFFF;border:1px solid rgba(255,255,255,.1);border-radius:999px;cursor:pointer;font-size:clamp(.7rem,.9vw,.8rem);transition:all .3s">새로고침</button></div>';
+    if(!hasChart)return;
+    const ctx=document.getElementById('chart').getContext('2d');
+    new Chart(ctx,{type:'line',data:{labels,datasets:[{data:closes,borderColor:'#BBCCD7',backgroundColor:'rgba(187,204,215,.08)',borderWidth:2,pointRadius:0,pointHitRadius:10,tension:.3,fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(12,12,12,.9)',titleColor:'#8b949e',bodyColor:'#D7E2EA',borderColor:'rgba(215,226,234,.1)',borderWidth:1,padding:12,cornerRadius:8,callbacks:{label:ctx=>'₩'+fmt(ctx.parsed.y)}}},scales:{x:{display:true,grid:{color:'rgba(215,226,234,.03)'},ticks:{color:'rgba(215,226,234,.2)',font:{family:'Kanit',size:10},maxTicksLimit:8}},y:{display:true,grid:{color:'rgba(215,226,234,.05)'},ticks:{color:'rgba(215,226,234,.2)',font:{family:'Kanit',size:10},callback:v=>'₩'+fmt(v)}}},interaction:{mode:'index',intersect:false}}});
+  }catch(e){
+    root.innerHTML='<div class="ld"><p style="color:#f85149;font-weight:500">불러오기 실패</p><p style="margin-top:8px;font-weight:300;font-size:.85rem">'+e.message+'</p><button class="btn" onclick="load()" style="margin-top:20px;font-family:Kanit,sans-serif;font-weight:500;text-transform:uppercase;letter-spacing:.12em;padding:10px 32px;background:rgba(255,255,255,.03);color:#D7E2EA;border:1px solid rgba(215,226,234,.1);border-radius:999px;cursor:pointer;font-size:clamp(.65rem,.9vw,.75rem)">다시시도</button></div>';
+  }
+}
+
 async function load(){
   const root=document.getElementById('root');
   try{
+    if(krItem){return await loadKr(root)}
     const histRes=await fetch('/api/history?symbol='+encodeURIComponent(symbol));
     if(!histRes.ok)throw Error('fetch failed');
     const d=await histRes.json();
