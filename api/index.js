@@ -134,27 +134,24 @@ app.get('/api/krgold', async (req, res) => {
 
 function fetchKrIndexPrevClose() {
   return new Promise(async (ok) => {
-    try {
-      const urls = {
-        '^KS11': 'https://api.finance.naver.com/siseJson.naver?symbol=KOSPI&requestType=1&count=2&timeframe=day',
-        '^KQ11': 'https://api.finance.naver.com/siseJson.naver?symbol=KOSDAQ&requestType=1&count=2&timeframe=day'
-      };
-      const results = {};
-      for (const [sym, url] of Object.entries(urls)) {
-        try {
-          const r = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0', 'Referer': 'https://finance.naver.com/' }, timeout: 5000 });
-          const text = await r.text();
-          const arr = JSON.parse(text.replace(/^.*?(\[[\s\S]*\]).*$/, '$1'));
-          if (Array.isArray(arr) && arr.length >= 2) {
-            const yesterday = arr[1];
-            if (yesterday && typeof yesterday[4] === 'number') {
-              results[sym] = yesterday[4];
-            }
+    const results = {};
+    for (const sym of ['^KS11', '^KQ11']) {
+      try {
+        const url = `https://query1.finance.yahoo.com/v8/finance/chart/${sym.replace('^', '%5E')}?range=5d&interval=1d`;
+        const r = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' }, timeout: 10000 });
+        const j = await r.json();
+        const ind = j.chart?.result?.[0]?.indicators?.quote?.[0];
+        const closes = ind?.close;
+        if (closes && closes.length >= 2) {
+          // Second-to-last close = previous trading day's close
+          const prevClose = closes[closes.length - 2];
+          if (prevClose && prevClose > 0) {
+            results[sym] = prevClose;
           }
-        } catch (e) { console.error('Naver index fetch error:', sym, e.message); }
-      }
-      ok(results);
-    } catch (e) { ok({}); }
+        }
+      } catch (e) { console.error('KR index 5d fetch error:', sym, e.message); }
+    }
+    ok(results);
   });
 }
 
