@@ -81,7 +81,7 @@ async function updateKrwRate() {
 
 function toKrw(item) {
   const s = item.symbol;
-  const isKrwAsset = s.endsWith('KRW=X') || s === '^KS11' || s === '^KQ11' || s.endsWith('.KS') || ['^TYX','^TNX','^VIX'].includes(s);
+  const isKrwAsset = s.startsWith('^') || s.endsWith('KRW=X') || s.endsWith('.KS');
   const rate = isKrwAsset ? 1 : krwRate;
   return { ...item, priceKrw: item.regularMarketPrice * rate, changeKrw: item.regularMarketChange * rate, changePercentKrw: item.regularMarketChangePercent, previousCloseKrw: item.regularMarketPreviousClose * rate, krwRate };
 }
@@ -135,7 +135,7 @@ app.get('/api/history', async (req, res) => {
     const start = data.timestamps.length - 35;
     data = { ...data, timestamps: data.timestamps.slice(start), opens: data.opens?.slice(start), highs: data.highs?.slice(start), lows: data.lows?.slice(start), closes: data.closes?.slice(start), volumes: data.volumes?.slice(start) };
   }
-  const isKrwAsset = symbol.endsWith('KRW=X') || symbol === '^KS11' || symbol === '^KQ11' || symbol.endsWith('.KS') || ['^TYX','^TNX','^VIX'].includes(symbol);
+  const isKrwAsset = symbol.startsWith('^') || symbol.endsWith('KRW=X') || symbol.endsWith('.KS');
   const rate = isKrwAsset ? 1 : krwRate;
   const history = (data.timestamps || []).map((t, i) => ({
     date: t,
@@ -434,5 +434,213 @@ app.get('/llms.txt', (req, res) => {
 });
 
 app.get('/favicon.ico', (req, res) => res.status(204).end());
+
+// ===== 오피넷 기름값 =====
+const OIL_PRODUCTS = [['B027', '휘발유'], ['D047', '경유'], ['K015', 'LPG']];
+const OIL_SIDOS = { '01': '서울', '02': '경기', '03': '강원', '04': '충북', '05': '충남', '06': '전북', '08': '경북', '09': '경남', '10': '부산', '11': '제주', '14': '대구', '15': '인천', '17': '대전', '18': '울산', '19': '세종', '20': '전남광주' };
+const OIL_GUNS = {
+  '01': ['13:강남구', '14:강동구', '24:강북구', '15:강서구', '17:관악구', '23:광진구', '16:구로구', '25:금천구', '18:노원구', '06:도봉구', '03:동대문구', '12:동작구', '09:마포구', '07:서대문구', '21:서초구', '04:성동구', '05:성북구', '22:송파구', '19:양천구', '11:영등포구', '10:용산구', '08:은평구', '01:종로구', '02:중구', '20:중랑구'],
+  '02': ['31:가평군', '19:고양시', '11:과천시', '07:광명시', '28:광주시', '10:구리시', '15:군포시', '36:김포시', '17:남양주시', '06:동두천시', '05:부천시', '02:성남시', '01:수원시', '16:시흥시', '12:안산시', '35:안성시', '04:안양시', '21:양주시', '32:양평군', '22:여주시', '29:연천군', '13:오산시', '20:용인시', '14:의왕시', '03:의정부시', '08:이천시', '26:파주시', '09:평택시', '30:포천시', '18:하남시', '24:화성시'],
+  '03': ['03:강릉시', '32:고성군', '05:동해시', '07:삼척시', '04:속초시', '30:양구군', '33:양양군', '25:영월군', '02:원주시', '31:인제군', '27:정선군', '28:철원군', '01:춘천시', '06:태백시', '26:평창군', '22:홍천군', '29:화천군', '23:횡성군'],
+  '04': ['26:괴산군', '30:단양군', '22:보은군', '24:영동군', '23:옥천군', '27:음성군', '03:제천시', '31:증평군', '25:진천군', '01:청주시', '02:충주시'],
+  '05': ['08:계룡시', '03:공주시', '21:금산군', '07:논산시', '33:당진시', '05:보령시', '26:부여군', '06:서산시', '27:서천군', '04:아산시', '31:예산군', '02:천안시', '29:청양군', '37:태안군', '30:홍성군'],
+  '06': ['29:고창군', '02:군산시', '06:김제시', '04:남원시', '23:무주군', '30:부안군', '27:순창군', '21:완주군', '03:익산시', '25:임실군', '24:장수군', '01:전주시', '05:정읍시', '22:진안군'],
+  '08': ['10:경산시', '02:경주시', '33:고령군', '07:구미시', '03:김천시', '08:문경시', '42:봉화군', '09:상주시', '34:성주군', '06:안동시', '27:영덕군', '26:영양군', '04:영주시', '05:영천시', '40:예천군', '44:울릉군', '43:울진군', '23:의성군', '32:청도군', '25:청송군', '35:칠곡군', '01:포항시'],
+  '09': ['10:거제시', '38:거창군', '32:고성군', '08:김해시', '34:남해군', '09:밀양시', '07:사천시', '36:산청군', '11:양산시', '22:의령군', '04:진주시', '24:창녕군', '02:창원시', '06:통영시', '35:하동군', '23:함안군', '37:함양군', '39:합천군'],
+  '10': ['11:강서구', '12:금정구', '31:기장군', '07:남구', '03:동구', '06:동래구', '05:부산진구', '08:북구', '15:사상구', '10:사하구', '02:서구', '14:수영구', '13:연제구', '04:영도구', '01:중구', '09:해운대구'],
+  '11': ['02:서귀포시', '01:제주시'],
+  '14': ['22:군위군', '04:남구', '07:달서구', '31:달성군', '02:동구', '05:북구', '03:서구', '06:수성구', '01:중구'],
+  '15': ['31:강화군', '08:계양구', '03:미추홀구', '06:남동구', '02:동구', '12:영종구', '04:부평구', '05:서구', '13:서해구', '14:검단구', '07:연수구', '32:옹진군', '01:중구', '11:제물포구'],
+  '17': ['05:대덕구', '01:동구', '03:서구', '04:유성구', '02:중구'],
+  '18': ['02:남구', '03:동구', '04:북구', '31:울주군', '01:중구'],
+  '19': ['01:세종시'],
+  '20': ['04:광산구', '05:남구', '01:동구', '03:북구', '02:서구', '28:강진군', '24:고흥군', '22:곡성군', '10:광양시', '23:구례군', '09:나주시', '21:담양군', '06:목포시', '31:무안군', '25:보성군', '08:순천시', '37:신안군', '07:여수시', '33:영광군', '30:영암군', '35:완도군', '34:장성군', '27:장흥군', '36:진도군', '32:함평군', '29:해남군', '26:화순군']
+};
+const OIL_BRANDS = { GSC: 'GS칼텍스', HDO: 'HD현대오일뱅크', SKE: 'SK에너지', SOL: 'S-OIL', NHO: 'NH-OIL', E1G: 'E1', SKG: 'SK가스', RTO: '알뜰주유소', ODC: '자영알뜰', ETC: '자영', NCO: 'NC오일' };
+const OIL_UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36';
+const OIL_OPINET_KEY = '9WEsDjBBQmvM3lvioOOJcs8epB6pPasrhB1MO6YRhzU=';
+let oilCookies = {};
+let oilSessionT = 0;
+
+function opReq(host, path, method, formBody) {
+  return new Promise((ok) => {
+    const headers = {
+      'User-Agent': OIL_UA,
+      'Accept': 'text/html,application/xhtml+xml,*/*;q=0.8',
+      'Referer': 'https://www.opinet.co.kr/',
+      'Cookie': Object.entries(oilCookies).map(([k, v]) => k + '=' + v).join('; ')
+    };
+    if (formBody) headers['Content-Type'] = 'application/x-www-form-urlencoded';
+    const req = https.request({ hostname: host, path, method, headers, timeout: 20000 }, (r) => {
+      if (r.headers['set-cookie']) for (const c of r.headers['set-cookie']) { const p = c.split(';')[0].split('='); oilCookies[p[0]] = p[1]; }
+      let d = '';
+      r.on('data', c => d += c);
+      r.on('end', () => ok({ status: r.statusCode, body: d }));
+    });
+    req.on('error', () => ok(null));
+    req.on('timeout', () => { req.destroy(); ok(null); });
+    if (formBody) req.write(formBody);
+    req.end();
+  });
+}
+
+function oilChallengeKey() {
+  return new Promise(async (ok) => {
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const path = `/ts.wseq?opcode=5001&nfid=0&prefix=NetFunnel.gRtype=5001;&sid=service_1&aid=B1&js=yes&${Date.now() + attempt}`;
+      const r = await opReq('nfl.opinet.co.kr', path, 'GET', null);
+      const m = r && /key=([0-9A-F]+)/.exec(r.body);
+      if (m) return ok(m[1]);
+      await new Promise(res => setTimeout(res, 400));
+    }
+    ok(null);
+  });
+}
+
+async function getOilMainView() {
+  if (Date.now() - oilSessionT > 600000 || !Object.keys(oilCookies).length) {
+    for (let attempt = 0; attempt < 2; attempt++) {
+      await opReq('www.opinet.co.kr', '/', 'GET', null);
+      const key = await oilChallengeKey();
+      if (key) {
+        const rr = await opReq('www.opinet.co.kr', '/user/main/mainView.do', 'POST', `netfunnel_key=${key}&opinet_key=${encodeURIComponent(OIL_OPINET_KEY)}`);
+        oilSessionT = Date.now();
+        if (rr && rr.body && rr.body.length > 30000 && !rr.body.includes('netfunnel_key')) return rr.body;
+      }
+    }
+    oilSessionT = Date.now();
+    return null;
+  }
+  const r = await opReq('www.opinet.co.kr', '/user/main/mainView.do', 'GET', null);
+  if (r && r.body && r.body.length > 30000 && !r.body.includes('netfunnel_key')) return r.body;
+  const key = await oilChallengeKey();
+  if (key) {
+    const rr = await opReq('www.opinet.co.kr', '/user/main/mainView.do', 'POST', `netfunnel_key=${key}&opinet_key=${encodeURIComponent(OIL_OPINET_KEY)}`);
+    oilSessionT = Date.now();
+    if (rr && rr.body && rr.body.length > 30000 && !rr.body.includes('netfunnel_key')) return rr.body;
+  }
+  return null;
+}
+
+function formatOilDate(s) {
+  const d = String(s || '').replace(/\D/g, '');
+  return d.length >= 8 ? d.slice(0, 4) + '.' + d.slice(4, 6) + '.' + d.slice(6, 8) : '';
+}
+
+function parseOilMain(html) {
+  const dm = /\((\d{4}\.\d{2}\.\d{2})\)/.exec(html);
+  const prods = [];
+  const oid = { B027: 'oilcon1', D047: 'oilcon2', K015: 'oilcon3' };
+  for (const [code, name] of OIL_PRODUCTS) {
+    const id = oid[code];
+    const re = new RegExp(`id="${id}"[\\s\\S]*?<span class="text-3">([\\d.]+)<\\/span>[\\s\\S]*?<span class="point">([▲▼])<\\/span>\\s*([\\d.]+)[\\s\\S]*?최저가 <span class="col-1">(\\d+)<\\/span> <span class="line">\\|<\\/span> 최고가 <span class="col-2">(\\d+)<\\/span>`);
+    const m = re.exec(html);
+    if (m) prods.push({ code, name, avg: parseFloat(m[1]), chg: (m[2] === '▲' ? 1 : -1) * parseFloat(m[3]), min: +m[4], max: +m[5] });
+  }
+  return { date: dm ? dm[1] : '', products: prods };
+}
+
+function parseSidoAvg(json) {
+  const a = json && json.allSigunAvg ? json.allSigunAvg : {};
+  const out = {};
+  for (const code of Object.keys(OIL_SIDOS)) {
+    const avg = a['SIDO' + code + '_AVG_P'];
+    const chg = a['SIDO' + code + '_CHA'];
+    if (avg !== undefined && avg !== null && +avg > 0) out[code] = { avg: +avg, chg: chg === undefined || chg === null ? 0 : +chg };
+  }
+  return out;
+}
+
+async function fetchOilChart(prod) {
+  const r = await opReq('www.opinet.co.kr', `/user/main/mainLineChartNewAjax.do?DIV_CD=M&SIDO_CD=&KNOC_PD_CD=${prod}`, 'GET', null);
+  try {
+    return (JSON.parse(r.body).result.chartData || []).map(x => ({ date: String(x.STD_DT_FULL).slice(0, 10), price: x.PRICE }));
+  } catch { return []; }
+}
+
+async function fetchOil() {
+  const page = await getOilMainView();
+  let main = page ? parseOilMain(page) : { date: '', products: [] };
+  const sidoByProd = {};
+  const chartByProd = {};
+  for (const [code] of OIL_PRODUCTS) {
+    const s = await opReq('www.opinet.co.kr', `/user/main/mainSidoAvg.do?KNOC_PD_CD=${code}`, 'GET', null);
+    try { sidoByProd[code] = parseSidoAvg(JSON.parse(s.body)); } catch { sidoByProd[code] = {}; }
+    chartByProd[code] = await fetchOilChart(code);
+  }
+  const products = main.products.length ? main.products : [];
+  if (!products.length) {
+    for (const [code, name] of OIL_PRODUCTS) {
+      const ch = chartByProd[code];
+      const sv = Object.values(sidoByProd[code] || {});
+      const min = sv.length ? Math.round(Math.min(...sv.map(v => v.avg))) : 0;
+      const max = sv.length ? Math.round(Math.max(...sv.map(v => v.avg))) : 0;
+      if (ch.length >= 2) {
+        const last = ch[ch.length - 1], prev = ch[ch.length - 2];
+        products.push({ code, name, avg: last.price, chg: +(last.price - prev.price), min, max });
+      }
+    }
+    main.date = main.date || (chartByProd.B027 && chartByProd.B027.length ? formatOilDate(chartByProd.B027[chartByProd.B027.length - 1].date) : '');
+  }
+  for (const p of products) { p.sido = sidoByProd[p.code] || {}; p.chart = chartByProd[p.code] || []; }
+  return { date: main.date || '', products };
+}
+
+let oilCache = null, oilCacheT = 0, oilFetching = null;
+app.get('/api/oil', async (req, res) => {
+  if (!oilCache || Date.now() - oilCacheT > 600000) {
+    if (!oilFetching) {
+      oilFetching = fetchOil().finally(() => { oilFetching = null; });
+    }
+    oilCache = await oilFetching;
+    oilCacheT = Date.now();
+  }
+  res.json(oilCache || { error: 'fetch failed' });
+});
+
+let oilStCache = {}, oilStCacheT = {};
+function opReqLimited(tasks, limit) {
+  let i = 0;
+  const workers = [];
+  const run = async () => {
+    while (i < tasks.length) { const idx = i++; await tasks[idx](); }
+  };
+  for (let w = 0; w < limit; w++) workers.push(run());
+  return Promise.all(workers);
+}
+
+async function fetchStations(prod, sido) {
+  if (Date.now() - oilSessionT > 600000 || !Object.keys(oilCookies).length) {
+    await opReq('www.opinet.co.kr', '/', 'GET', null);
+    oilSessionT = Date.now();
+  }
+  const guns = OIL_GUNS[sido] || [];
+  const all = [];
+  await opReqLimited(guns.map((gun, i) => async () => {
+    const gunCd = gun.split(':')[0];
+    const r = await opReq('www.opinet.co.kr', '/user/main/mainOSNewselect.do', 'POST', `SIGUN_CD=${sido}${gunCd}&SIDO_CD=${sido}&KNOC_PD_CD=${prod}&ORDER=`);
+    try {
+      const j = JSON.parse(r.body);
+      for (const st of j.os_tab_1 || []) {
+        all.push({ id: st.UNI_ID, name: st.OS_NM, sido: st.SIDO_NM, gun: st.SIGUNGU_NM, price: +st.CUR_P, brand: OIL_BRANDS[st.POLL_DIV_CD] || st.POLL_DIV_CD, div: st.POLL_DIV_CD });
+      }
+    } catch { /* skip */ }
+  }), 4);
+  all.sort((a, b) => a.price - b.price);
+  return all.slice(0, 30);
+}
+
+app.get('/api/oil/stations', async (req, res) => {
+  const prod = req.query.prod || 'B027';
+  const sido = req.query.sido || '01';
+  if (!OIL_PRODUCTS.some(p => p[0] === prod)) return res.status(400).json({ error: 'invalid prod' });
+  if (!OIL_SIDOS[sido]) return res.status(400).json({ error: 'invalid sido' });
+  const ck = prod + '|' + sido;
+  if (!oilStCache[ck] || Date.now() - oilStCacheT[ck] > 600000) {
+    oilStCache[ck] = await fetchStations(prod, sido);
+    oilStCacheT[ck] = Date.now();
+  }
+  res.json({ date: '', prod, sido, sidoName: OIL_SIDOS[sido], stations: oilStCache[ck] });
+});
 
 module.exports = app;

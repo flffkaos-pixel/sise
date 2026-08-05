@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#323233">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<!-- Naver SEO -->
+<meta name="NaverBot" content="All">
+<meta name="Yeti" content="All">
+<meta name="naver-site-verification" content="af42f7ca6447323460c4d85e8babb00bb2f31f61">
+<meta name="google-site-verification" content="5m9WrjHo6HZ1aRzDjKvDEtLsv1Egv2K2yi-clQ1WHfk">
+<meta name="referrer" content="always">
+
+<title>모두의 시세 - 기름값 | 휘발유·경유·LPG 전국 주유소 평균가</title>
+<meta name="description" content="오피넷 고시 기반 휘발유·경유·LPG 전국 주유소 평균가, 시도별 평균, 30일 가격 추이, 저가 주유소 목록을 실시간으로 확인하세요.">
+<meta name="keywords" content="기름값,주유소 가격,휘발유 가격,경유 가격,LPG 가격,전국 평균,시도별,저가 주유소,오피넷">
+<link rel="canonical" href="https://modu-sise.vercel.app/oil.html">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/favicon.svg">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://modu-sise.vercel.app/oil.html">
+<meta property="og:title" content="모두의 시세 - 기름값">
+<meta property="og:description" content="휘발유·경유·LPG 전국 주유소 평균가와 시도별 비교, 저가 주유소 목록">
+<meta property="og:site_name" content="모두의 시세">
+<meta property="og:locale" content="ko_KR">
+
+<!-- JSON-LD -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type":"ListItem","position":1,"name":"홈","item":"https://modu-sise.vercel.app/"},
+    {"@type":"ListItem","position":2,"name":"기름값","item":"https://modu-sise.vercel.app/oil.html"}
+  ]
+}
+</script>
+
+<link rel="stylesheet" href="/theme.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script>
+(function(){var t='vscode';try{t=localStorage.getItem('modu-theme')||'vscode'}catch(e){}document.documentElement.setAttribute('data-theme',t);
+window.__setTheme=function(x){document.documentElement.setAttribute('data-theme',x);try{localStorage.setItem('modu-theme',x)}catch(e){}var bs=document.querySelectorAll('.theme-toggle button');for(var i=0;i<bs.length;i++)bs[i].classList.toggle('on',bs[i].getAttribute('data-theme')===x);if(window.__onTheme)window.__onTheme(x)}})();
+</script>
+</head>
+<body>
+<header class="topbar" role="banner">
+  <div class="topbar-main">
+    <a class="brand" href="/"><span class="brand-mark">₩</span><span class="brand-name">모두의 시세</span><span class="brand-sub">기름값</span></a>
+    <div class="theme-toggle" role="group" aria-label="테마 선택">
+      <button type="button" data-theme="vscode" onclick="__setTheme('vscode')">VS Code</button>
+      <button type="button" data-theme="excel" onclick="__setTheme('excel')">엑셀</button>
+    </div>
+  </div>
+  <nav class="topbar-tabs" aria-label="주요 메뉴">
+    <a href="/">홈</a>
+    <a href="/oil.html" class="active">기름값</a>
+    <a href="/privacy.html">개인정보처리방침</a>
+    <a href="/terms.html">이용약관</a>
+    <a href="/contact.html">문의하기</a>
+  </nav>
+</header>
+
+<main role="main">
+  <div class="wrap">
+    <div class="page-head">
+      <h1>전국 주유소 기름값</h1>
+      <p>오피넷(OPINET) 고시 · 휘발유·경유·LPG 전국평균과 시도별 평균, 저가 주유소를 제공합니다.</p>
+    </div>
+
+    <nav class="oil-tabs" id="oil-tabs" aria-label="유종 선택"></nav>
+
+    <div class="stat-grid" id="stat-grid">
+      <div class="stat-cell"><div class="n">전국평균</div><div class="v" id="st-avg">-<small> 원/L</small></div></div>
+      <div class="stat-cell"><div class="n">전일대비</div><div class="v" id="st-chg">-</div></div>
+      <div class="stat-cell"><div class="n">최저~최고</div><div class="v" id="st-range" style="font-size:15px">-</div></div>
+      <div class="stat-cell"><div class="n">기준일</div><div class="v" id="st-date" style="font-size:15px">-</div></div>
+    </div>
+
+    <div class="filters">
+      <select class="sel" id="sidoSel" aria-label="시도 선택"></select>
+      <select class="sel" id="gunSel" aria-label="구군 선택"><option value="">전체 구군</option></select>
+      <button class="btn ghost" onclick="loadStations()">주유소 갱신</button>
+    </div>
+
+    <section class="box" aria-label="저가 주유소 목록" style="margin-top:14px">
+      <h2>지역별 저가 주유소</h2>
+      <p class="sub" id="st-sub">선택한 시·도에서 가격이 저렴한 주유소 순으로 최대 30곳을 표시합니다. (오피넷 정보)</p>
+      <div class="table-wrap">
+        <table class="qt">
+          <thead><tr><th>브랜드</th><th>상호</th><th>구군</th><th class="num">가격(원/L)</th></tr></thead>
+          <tbody id="st-body"><tr><td colspan="4" class="ld" style="padding:40px"><span class="sp"></span></td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="chart-wrap" style="margin-top:14px">
+      <h2>전국평균 30일 가격 추이</h2>
+      <p class="sub">오피넷 일별 전국평균 (원/리터)</p>
+      <canvas id="chart"></canvas>
+    </div>
+
+    <section class="box" aria-label="시도별 평균">
+      <h2>시도별 평균가</h2>
+      <p class="sub">오피넷 시도별 평균 · 전일대비</p>
+      <div class="table-wrap">
+        <table class="qt">
+          <thead><tr><th>시도</th><th class="num">평균</th><th class="num">전일대비</th></tr></thead>
+          <tbody id="sido-body"><tr><td colspan="3" class="ld" style="padding:40px"><span class="sp"></span></td></tr></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer" role="contentinfo">
+  <div class="wrap" style="padding-top:0;padding-bottom:0">
+    <p>데이터 출처: <a href="https://www.opinet.co.kr" rel="external nofollow">오피넷(OPINET)</a> · 한국석유공사</p>
+    <p>© 2025 모두의 시세 · 본 서비스는 오피넷 공개 정보를 활용하며 오피넷과 제휴 관계가 아닙니다.</p>
+    <p class="disclaimer">주유소 가격은 오피넷 조사 시점 기준이며 실제 판매가와 다를 수 있습니다.</p>
+  </div>
+</footer>
+
+<script>
+const PRODS={B027:'휘발유',D047:'경유',K015:'LPG'};
+const SIDOS={'01':'서울','02':'경기','03':'강원','04':'충북','05':'충남','06':'전북','08':'경북','09':'경남','10':'부산','11':'제주','14':'대구','15':'인천','17':'대전','18':'울산','19':'세종','20':'전남광주'};
+const GUNS={'01':['13:강남구','14:강동구','24:강북구','15:강서구','17:관악구','23:광진구','16:구로구','25:금천구','18:노원구','06:도봉구','03:동대문구','12:동작구','09:마포구','07:서대문구','21:서초구','04:성동구','05:성북구','22:송파구','19:양천구','11:영등포구','10:용산구','08:은평구','01:종로구','02:중구','20:중랑구'],'02':['31:가평군','19:고양시','11:과천시','07:광명시','28:광주시','10:구리시','15:군포시','36:김포시','17:남양주시','06:동두천시','05:부천시','02:성남시','01:수원시','16:시흥시','12:안산시','35:안성시','04:안양시','21:양주시','32:양평군','22:여주시','29:연천군','13:오산시','20:용인시','14:의왕시','03:의정부시','08:이천시','26:파주시','09:평택시','30:포천시','18:하남시','24:화성시'],'03':['03:강릉시','32:고성군','05:동해시','07:삼척시','04:속초시','30:양구군','33:양양군','25:영월군','02:원주시','31:인제군','27:정선군','28:철원군','01:춘천시','06:태백시','26:평창군','22:홍천군','29:화천군','23:횡성군'],'04':['26:괴산군','30:단양군','22:보은군','24:영동군','23:옥천군','27:음성군','03:제천시','31:증평군','25:진천군','01:청주시','02:충주시'],'05':['08:계룡시','03:공주시','21:금산군','07:논산시','33:당진시','05:보령시','26:부여군','06:서산시','27:서천군','04:아산시','31:예산군','02:천안시','29:청양군','37:태안군','30:홍성군'],'06':['29:고창군','02:군산시','06:김제시','04:남원시','23:무주군','30:부안군','27:순창군','21:완주군','03:익산시','25:임실군','24:장수군','01:전주시','05:정읍시','22:진안군'],'08':['10:경산시','02:경주시','33:고령군','07:구미시','03:김천시','08:문경시','42:봉화군','09:상주시','34:성주군','06:안동시','27:영덕군','26:영양군','04:영주시','05:영천시','40:예천군','44:울릉군','43:울진군','23:의성군','32:청도군','25:청송군','35:칠곡군','01:포항시'],'09':['10:거제시','38:거창군','32:고성군','08:김해시','34:남해군','09:밀양시','07:사천시','36:산청군','11:양산시','22:의령군','04:진주시','24:창녕군','02:창원시','06:통영시','35:하동군','23:함안군','37:함양군','39:합천군'],'10':['11:강서구','12:금정구','31:기장군','07:남구','03:동구','06:동래구','05:부산진구','08:북구','15:사상구','10:사하구','02:서구','14:수영구','13:연제구','04:영도구','01:중구','09:해운대구'],'11':['02:서귀포시','01:제주시'],'14':['22:군위군','04:남구','07:달서구','31:달성군','02:동구','05:북구','03:서구','06:수성구','01:중구'],'15':['31:강화군','08:계양구','03:미추홀구','06:남동구','02:동구','12:영종구','04:부평구','05:서구','13:서해구','14:검단구','07:연수구','32:옹진군','01:중구','11:제물포구'],'17':['05:대덕구','01:동구','03:서구','04:유성구','02:중구'],'18':['02:남구','03:동구','04:북구','31:울주군','01:중구'],'19':['01:세종시'],'20':['04:광산구','05:남구','01:동구','03:북구','02:서구','28:강진군','24:고흥군','22:곡성군','10:광양시','23:구례군','09:나주시','21:담양군','06:목포시','31:무안군','25:보성군','08:순천시','37:신안군','07:여수시','33:영광군','30:영암군','35:완도군','34:장성군','27:장흥군','36:진도군','32:함평군','29:해남군','26:화순군']};
+
+let chartInst=null;
+let oilData=null, stations=[];
+const qp=new URLSearchParams(location.search);
+let prod=PRODS[qp.get('prod')]?qp.get('prod'):'B027';
+let sido=SIDOS[qp.get('sido')]?qp.get('sido'):'01';
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function chartLabels(ch){return (ch||[]).map(function(x){var s=String(x.date).replace(/\D/g,'');return s.length>=8?s.slice(4,6)+'/'+s.slice(6,8):s})}
+function fmt(n){return Math.round(n).toLocaleString()}
+function cv(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
+function hexRgba(h,a){h=h.replace('#','');if(h.length===3)h=h.split('').map(c=>c+c).join('');const n=parseInt(h,16);return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+a+')'}
+function buildTabs(){
+  document.getElementById('oil-tabs').innerHTML=Object.keys(PRODS).map(c=>'<a href="oil.html?prod='+c+'&sido='+sido+'" class="'+(c===prod?'active':'')+'">'+PRODS[c]+'</a>').join('');
+}
+function fillSido(){
+  const s=document.getElementById('sidoSel');
+  s.innerHTML=Object.keys(SIDOS).map(c=>'<option value="'+c+'"'+(c===sido?' selected':'')+'>'+SIDOS[c]+'</option>').join('');
+  s.onchange=function(){sido=s.value;history.replaceState(null,'','oil.html?prod='+prod+'&sido='+sido);fillGun();loadStations()};
+}
+function fillGun(){
+  const g=document.getElementById('gunSel');
+  g.innerHTML='<option value="">전체 구군</option>'+GUNS[sido].map(x=>{const p=x.split(':');return '<option value="'+p[1]+'">'+p[1]+'</option>'}).join('');
+}
+async function loadOil(){
+  try{
+    const r=await fetch('/api/oil');
+    if(!r.ok)throw Error('fetch failed');
+    oilData=await r.json();
+  }catch(e){renderErr()}
+}
+async function loadStations(){
+  const tb=document.getElementById('st-body');
+  tb.innerHTML='<tr><td colspan="4" class="ld" style="padding:40px"><span class="sp"></span></td></tr>';
+  try{
+    const r=await fetch('/api/oil/stations?prod='+prod+'&sido='+sido);
+    if(!r.ok)throw Error('fetch failed');
+    const j=await r.json();
+    stations=j.stations||[];
+    renderStations();
+  }catch(e){
+    tb.innerHTML='<tr><td colspan="4" class="none" style="text-align:center;padding:40px">불러오기 실패 · <button class="btn ghost" onclick="loadStations()">다시시도</button></td></tr>';
+  }
+}
+function renderStations(){
+  const gsel=document.getElementById('gunSel');
+  const gun=gsel.value;
+  const list=gun?stations.filter(s=>s.gun===gun):stations;
+  const tb=document.getElementById('st-body');
+  document.getElementById('st-sub').textContent=SIDOS[sido]+' '+PRODS[prod]+' 저가 주유소 · 최대 30곳 · (오피넷 정보)';
+  if(!list.length){tb.innerHTML='<tr><td colspan="4" class="none" style="text-align:center;padding:40px">표시할 주유소가 없습니다.</td></tr>';return}
+  tb.innerHTML=list.map(s=>'<tr class="row"><td>'+esc(s.brand)+'</td><td>'+esc(s.name)+'</td><td>'+esc(s.gun)+'</td><td class="num">'+s.price+'</td></tr>').join('');
+}
+function renderMain(){
+  const p=(oilData.products||[]).find(x=>x.code===prod);
+  const date=oilData.date||'';
+  if(!p){renderErr();return}
+  const chgEl=document.getElementById('st-chg');
+  document.getElementById('st-avg').innerHTML=p.avg.toFixed(1)+'<small> 원/L</small>';
+  chgEl.textContent=(p.chg>=0?'+':'')+p.chg.toFixed(2);
+  chgEl.className='v '+(p.chg>=0?'up':'down');
+  document.getElementById('st-range').textContent=(p.min||'-')+' ~ '+(p.max||'-');
+  document.getElementById('st-date').textContent=date;
+  const sb=document.getElementById('sido-body');
+  const rows=Object.keys(SIDOS).map(c=>{const v=p.sido[c];if(!v)return null;return '<tr class="row"><td>'+SIDOS[c]+'</td><td class="num">'+v.avg.toFixed(1)+'</td><td class="num '+(v.chg>=0?'up':'down')+'">'+(v.chg>=0?'+':'')+v.chg.toFixed(2)+'</td></tr>'}).filter(Boolean);
+  sb.innerHTML=rows.join('')||'<tr><td colspan="3" class="none" style="text-align:center;padding:30px">데이터 없음</td></tr>';
+  const ch=p.chart||[];
+  renderChart(chartLabels(ch),ch.map(x=>x.price));
+}
+function renderErr(){
+  const sb=document.getElementById('sido-body');
+  sb.innerHTML='<tr><td colspan="3" class="none" style="text-align:center;padding:40px">기름값 데이터를 불러올 수 없습니다.</td></tr>';
+}
+function renderChart(labels,data){
+  if(chartInst){try{chartInst.destroy()}catch(e){}chartInst=null}
+  const c={line:cv('--chart-line'),fill:hexRgba(cv('--chart-line'),0.12),grid:cv('--grid'),tick:cv('--dim'),tipBg:cv('--surface2'),tipBorder:cv('--border'),tipTitle:cv('--muted'),tipBody:cv('--fg')};
+  chartInst=new Chart(document.getElementById('chart'),{type:'line',data:{labels,datasets:[{data,borderColor:c.line,backgroundColor:c.fill,borderWidth:2,pointRadius:0,pointHitRadius:10,tension:.3,fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:c.tipBg,titleColor:c.tipTitle,bodyColor:c.tipBody,borderColor:c.tipBorder,borderWidth:1,padding:12,cornerRadius:6,callbacks:{label:ctx=>ctx.parsed.y.toFixed(1)+' 원'}}},scales:{x:{display:true,grid:{color:c.grid},ticks:{color:c.tick,font:{size:10},maxTicksLimit:8}},y:{display:true,grid:{color:c.grid},ticks:{color:c.tick,font:{size:10},callback:v=>v.toFixed(0)}}},interaction:{mode:'index',intersect:false}}});
+}
+window.__onTheme=function(){const p=(oilData&&oilData.products||[]).find(x=>x.code===prod);if(p&&p.chart)renderChart(chartLabels(p.chart),p.chart.map(x=>x.price))};
+
+(async function init(){
+  buildTabs();
+  fillSido();
+  fillGun();
+  document.getElementById('gunSel').onchange=renderStations;
+  await loadOil();
+  renderMain();
+  loadStations();
+})();
+</script>
+</body>
+</html>

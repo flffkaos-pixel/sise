@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="theme-color" content="#0C0C0C">
-<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#323233">
+<meta name="color-scheme" content="dark light">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
 <!-- Naver SEO -->
@@ -16,9 +16,9 @@
 <meta name="referrer" content="always">
 
 <!-- GEO/SEO/AEO Meta -->
-<title>모두의 시세 — 실시간 글로벌 금융 시세 (원화 기준) | 70종목 환율·금·지수·코인</title>
-<meta name="description" content="70개 자산(환율 10종, 귀금속 9종, 에너지 2종, 채권 1종, 지수 15종, 암호화폐 9종, 글로벌 주식 24종) 실시간 시세를 원화(₩)로 한눈에 확인하세요. 국내 순금 1돈 고시가부터 30초 자동갱신, 30일 차트, 선형회귀 예측, 금융뉴스까지 무료 제공.">
-<meta name="keywords" content="실시간 시세,환율,금시세,원유가격,주가지수,비트코인,이더리움,코스피,나스닥,S&P500,금융뉴스,원화환산,USDKRW,WTI,VIX,코스닥,닛케이,항셍지수">
+<title>모두의 시세 — 실시간 시세 대시보드 | 환율·금·지수·코인·기름값</title>
+<meta name="description" content="환율 10종, 귀금속 9종, 에너지 2종, 채권 1종, 지수 15종, 암호화폐 9종, 글로벌 주식 24종을 원화 기준으로 한눈에. 주가지수는 포인트 표시, 휘발유·경유·LPG 전국 주유소 평균가와 시도별 비교, 30초 자동갱신, 30일 차트, 선형회귀 예측까지 무료 제공.">
+<meta name="keywords" content="실시간 시세,환율,금시세,원유가격,주가지수,비트코인,기름값,주유소 가격,휘발유 가격,경유 가격,LPG 가격,오피넷,USDKRW,WTI,VIX,코스피,닛케이,항셍지수">
 <link rel="canonical" href="https://modu-sise.vercel.app/">
 <link rel="alternate" hreflang="ko" href="https://modu-sise.vercel.app/">
 <link rel="alternate" hreflang="x-default" href="https://modu-sise.vercel.app/">
@@ -28,8 +28,8 @@
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://modu-sise.vercel.app/">
-<meta property="og:title" content="모두의 시세 — 실시간 글로벌 금융 시세 (원화 기준)">
-<meta property="og:description" content="환율·금·원유·지수·코인 20종목 실시간 시세, 원화 환산, 차트·예측·뉴스 무료 제공">
+<meta property="og:title" content="모두의 시세 — 실시간 시세 대시보드">
+<meta property="og:description" content="환율·금·원유·지수·코인·기름값 실시간 시세, 원화 기준, 차트·예측·뉴스 무료 제공">
 <meta property="og:image" content="https://modu-sise.vercel.app/og-image.svg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -39,8 +39,8 @@
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="모두의 시세 — 실시간 글로벌 금융 시세">
-<meta name="twitter:description" content="20개 자산 실시간 시세, 원화 기준, 차트·예측·뉴스 무료">
+<meta name="twitter:title" content="모두의 시세 — 실시간 시세 대시보드">
+<meta name="twitter:description" content="70종목 금융 시세 + 기름값, 원화 기준, 차트·예측·뉴스 무료">
 <meta name="twitter:image" content="https://modu-sise.vercel.app/og-image.svg">
 
 <!-- JSON-LD Structured Data -->
@@ -50,21 +50,16 @@
   "@type": "WebSite",
   "name": "모두의 시세",
   "url": "https://modu-sise.vercel.app/",
-  "description": "실시간 글로벌 금융 시세 대시보드 — 환율, 금, 원유, 지수, 암호화폐 시세를 원화(₩)로 실시간 제공",
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": "https://modu-sise.vercel.app/?q={search_term_string}",
-    "query-input": "required name=search_term_string"
-  },
+  "description": "실시간 글로벌 금융 시세 대시보드 — 환율, 금, 원유, 지수, 암호화폐, 주유소 기름값을 원화(₩)로 실시간 제공",
   "inLanguage": "ko-KR",
   "publisher": {
     "@type": "Organization",
     "name": "모두의 시세",
     "url": "https://modu-sise.vercel.app/",
-    "description": "실시간 글로벌 금융 시세 서비스 — Yahoo Finance 기반 원화 환산 시세 제공",
+    "description": "실시간 글로벌 금융 시세 서비스 — Yahoo Finance 기반 원화 환산 시세 및 오피넷 주유소 기름값 제공",
     "foundingDate": "2025",
     "knowsLanguage": "ko",
-    "knowsAbout": ["Finance", "Currency Exchange", "Stock Market", "Cryptocurrency"]
+    "knowsAbout": ["Finance", "Currency Exchange", "Stock Market", "Cryptocurrency", "Fuel Prices"]
   }
 }
 </script>
@@ -84,14 +79,9 @@
   "@context": "https://schema.org",
   "@type": "WebPage",
   "name": "모두의 시세 - 메인 대시보드",
-  "description": "글로벌 금융 자산 실시간 시세 (환율, 금, 은, 원유, 천연가스, S&P500, 다우존스, 나스닥, VIX, 미10년금리, 코스피, 코스닥, 닛케이, 항셍, 비트코인, 이더리움, 리플)",
+  "description": "글로벌 금융 자산 실시간 시세와 주유소 기름값 (환율, 금, 은, 원유, 지수, 암호화폐, 휘발유, 경유, LPG)",
   "url": "https://modu-sise.vercel.app/",
   "isPartOf": { "@id": "https://modu-sise.vercel.app/#website" },
-  "about": {
-    "@type": "FinancialProduct",
-    "name": "실시간 금융 시세",
-    "category": "Financial Data"
-  },
   "mainEntity": {
     "@type": "ItemList",
     "itemListElement": [
@@ -164,7 +154,10 @@
       {"@type":"ListItem","position":67,"name":"국내 순금 1돈 (살 때)"},
       {"@type":"ListItem","position":68,"name":"국내 순금 1돈 (팔 때)"},
       {"@type":"ListItem","position":69,"name":"국내 18K 1돈"},
-      {"@type":"ListItem","position":70,"name":"국내 14K 1돈"}
+      {"@type":"ListItem","position":70,"name":"국내 14K 1돈"},
+      {"@type":"ListItem","position":71,"name":"휘발유 전국평균"},
+      {"@type":"ListItem","position":72,"name":"경유 전국평균"},
+      {"@type":"ListItem","position":73,"name":"LPG 전국평균"}
     ]
   }
 }
@@ -175,140 +168,72 @@
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
-    {"@type":"Question","name":"모두의 시세는 어떤 서비스인가요?","acceptedAnswer":{"@type":"Answer","text":"야후 파이낸스 데이터와 한국금거래소 고시를 기반으로 70개 금융 자산(환율 10종, 귀금속 9종, 에너지 2종, 채권 1종, 지수 15종, 암호화폐 9종, 글로벌 주식 24종)의 실시간 시세를 원화(₩)로 환산해 제공하는 무료 대시보드입니다. 국내 순금 1돈 살 때/팔 때 고시가도 함께 확인할 수 있습니다."}},
+    {"@type":"Question","name":"모두의 시세는 어떤 서비스인가요?","acceptedAnswer":{"@type":"Answer","text":"야후 파이낸스 데이터와 오피넷 고시, 한국금거래소 고시를 기반으로 70개 금융 자산과 휘발유·경유·LPG 기름값의 시세를 원화(₩)로 환산해 제공하는 무료 대시보드입니다."}},
     {"@type":"Question","name":"시세는 얼마나 자주 갱신되나요?","acceptedAnswer":{"@type":"Answer","text":"자동으로 30초마다 갱신되며, 수동 새로고침 버튼으로 즉시 최신 데이터를 불러올 수 있습니다."}},
-    {"@type":"Question","name":"JPY/KRW가 100엔당 가격으로 나오는 이유는?","acceptedAnswer":{"@type":"Answer","text":"엔화 가치가 낮아 1엔당 원화 환율이 소수점 단위라 가독성을 위해 100엔당 가격(×100)으로 표시합니다."}},
-    {"@type":"Question","name":"차트와 예측 기능은 어떻게 이용하나요?","acceptedAnswer":{"@type":"Answer","text":"각 시세 카드를 클릭하면 상세 페이지로 이동해 30일 차트(Chart.js)와 선형회귀 기반 내일 가격 예측(R² 신뢰도 포함)을 볼 수 있습니다."}},
+    {"@type":"Question","name":"기름값은 어디서 가져오나요?","acceptedAnswer":{"@type":"Answer","text":"오피넷(OPINET)의 전국 주유소 가격 정보를 기반으로 휘발유·경유·LPG의 전국평균과 시도별 평균, 저가 주유소 목록을 제공합니다."}},
+    {"@type":"Question","name":"차트와 예측 기능은 어떻게 이용하나요?","acceptedAnswer":{"@type":"Answer","text":"각 시세 행을 클릭하면 상세 페이지로 이동해 30일 차트(Chart.js)와 선형회귀 기반 내일 가격 예측(R² 신뢰도 포함)을 볼 수 있습니다."}},
     {"@type":"Question","name":"금융 뉴스는 어디서 가져오나요?","acceptedAnswer":{"@type":"Answer","text":"연합뉴스, 전자신문, 구글 뉴스 등 6개 무료 RSS 소스에서 실시간 수집하며, 금융 키워드 필터링으로 관련 기사만 표시합니다."}}
   ]
 }
 </script>
 
-<!-- DNS Prefetch -->
 <link rel="dns-prefetch" href="https://query1.finance.yahoo.com">
 <link rel="dns-prefetch" href="https://news.google.com">
 <link rel="dns-prefetch" href="https://www.yna.co.kr">
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800;900&display=swap">
-
-<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-html,body,#root{background:#0C0C0C;font-family:'Kanit',sans-serif;color:#FFFFFF;min-height:100vh;overflow-x:clip}
-.wrap{max-width:1280px;margin:0 auto;padding:32px 24px}
-.hero-heading{background:linear-gradient(180deg,#646973 0%,#BBCCD7 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-nav{display:flex;justify-content:flex-end;gap:clamp(16px,3vw,40px);padding:8px 0 24px;animation:fadeUp .7s cubic-bezier(.25,.1,.25,1) both;animation-delay:0s}
-nav a{color:#FFFFFF;font-weight:500;text-transform:uppercase;letter-spacing:.1em;font-size:clamp(.8rem,1.2vw,1rem);text-decoration:none;transition:opacity .2s;cursor:default}
-nav a:hover{opacity:.6}
-header{text-align:center;padding:clamp(20px,4vw,48px) 0 clamp(12px,2vw,24px)}
-header h1{font-size:clamp(2.5rem,10vw,7rem);font-weight:900;text-transform:uppercase;letter-spacing:-2px;line-height:.9;animation:fadeUp .7s cubic-bezier(.25,.1,.25,1) both;animation-delay:.1s}
-header p{font-weight:300;font-size:clamp(.9rem,1.6vw,1.25rem);color:#BBBBBB;text-transform:uppercase;letter-spacing:.15em;margin-top:8px;animation:fadeUp .7s cubic-bezier(.25,.1,.25,1) both;animation-delay:.2s}
-.status-bar{display:flex;justify-content:space-between;align-items:center;padding:16px 0 20px;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:32px;animation:fadeUp .7s cubic-bezier(.25,.1,.25,1) both;animation-delay:.3s}
-.status-bar .time{font-weight:300;font-size:clamp(.85rem,1.3vw,1rem);color:#BBBBBB;letter-spacing:.02em}
-.status-bar .badge{font-weight:500;font-size:clamp(.65rem,1vw,.8rem);text-transform:uppercase;letter-spacing:.12em;padding:4px 14px;border:1px solid rgba(255,255,255,.15);border-radius:999px;color:rgba(255,255,255,.5)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
-.card{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:clamp(20px,2.5vw,32px);transition:border-color .4s,transform .4s,box-shadow .4s;backdrop-filter:blur(6px);animation:fadeUp .6s cubic-bezier(.25,.1,.25,1) both;cursor:pointer;text-decoration:none;display:block;color:inherit}
-.card:hover{border-color:rgba(255,255,255,.2);transform:translateY(-4px);box-shadow:0 8px 40px rgba(0,0,0,.3)}
-.card .label{font-size:clamp(.75rem,1.1vw,.85rem);font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.45);margin-bottom:12px}
-.card .head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}
-.card .head .label{margin-bottom:0}
-.kr-badge{font-size:.58rem;font-weight:700;letter-spacing:.05em;color:#1a1a1a;background:#FFC400;border-radius:999px;padding:3px 9px;white-space:nowrap;flex-shrink:0}
-.card .cmp{font-size:clamp(.62rem,.85vw,.7rem);font-weight:400;color:rgba(255,255,255,.5);margin-top:8px;letter-spacing:.02em}
-.card .cmp b{color:#FFC400;font-weight:600}
-.card .price{font-size:clamp(1.5rem,3.2vw,2.4rem);font-weight:700;letter-spacing:-.5px;line-height:1.2;color:#FFFFFF}
-.card .price .won{font-weight:300;font-size:.6em;color:rgba(255,255,255,.35);margin-right:3px}
-.card .change{font-size:clamp(.9rem,1.5vw,1.15rem);font-weight:500;margin-top:8px}
-.card .prev{font-size:clamp(.7rem,1vw,.8rem);font-weight:300;color:rgba(255,255,255,.3);margin-top:16px;border-top:1px solid rgba(255,255,255,.06);padding-top:12px}
-.up{color:#3fb950}.down{color:#f85149}
-.news-box{background:rgba(255,255,255,.015);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:clamp(16px,2vw,28px);margin:0 0 32px;animation:fadeUp .7s cubic-bezier(.25,.1,.25,1) both;animation-delay:.4s}
-.news-box h2{font-weight:500;font-size:clamp(.8rem,1.2vw,.9rem);text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.4);margin-bottom:16px}
-.news-item{padding:14px 0;border-bottom:1px solid rgba(255,255,255,.05)}
-.news-item:last-child{border-bottom:none;padding-bottom:0}
-.news-item .n-title{font-weight:500;font-size:clamp(.85rem,1.3vw,1rem);color:#FFFFFF;text-decoration:none;display:block;line-height:1.4;transition:opacity .2s}
-.news-item .n-title:hover{opacity:.7}
-.news-item .n-meta{font-weight:300;font-size:clamp(.65rem,.9vw,.75rem);color:rgba(255,255,255,.35);margin-top:6px}
-.news-item .n-summary{font-weight:300;font-size:clamp(.7rem,1vw,.8rem);color:rgba(255,255,255,.45);margin-top:4px;line-height:1.3}
-.ns-list{max-height:360px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.08) transparent}
-.ns-list::-webkit-scrollbar{width:4px}.ns-list::-webkit-scrollbar-track{background:transparent}.ns-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:4px}
-.news-empty{padding:40px 0;text-align:center;font-weight:300;font-size:clamp(.8rem,1.1vw,.9rem);color:rgba(255,255,255,.25)}
-.ad-slot{display:block;min-height:0}
-.ad-slot ins{display:block;width:100%}
-.ad-slot iframe{display:block;width:100%;min-height:0;border:none;background:transparent}
-.ad-slot iframe[style*="background-color:transparent"]{display:block !important}
-.ad-slot iframe body{background:transparent !important;margin:0 !important;padding:0 !important}
-.ft{text-align:center;padding:48px 0 24px;animation:fadeUp .7s cubic-bezier(.25,.1,.25,1) both;animation-delay:.8s}
-.btn{font-family:'Kanit',sans-serif;font-weight:500;text-transform:uppercase;letter-spacing:.12em;padding:10px 32px;background:rgba(255,255,255,.03);color:#FFFFFF;border:1px solid rgba(255,255,255,.1);border-radius:999px;cursor:pointer;font-size:clamp(.7rem,1vw,.8rem);transition:all .3s}
-.btn:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.25)}
-.ft p{font-weight:300;font-size:clamp(.65rem,.9vw,.75rem);color:rgba(255,255,255,.25);margin-top:14px;letter-spacing:.05em}
-.ld{text-align:center;padding:100px 0;color:rgba(255,255,255,.3)}
-.sp{width:28px;height:28px;border:2px solid rgba(255,255,255,.08);border-top-color:#BBCCD7;border-radius:50%;animation:spin .8s linear infinite;display:inline-block}
-@keyframes spin{to{transform:rotate(360deg)}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-@media(max-width:600px){.wrap{padding:20px 14px}.grid{grid-template-columns:1fr 1fr;gap:10px}.card{padding:16px;border-radius:16px}}
-</style>
+<link rel="dns-prefetch" href="https://www.opinet.co.kr">
+<link rel="stylesheet" href="/theme.css">
+<script>
+(function(){var t='vscode';try{t=localStorage.getItem('modu-theme')||'vscode'}catch(e){}document.documentElement.setAttribute('data-theme',t);
+window.__setTheme=function(x){document.documentElement.setAttribute('data-theme',x);try{localStorage.setItem('modu-theme',x)}catch(e){}var bs=document.querySelectorAll('.theme-toggle button');for(var i=0;i<bs.length;i++)bs[i].classList.toggle('on',bs[i].getAttribute('data-theme')===x);if(window.__onTheme)window.__onTheme(x)}})();
+</script>
 </head>
 <body>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1955893232253258" crossorigin="anonymous"></script>
-<script>
-  window.adsbygoogle = window.adsbygoogle || [];
-</script>
+<script>window.adsbygoogle=window.adsbygoogle||[];</script>
 
-<header class="site-header" role="banner">
-  <div class="wrap">
-    <nav class="main-nav" aria-label="주요 메뉴">
-      <a href="/">홈</a>
-      <a href="/privacy.html">개인정보처리방침</a>
-      <a href="/terms.html">이용약관</a>
-      <a href="/contact.html">문의하기</a>
-    </nav>
-    <div class="hero">
-      <h1 class="hero-heading">모두의 시세</h1>
-      <p>실시간 글로벌 경제지표 · 원화 기준</p>
-      <p class="auto-refresh" aria-live="polite">30초 자동갱신</p>
+<header class="topbar" role="banner">
+  <div class="topbar-main">
+    <a class="brand" href="/"><span class="brand-mark">₩</span><span class="brand-name">모두의 시세</span><span class="brand-sub">실시간 글로벌 시세</span></a>
+    <div class="theme-toggle" role="group" aria-label="테마 선택">
+      <button type="button" data-theme="vscode" onclick="__setTheme('vscode')">VS Code</button>
+      <button type="button" data-theme="excel" onclick="__setTheme('excel')">엑셀</button>
     </div>
   </div>
+  <nav class="topbar-tabs" aria-label="주요 메뉴">
+    <a href="/" class="active">홈</a>
+    <a href="/oil.html">기름값</a>
+    <a href="/privacy.html">개인정보처리방침</a>
+    <a href="/terms.html">이용약관</a>
+    <a href="/contact.html">문의하기</a>
+  </nav>
 </header>
 
-<main class="main-content" role="main">
+<main role="main">
   <div class="wrap">
-    <!-- AEO: 상태 표시줄 + GEO 통계 -->
-    <div class="status-bar" role="status" aria-live="polite" aria-label="마지막 갱신 시간">
-      <span class="time" id="tb">불러오는 중...</span>
-      <span class="badge">Yahoo Finance · 글로벌 · 원화기준</span>
-    </div>
-    <div class="search-bar" style="margin:16px 0;position:relative">
-      <input id="search" type="text" placeholder="종목 검색 (이름 또는 티커)..." style="width:100%;padding:10px 14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:999px;color:#D7E2EA;font-size:clamp(.8rem,1.1vw,.9rem);outline:none;box-sizing:border-box;font-family:inherit" oninput="searchStocks(this.value)">
+    <div class="page-head">
+      <h1>실시간 시세 대시보드</h1>
+      <p>환율·귀금속·에너지·채권·주가지수·암호화폐·글로벌 주식 70종목과 전국 기름값을 제공합니다. 주가지수는 포인트, 그 외 자산은 원화(₩) 기준입니다.</p>
     </div>
 
-    <!-- GEO: 신뢰 신호 - 통계 인용 -->
-    <div class="geo-stats" style="display:none;text-align:center;padding:0 0 24px;animation:fadeUp .7s both;animation-delay:.25s" aria-label="서비스 통계">
-      <p style="font-weight:300;font-size:clamp(.75rem,1vw,.85rem);color:rgba(255,255,255,.35);letter-spacing:.02em">
-        Yahoo Finance 실시간 데이터 · 70종목 자산 · 8개 카테고리 · 6개 금융 뉴스 소스 · 30초 갱신 · 30일 차트 · AI 예측
-      </p>
+    <div class="status" role="status" aria-live="polite" aria-label="마지막 갱신 시간">
+      <span><span class="dot" aria-hidden="true"></span><span id="tb">불러오는 중...</span></span>
+      <span>Yahoo Finance · 오피넷 · 원화·포인트 기준</span>
     </div>
 
-    <!-- AEO: 질문 기반 뉴스 섹션 -->
-    <section aria-labelledby="news-heading" class="news-section">
-      <div id="news-box" class="news-box" style="display:none" role="region" aria-label="금융 뉴스">
-        <h2 id="news-heading">오늘의 주요 금융 뉴스 — 어떤 일이 있었나요?</h2>
-        <p style="font-weight:300;font-size:clamp(.75rem,1vw,.85rem);color:rgba(255,255,255,.35);margin:-8px 0 16px">연합뉴스·전자신문·Google News 6개 소스에서 금융 키워드(80+개)로 필터링한 주요 뉴스입니다.</p>
-        <div id="news-list" class="ns-list"></div>
-      </div>
+    <input id="search" class="search" type="text" placeholder="종목 검색 (이름 또는 티커)..." oninput="searchStocks(this.value)">
+
+    <section class="table-wrap" style="margin-top:14px" aria-label="실시간 금융 시세">
+      <table class="qt">
+        <thead>
+          <tr><th>종목</th><th class="num">현재가</th><th class="num">전일대비</th><th class="num">등락률</th></tr>
+        </thead>
+        <tbody id="tbody">
+          <tr><td colspan="4" class="ld" style="padding:90px 20px"><span class="sp"></span></td></tr>
+        </tbody>
+      </table>
     </section>
 
-    <!-- AEO: 질문 기반 시세 섹션 -->
-    <section aria-labelledby="quotes-heading" class="quotes-section">
-      <h2 id="quotes-heading" style="font-weight:500;font-size:clamp(1.1rem,1.8vw,1.4rem);margin-bottom:4px;color:#FFFFFF">실시간 글로벌 시세, 지금 얼마인가요?</h2>
-      <p style="font-weight:300;font-size:clamp(.75rem,1vw,.85rem);color:rgba(255,255,255,.35);margin:0 0 20px">환율·귀금속·에너지·채권·주가지수·암호화폐·글로벌 주식 70종목을 Yahoo Finance 실시간 데이터로 원화(₩) 환산하여 제공합니다.</p>
-      <div id="app" role="feed" aria-label="실시간 금융 시세">
-        <div class="ld" role="status" aria-label="데이터 로딩 중">
-          <div class="sp" aria-hidden="true"></div>
-          <p>데이터 로딩중...</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- AdSense Slot (Article Middle) -->
-    <div class="ad-slot ad-slot-middle" aria-hidden="true">
+    <div class="ad-slot" aria-hidden="true">
       <ins class="adsbygoogle"
            style="display:block; text-align:center;"
            data-ad-format="fluid"
@@ -316,36 +241,28 @@ header p{font-weight:300;font-size:clamp(.9rem,1.6vw,1.25rem);color:#BBBBBB;text
            data-ad-slot="1955893232"></ins>
       <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
+
+    <section class="box" id="oil-box" style="display:none" aria-label="전국 주유소 기름값">
+      <h2>기름값 — 전국 주유소 평균</h2>
+      <p class="sub"><span id="oil-update"></span> · 오피넷 고시 · 시도별 비교와 저가 주유소 확인은 <a href="/oil.html">기름값 상세</a></p>
+      <div class="table-wrap">
+        <table class="qt">
+          <thead><tr><th>품목</th><th class="num">전국평균</th><th class="num">전일대비</th><th class="num">최저~최고</th></tr></thead>
+          <tbody id="oil-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="box" id="news-box" style="display:none" aria-label="금융 뉴스">
+      <h2>오늘의 주요 금융 뉴스</h2>
+      <p class="sub">연합뉴스·전자신문·Google News에서 금융 키워드로 수집한 뉴스</p>
+      <div id="news-list"></div>
+    </section>
   </div>
 </main>
 
 <footer class="site-footer" role="contentinfo">
-  <div class="wrap">
-    <!-- E-E-A-T: 작성자/운영자 정보 -->
-    <div class="eeat-info" style="max-width:600px;margin:0 auto 32px;padding:20px;background:rgba(255,255,255,.015);border:1px solid rgba(255,255,255,.06);border-radius:16px;text-align:center">
-      <p style="font-weight:500;font-size:clamp(.75rem,1vw,.85rem);letter-spacing:.05em;color:rgba(255,255,255,.5);margin-bottom:8px">운영자 정보 · E-E-A-T</p>
-      <p style="font-weight:300;font-size:clamp(.7rem,.9vw,.8rem);color:rgba(255,255,255,.35);line-height:1.6">
-        모두의 시세(Modu Sise)는 Yahoo Finance의 실시간 금융 데이터와 6개 공개 RSS(연합뉴스, 전자신문, Google News)를 기반으로 
-        20개 글로벌 금융 자산의 시세를 원화(KRW) 기준으로 제공하는 독립 서비스입니다. 
-        모든 데이터는 Yahoo Finance v8 chart API를 통해 30초 간격으로 갱신되며, 
-        예측값은 30일 선형회귀 분석 기반으로 투자 참고용입니다.
-      </p>
-      <p style="font-weight:300;font-size:clamp(.65rem,.85vw,.75rem);color:rgba(255,255,255,.2);margin-top:8px">
-        문의: <a href="/contact.html" style="color:rgba(255,255,255,.4);text-decoration:underline">문의하기</a> · 
-        <a href="https://github.com/flffkaos-pixel/sise" style="color:rgba(255,255,255,.4);text-decoration:underline" rel="external nofollow">GitHub</a>
-      </p>
-    </div>
-
-    <!-- GEO: 출처 표시 -->
-    <div style="text-align:center;padding:0 0 20px">
-      <p style="font-weight:300;font-size:clamp(.6rem,.8vw,.7rem);color:rgba(255,255,255,.15);letter-spacing:.03em">
-        데이터 출처: <a href="https://finance.yahoo.com" style="color:rgba(255,255,255,.3);text-decoration:underline" rel="external nofollow">Yahoo Finance</a> · 
-        <a href="https://www.yna.co.kr" style="color:rgba(255,255,255,.3);text-decoration:underline" rel="external nofollow">연합뉴스</a> · 
-        <a href="https://www.etnews.com" style="color:rgba(255,255,255,.3);text-decoration:underline" rel="external nofollow">전자신문</a> · 
-        <a href="https://news.google.com" style="color:rgba(255,255,255,.3);text-decoration:underline" rel="external nofollow">Google News</a>
-      </p>
-    </div>
-
+  <div class="wrap" style="padding-top:0;padding-bottom:0">
     <nav aria-label="푸터 링크">
       <a href="/privacy.html">개인정보처리방침</a>
       <a href="/terms.html">이용약관</a>
@@ -353,83 +270,105 @@ header p{font-weight:300;font-size:clamp(.9rem,1.6vw,1.25rem);color:#BBBBBB;text
       <a href="/sitemap.xml">사이트맵</a>
       <a href="/llms.txt">llms.txt</a>
     </nav>
-    <p>© 2025 모두의 시세. 본 서비스는 Yahoo Finance API를 활용하며, Yahoo와 제휴 관계가 아닙니다.</p>
+    <p>데이터 출처: <a href="https://finance.yahoo.com" rel="external nofollow">Yahoo Finance</a> · <a href="https://www.opinet.co.kr" rel="external nofollow">오피넷</a> · <a href="https://www.yna.co.kr" rel="external nofollow">연합뉴스</a> · <a href="https://www.etnews.com" rel="external nofollow">전자신문</a> · <a href="https://news.google.com" rel="external nofollow">Google News</a></p>
+    <p>© 2025 모두의 시세. 본 서비스는 Yahoo Finance API와 오피넷 공개 정보를 활용하며, 각 기관과 제휴 관계가 아닙니다.</p>
     <p class="disclaimer">본 정보는 투자 참고용이며, 투자 판단과 책임은 이용자에게 있습니다. 과거 데이터 기반 예측은 실제 결과와 다를 수 있습니다.</p>
   </div>
 </footer>
 
 <script>
 const CATS=[
-{id:"fx",name:"환율",icon:"💱",items:[
-{l:"원/달러",t:"USDKRW=X",e:"💵"},{l:"유로/원",t:"EURKRW=X",e:"💶"},{l:"엔/원 (100엔당)",t:"JPYKRW=X",e:"💴",h:100},{l:"위안/원",t:"CNYKRW=X",e:"💷"},
-{l:"호주달러/원",t:"AUDKRW=X",e:"🇦🇺"},{l:"파운드/원",t:"GBPKRW=X",e:"🇬🇧"},{l:"캐나다달러/원",t:"CADKRW=X",e:"🇨🇦"},{l:"스위스프랑/원",t:"CHFKRW=X",e:"🇨🇭"},{l:"홍콩달러/원",t:"HKDKRW=X",e:"🇭🇰"},{l:"싱가포르달러/원",t:"SGDKRW=X",e:"🇸🇬"}
+{id:"fx",name:"환율",items:[
+{l:"원/달러",t:"USDKRW=X"},{l:"유로/원",t:"EURKRW=X"},{l:"엔/원 (100엔당)",t:"JPYKRW=X",h:100},{l:"위안/원",t:"CNYKRW=X"},
+{l:"호주달러/원",t:"AUDKRW=X"},{l:"파운드/원",t:"GBPKRW=X"},{l:"캐나다달러/원",t:"CADKRW=X"},{l:"스위스프랑/원",t:"CHFKRW=X"},{l:"홍콩달러/원",t:"HKDKRW=X"},{l:"싱가포르달러/원",t:"SGDKRW=X"}
 ]},
-{id:"metal",name:"귀금속",icon:"🥇",items:[
-{l:"순금 1돈 (살 때)",t:"KR_PURE_BUY",e:"🥇",kr:"pure",m:"buy",p:1},{l:"순금 1돈 (팔 때)",t:"KR_PURE_SELL",e:"🥇",kr:"pure",m:"sell",p:1},{l:"18K 1돈",t:"KR_18K_BUY",e:"💍",kr:"k18",m:"buy",p:.75},{l:"14K 1돈",t:"KR_14K_BUY",e:"💍",kr:"k14",m:"buy",p:.585},
-{l:"금",t:"GC=F",e:"🥇"},{l:"은",t:"SI=F",e:"🥈"},{l:"백금",t:"PL=F",e:"💎"},{l:"팔라듐",t:"PA=F",e:"🔬"},{l:"구리",t:"HG=F",e:"🔌"}
+{id:"metal",name:"귀금속",items:[
+{l:"순금 1돈 (살 때)",t:"KR_PURE_BUY",kr:"pure",m:"buy",p:1},{l:"순금 1돈 (팔 때)",t:"KR_PURE_SELL",kr:"pure",m:"sell",p:1},{l:"18K 1돈",t:"KR_18K_BUY",kr:"k18",m:"buy",p:.75},{l:"14K 1돈",t:"KR_14K_BUY",kr:"k14",m:"buy",p:.585},
+{l:"금",t:"GC=F"},{l:"은",t:"SI=F"},{l:"백금",t:"PL=F"},{l:"팔라듐",t:"PA=F"},{l:"구리",t:"HG=F"}
 ]},
-{id:"energy",name:"에너지",icon:"🛢️",items:[
-{l:"WTI 원유",t:"CL=F",e:"🛢️"},{l:"천연가스",t:"NG=F",e:"🔥"}
+{id:"energy",name:"에너지",items:[
+{l:"WTI 원유",t:"CL=F"},{l:"천연가스",t:"NG=F"}
 ]},
-{id:"bond",name:"채권",icon:"📜",items:[
-{l:"美 30년물 금리",t:"^TYX",e:"📅"}
+{id:"bond",name:"채권",items:[
+{l:"美 30년물 금리",t:"^TYX"}
 ]},
-{id:"index",name:"지수",icon:"📊",items:[
-{l:"S&P 500",t:"^GSPC",e:"📈"},{l:"다우존스",t:"^DJI",e:"🏛️"},{l:"나스닥",t:"^IXIC",e:"💻"},{l:"VIX 공포지수",t:"^VIX",e:"😨"},{l:"美 10년물 금리",t:"^TNX",e:"🏦"},{l:"코스피",t:"^KS11",e:"🇰🇷"},{l:"코스닥",t:"^KQ11",e:"📋"},{l:"닛케이",t:"^N225",e:"🇯🇵"},{l:"항셍지수",t:"^HSI",e:"🇭🇰"},
-{l:"영국 FTSE",t:"^FTSE",e:"🇬🇧"},{l:"독일 DAX",t:"^GDAXI",e:"🇩🇪"},{l:"프랑스 CAC",t:"^FCHI",e:"🇫🇷"},{l:"인도 Sensex",t:"^BSESN",e:"🇮🇳"},{l:"호주 ASX",t:"^AXJO",e:"🇦🇺"},{l:"브라질 IBOVESPA",t:"^BVSP",e:"🇧🇷"}
+{id:"index",name:"지수",items:[
+{l:"S&P 500",t:"^GSPC"},{l:"다우존스",t:"^DJI"},{l:"나스닥",t:"^IXIC"},{l:"VIX 공포지수",t:"^VIX"},{l:"美 10년물 금리",t:"^TNX"},{l:"코스피",t:"^KS11"},{l:"코스닥",t:"^KQ11"},{l:"닛케이",t:"^N225"},{l:"항셍지수",t:"^HSI"},
+{l:"영국 FTSE",t:"^FTSE"},{l:"독일 DAX",t:"^GDAXI"},{l:"프랑스 CAC",t:"^FCHI"},{l:"인도 Sensex",t:"^BSESN"},{l:"호주 ASX",t:"^AXJO"},{l:"브라질 IBOVESPA",t:"^BVSP"}
 ]},
-{id:"crypto",name:"암호화폐",icon:"₿",items:[
-{l:"비트코인",t:"BTC-USD",e:"₿"},{l:"이더리움",t:"ETH-USD",e:"💎"},{l:"리플",t:"XRP-USD",e:"✖️"},
-{l:"솔라나",t:"SOL-USD",e:"◎"},{l:"도지코인",t:"DOGE-USD",e:"🐕"},{l:"에이다",t:"ADA-USD",e:"🪙"},{l:"폴카닷",t:"DOT-USD",e:"●"},{l:"아발란체",t:"AVAX-USD",e:"🔺"},{l:"체인링크",t:"LINK-USD",e:"🔗"}
+{id:"crypto",name:"암호화폐",items:[
+{l:"비트코인",t:"BTC-USD"},{l:"이더리움",t:"ETH-USD"},{l:"리플",t:"XRP-USD"},{l:"솔라나",t:"SOL-USD"},{l:"도지코인",t:"DOGE-USD"},{l:"에이다",t:"ADA-USD"},{l:"폴카닷",t:"DOT-USD"},{l:"아발란체",t:"AVAX-USD"},{l:"체인링크",t:"LINK-USD"}
 ]},
-{id:"stock",name:"글로벌 주식",icon:"🏢",items:[
-{l:"삼성전자",t:"005930.KS",e:"📱"},{l:"SK하이닉스",t:"000660.KS",e:"🔴"},{l:"NAVER",t:"035420.KS",e:"🔍"},{l:"현대차",t:"005380.KS",e:"🚗"},{l:"LG에너지솔루션",t:"373220.KS",e:"🔋"},{l:"삼성바이오로직스",t:"207940.KS",e:"💊"},{l:"POSCO홀딩스",t:"005490.KS",e:"🏭"},{l:"카카오",t:"035720.KS",e:"💬"},{l:"셀트리온",t:"068270.KS",e:"🧬"},{l:"Visa",t:"V",e:"💳"},{l:"JP모건",t:"JPM",e:"🏦"},{l:"월마트",t:"WMT",e:"🛒"},{l:"디즈니",t:"DIS",e:"🎬"},{l:"넷플릭스",t:"NFLX",e:"📺"},{l:"AMD",t:"AMD",e:"💻"},{l:"코카콜라",t:"KO",e:"🥤"},{l:"브로드컴",t:"AVGO",e:"🔌"},{l:"애플",t:"AAPL",e:"🍎"},{l:"마이크로소프트",t:"MSFT",e:"🪟"},{l:"엔비디아",t:"NVDA",e:"🟢"},{l:"테슬라",t:"TSLA",e:"🚗"},{l:"구글",t:"GOOGL",e:"🔍"},{l:"아마존",t:"AMZN",e:"📦"},{l:"메타",t:"META",e:"👤"}
+{id:"stock",name:"글로벌 주식",items:[
+{l:"삼성전자",t:"005930.KS"},{l:"SK하이닉스",t:"000660.KS"},{l:"NAVER",t:"035420.KS"},{l:"현대차",t:"005380.KS"},{l:"LG에너지솔루션",t:"373220.KS"},{l:"삼성바이오로직스",t:"207940.KS"},{l:"POSCO홀딩스",t:"005490.KS"},{l:"카카오",t:"035720.KS"},{l:"셀트리온",t:"068270.KS"},{l:"Visa",t:"V"},{l:"JP모건",t:"JPM"},{l:"월마트",t:"WMT"},{l:"디즈니",t:"DIS"},{l:"넷플릭스",t:"NFLX"},{l:"AMD",t:"AMD"},{l:"코카콜라",t:"KO"},{l:"브로드컴",t:"AVGO"},{l:"애플",t:"AAPL"},{l:"마이크로소프트",t:"MSFT"},{l:"엔비디아",t:"NVDA"},{l:"테슬라",t:"TSLA"},{l:"구글",t:"GOOGL"},{l:"아마존",t:"AMZN"},{l:"메타",t:"META"}
 ]}
 ];
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 function fmt(n){return Math.round(n).toLocaleString()}
-function tf(ts){if(!ts)return'';const d=new Date(ts*1000),n=new Date(),s=(n-d)/1000;if(s<60)return'방금';if(s<3600)return Math.floor(s/60)+'분 전';if(s<86400)return Math.floor(s/3600)+'시간 전';return d.toLocaleDateString('ko-KR',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}
-const itemMap={};CATS.forEach(c=>c.items.forEach(x=>{itemMap[x.t]=x;if(x.t[0]=='^')itemMap[x.t.replace('^','%5E')]=x}));
-function searchStocks(q){q=q.toLowerCase().trim();document.querySelectorAll('.cat-section').forEach(s=>{let c=0;s.querySelectorAll('.card').forEach(card=>{const m=card.textContent.toLowerCase().includes(q);card.style.display=m?'':'none';if(m)c++});s.style.display=c?'':'none'})}
-async function f(){
-const a=document.getElementById("app"),tb=document.getElementById("tb"),nb=document.getElementById("news-box"),nl=document.getElementById("news-list");
-const isInit=!a.querySelector('.card');
-tb.innerHTML='<span style="opacity:.5">갱신중...</span>';
-if(isInit){a.innerHTML='<div class="ld"><div class="sp"></div><p style="margin-top:16px;font-weight:300;font-size:.85rem">로딩중...</p></div>';nb.style.display='none'}
-try{
-const [qRes,nRes,kgS]=await Promise.all([fetch("/api/quotes"),fetch("/api/news/headlines"),fetch("/api/krgold").catch(()=>null)]);
-let krg=null;try{if(kgS&&kgS.ok)krg=await kgS.json()}catch(e){}
-const j=await qRes.json(),rs=j.quoteResponse?.result||[];
-if(!rs.length)throw Error("no data");
-if(isInit){
-let idx=0;a.innerHTML='';
-const gcR=rs.find(r=>r.symbol==='GC=F'),intlDon=gcR&&gcR.priceKrw?gcR.priceKrw/31.1035*3.75:0;
-const aeoQ={fx:'현재 원/달러·엔·위안 등 주요 환율은 얼마인가요?',metal:'국내 순금 1돈 시세와 국제 금·은 가격은?',energy:'WTI 원유와 천연가스 가격 동향은?',bond:'미국 국채 금리는 얼마인가요?',index:'S&P500·코스피·닛케이 등 주요 지수 흐름은?',crypto:'비트코인·이더리움·리플 등 코인 가격은?',stock:'삼성전자·SK하이닉스·애플·엔비디아 등 글로벌 주가?'};
-const aeoA={fx:'Yahoo Finance 실시간 데이터 기반으로 10개 통화쌍(USD, EUR, JPY(100엔), CNY, AUD, GBP, CAD, CHF, HKD, SGD)의 원화 환산 시세입니다.',metal:'국내 순금(한국금거래소 고시, 1돈 3.75g 살 때/팔 때)·18K·14K 가격과 국제 금(GC=F)·은(SI=F)·백금(PL=F)·팔라듐(PA=F)·구리(HG=F) 선물 가격을 원화 기준으로 제공합니다. 구리는 산업용 금속으로 경기 선행지표로 활용됩니다.',energy:'서부텍사스산중질유 WTI(CL=F)와 천연가스(NG=F) 선물 가격을 원화 환산하여 제공합니다. 에너지 가격은 지정학적 리스크와 수급에 영향을 받습니다.',bond:'미국 30년물(^TYX) 국채 금리를 실시간 제공합니다.',index:'미국(S&P500·다우·나스닥·VIX·10년물), 한국(코스피·코스닥), 일본(닛케이), 홍콩(항셍), 유럽(FTSE·DAX·CAC), 인도·호주·브라질까지 15개국 지수.',crypto:'비트코인·이더리움·리플·솔라나·도지코인·에이다·폴카닷·아발란체·체인링크 등 9개 암호화폐 시세를 원화 환산 제공합니다.',stock:'삼성전자·SK하이닉스·NAVER·현대차·LG에너지솔루션·삼성바이오로직스·POSCO홀딩스·카카오·셀트리온·Visa·JP모건·월마트·디즈니·넷플릭스·AMD·코카콜라·브로드컴·애플·마이크로소프트·엔비디아·테슬라·구글·아마존·메타 등 24개 글로벌 대형주 실시간 주가를 원화 환산합니다.'};
-CATS.forEach(cat=>{
-const sec=document.createElement("section");sec.className="cat-section";sec.setAttribute("aria-label",cat.name);
-sec.innerHTML='<h3 class="cat-title" style="font-weight:600;font-size:clamp(1rem,1.5vw,1.15rem);margin-bottom:4px"><span class="cat-icon">'+cat.icon+'</span> '+aeoQ[cat.id]+'</h3><p style="font-weight:300;font-size:clamp(.7rem,.9vw,.8rem);color:rgba(255,255,255,.3);margin:0 0 14px">'+aeoA[cat.id]+'</p><div class="grid"></div>';
-const grid=sec.querySelector(".grid");
-cat.items.forEach(x=>{
-const c=document.createElement("a");c.className="card";c.href="detail.html?s="+encodeURIComponent(x.t);c.setAttribute("data-sym",x.t);
-c.style.animationDelay=(0.06*idx+++0.4)+'s';
-if(x.kr){const g=krg||{},k=x.m==='sell'?'Sell':'Buy',v=g[x.kr+k],ch=g[x.kr+k+'Chg']||0,cp=g[x.kr+k+'ChgPct']||0;
-if(v){const cmp=intlDon&&x.p?((v/(intlDon*x.p))-1)*100:null;
-c.innerHTML='<div class="head"><div class="label">'+x.e+' '+x.l+'</div><span class="kr-badge">한국시세</span></div><div class="price"><span class="won">₩</span>'+fmt(v)+'</div><div class="change '+(ch>=0?"up":"down")+'">'+(ch>=0?"▲":"▼")+' '+(ch>=0?"+":"")+fmt(ch)+' ('+(cp>=0?"+":"")+cp.toFixed(2)+'%)</div><div class="prev">전일: ₩'+fmt(v-ch)+'</div>'+(cmp!==null?'<div class="cmp">국제 금 1돈(환산) <b>₩'+fmt(intlDon*x.p)+'</b> · 국내 '+(cmp>=0?'+':'')+cmp.toFixed(0)+'%</div>':'')}
-else c.innerHTML='<div class="label">'+x.e+' '+x.l+'</div><div style="color:rgba(255,255,255,.2)">-</div>';
-grid.appendChild(c);return}
-const d=rs.find(r=>r.symbol===x.t||r.symbol===x.t.replace("^","%5E"));
-if(!d){c.innerHTML='<div class="label">'+x.e+' '+x.l+'</div><div style="color:rgba(255,255,255,.2)">-</div>';grid.appendChild(c);return}
-const h=x.h||1,p=d.priceKrw*h,ch=d.changeKrw*h,cp=d.changePercentKrw,pc=d.previousCloseKrw*h;
-const iy=['^TYX','^TNX','^VIX'].includes(x.t),wo=iy?'':'<span class="won">₩</span>',wp=iy?'':'₩';
-c.innerHTML='<div class="label">'+x.e+' '+x.l+'</div><div class="price">'+wo+fmt(p)+'</div><div class="change '+(ch>=0?"up":"down")+'">'+(ch>=0?"▲":"▼")+' '+(ch>=0?"+":"")+fmt(ch)+' ('+(cp>=0?"+":"")+cp.toFixed(2)+'%)</div><div class="prev">전일: '+wp+(pc?fmt(pc):"-")+'</div>';
-grid.appendChild(c)});
-a.appendChild(sec)});
-}else{rs.forEach(r=>{const card=a.querySelector(`[data-sym="${r.symbol}"]`);if(!card)return;const x=itemMap[r.symbol];if(!x)return;const h=x.h||1,p=r.priceKrw*h,ch=r.changeKrw*h,cp=r.changePercentKrw,pc=r.previousCloseKrw*h,iy=['^TYX','^TNX','^VIX'].includes(x.t);const pe=card.querySelector('.price');if(pe)pe.innerHTML=(iy?'':'<span class="won">₩</span>')+fmt(p);const ce=card.querySelector('.change');if(ce){ce.className='change '+(ch>=0?'up':'down');ce.innerHTML=(ch>=0?'▲':'▼')+' '+(ch>=0?'+':'')+fmt(ch)+' ('+(cp>=0?'+':'')+cp.toFixed(2)+'%)'}const pve=card.querySelector('.prev');if(pve)pve.textContent='전일: '+(iy?'':'₩')+(pc?fmt(pc):'-')});
-if(krg){const gcR2=rs.find(r=>r.symbol==='GC=F'),intlDon2=gcR2&&gcR2.priceKrw?gcR2.priceKrw/31.1035*3.75:0;a.querySelectorAll('.card[data-sym^="KR_"]').forEach(card=>{const x=itemMap[card.getAttribute('data-sym')];if(!x)return;const k=x.m==='sell'?'Sell':'Buy',v=krg[x.kr+k],ch=krg[x.kr+k+'Chg']||0,cp=krg[x.kr+k+'ChgPct']||0;if(!v)return;const pe=card.querySelector('.price');if(pe)pe.innerHTML='<span class="won">₩</span>'+fmt(v);const ce=card.querySelector('.change');if(ce){ce.className='change '+(ch>=0?'up':'down');ce.innerHTML=(ch>=0?'▲':'▼')+' '+(ch>=0?'+':'')+fmt(ch)+' ('+(cp>=0?'+':'')+cp.toFixed(2)+'%)'}const pve=card.querySelector('.prev');if(pve)pve.textContent='전일: ₩'+fmt(v-ch);if(intlDon2&&x.p){const ce2=card.querySelector('.cmp');if(ce2){const pp=((v/(intlDon2*x.p))-1)*100;ce2.innerHTML='국제 금 1돈(환산) <b>₩'+fmt(intlDon2*x.p)+'</b> · 국내 '+(pp>=0?'+':'')+pp.toFixed(0)+'%'}}})}
+function go(sym){location.href='detail.html?s='+encodeURIComponent(sym)}
+function qRow(x,rs,krg,intlDon){
+  if(x.kr){
+    const g=krg||{},k=x.m==='sell'?'Sell':'Buy',v=g[x.kr+k],ch=g[x.kr+k+'Chg']||0,cp=g[x.kr+k+'ChgPct']||0;
+    if(!v)return '<tr class="row" data-q="'+esc(x.l)+'" onclick="go(\''+encodeURIComponent(x.t)+'\')"><td class="name"><span class="k">'+esc(x.l)+'</span><span class="t">한국시세</span></td><td class="num none">-</td><td class="num none">-</td><td class="num none">-</td></tr>';
+    return '<tr class="row" data-q="'+esc(x.l)+'" onclick="go(\''+encodeURIComponent(x.t)+'\')"><td class="name"><span class="k">'+esc(x.l)+'</span><span class="t">한국시세</span></td><td class="num">'+fmt(v)+'</td><td class="num chg '+(ch>=0?'up':'down')+'">'+(ch>=0?'+':'')+fmt(ch)+'</td><td class="num pct '+(ch>=0?'up':'down')+'">'+(ch>=0?'+':'')+cp.toFixed(2)+'%</td></tr>';
+  }
+  const d=rs.find(r=>r.symbol===x.t||r.symbol===x.t.replace('^','%5E'));
+  if(!d)return '<tr class="row" data-q="'+esc(x.l)+'" onclick="go(\''+encodeURIComponent(x.t)+'\')"><td class="name"><span class="k">'+esc(x.l)+'</span><span class="t">'+esc(x.t)+'</span></td><td class="num none">-</td><td class="num none">-</td><td class="num none">-</td></tr>';
+  const h=x.h||1,p=d.priceKrw*h,ch=d.changeKrw*h,cp=d.changePercentKrw;
+  return '<tr class="row" data-q="'+esc(x.l)+'" onclick="go(\''+encodeURIComponent(x.t)+'\')"><td class="name"><span class="k">'+esc(x.l)+'</span><span class="t">'+esc(x.t)+'</span></td><td class="num">'+fmt(p)+'</td><td class="num chg '+(ch>=0?'up':'down')+'">'+(ch>=0?'+':'')+fmt(ch)+'</td><td class="num pct '+(ch>=0?'up':'down')+'">'+(ch>=0?'+':'')+cp.toFixed(2)+'%</td></tr>';
 }
-tb.innerHTML='<span>'+new Date().toLocaleTimeString("ko-KR")+'</span>';
-if(nRes.ok){const nd=await nRes.json();if(nd.news&&nd.news.length){nl.innerHTML=nd.news.slice(0,7).map(n=>'<div class="news-item"><a class="n-title" href="'+(n.link||'#')+'" target="_blank" rel="noopener">'+(n.title||'')+'</a><div class="n-meta">'+(n.publisher||'')+' · '+tf(n.time)+'</div></div>').join('');nb.style.display='block'}}
-}catch(e){if(isInit){a.innerHTML='<div class="ld"><p style="color:#f85149;font-weight:500">불러오기 실패</p><p style="margin-top:8px;font-weight:300;font-size:.85rem">'+e.message+'</p><button class="btn" style="margin-top:20px" onclick="f()">다시시도</button></div>'}tb.innerHTML='<span style="opacity:.5">오류</span>'}
+let curQ='';
+function searchStocks(q){curQ=(q||'').toLowerCase().trim();filterTable()}
+function filterTable(){
+  const cats=document.querySelectorAll('#tbody tr.cat');
+  for(let i=0;i<cats.length;i++){
+    const cat=cats[i];let vis=0;let n=cat.nextElementSibling;
+    while(n&&n.classList.contains('row')){
+      const m=!curQ||(n.getAttribute('data-q')||'').toLowerCase().includes(curQ);
+      n.style.display=m?'':'none';if(m)vis++;
+      n=n.nextElementSibling;
+    }
+    cat.style.display=vis?'':'none';
+  }
+}
+const OIL_PNAME={B027:'휘발유',D047:'경유',K015:'LPG'};
+async function renderOil(){
+  const box=document.getElementById('oil-box'),tbody=document.getElementById('oil-tbody'),lbl=document.getElementById('oil-update');
+  let j;
+  try{const r=await fetch('/api/oil');if(!r.ok)return;j=await r.json()}catch(e){return}
+  if(!j.products||!j.products.length){box.style.display='none';return}
+  box.style.display='block';
+  if(lbl)lbl.textContent='기준 '+(j.date||'')+' · 전국평균 (원/리터)';
+  tbody.innerHTML=j.products.map(p=>'<tr class="row" onclick="location.href=\'oil.html?prod='+p.code+'\'"><td class="name"><span class="k">'+OIL_PNAME[p.code]+'</span><span class="t">전국평균</span></td><td class="num">'+p.avg.toFixed(1)+'</td><td class="num chg '+(p.chg>=0?'up':'down')+'">'+(p.chg>=0?'+':'')+p.chg.toFixed(2)+'</td><td class="num none">'+p.min+'~'+p.max+'</td></tr>').join('');
+}
+function tf(ts){if(!ts)return'';const d=new Date(ts*1000),n=new Date(),s=(n-d)/1000;if(s<60)return'방금';if(s<3600)return Math.floor(s/60)+'분 전';if(s<86400)return Math.floor(s/3600)+'시간 전';return d.toLocaleDateString('ko-KR',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}
+async function f(){
+  const tb=document.getElementById('tb'),tbody=document.getElementById('tbody');
+  const isInit=!tbody.querySelector('tr.row');
+  try{
+    const [qRes,nRes]=await Promise.all([fetch('/api/quotes'),fetch('/api/news/headlines')]);
+    const j=await qRes.json(),rs=j.quoteResponse?.result||[];
+    if(!rs.length)throw Error('no data');
+    let krg=null;
+    try{const kg=await fetch('/api/krgold');if(kg.ok)krg=await kg.json()}catch(e){}
+    const gcR=rs.find(r=>r.symbol==='GC=F'),intlDon=gcR&&gcR.priceKrw?gcR.priceKrw/31.1035*3.75:0;
+    let html='';
+    for(let ci=0;ci<CATS.length;ci++){
+      const cat=CATS[ci];
+      html+='<tr class="cat"><td colspan="4">'+cat.name+'<span class="cnt">'+cat.items.length+'종목</span></td></tr>';
+      for(let ii=0;ii<cat.items.length;ii++)html+=qRow(cat.items[ii],rs,krg,intlDon);
+    }
+    tbody.innerHTML=html;
+    filterTable();
+    renderOil();
+    tb.textContent='갱신 ' + new Date().toLocaleTimeString('ko-KR');
+    if(nRes.ok){const nd=await nRes.json();const nl=document.getElementById('news-list'),nb=document.getElementById('news-box');if(nd.news&&nd.news.length){nl.innerHTML=nd.news.slice(0,7).map(n=>'<div class="news-item"><a class="n-title" href="'+(n.link||'#')+'" target="_blank" rel="noopener">'+esc(n.title||'')+'</a><div class="n-meta">'+(n.publisher||'')+' · '+tf(n.time)+'</div></div>').join('');nb.style.display='block'}}
+  }catch(e){
+    if(isInit){tbody.innerHTML='<tr><td colspan="4" style="text-align:center;padding:50px 20px"><p style="font-weight:700;color:var(--down)">불러오기 실패</p><p style="margin-top:8px;color:var(--muted);font-size:13px">'+esc(e.message)+'</p><button class="btn" style="margin-top:18px" onclick="f()">다시시도</button></td></tr>'}
+    tb.textContent='갱신 오류';
+  }
 }
 f();setInterval(f,30000);
 </script>
+</body>
+</html>
