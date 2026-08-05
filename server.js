@@ -3,6 +3,10 @@ const https = require('https');
 const http = require('http');
 const cheerio = require('cheerio');
 const app = express();
+app.use((req, res, next) => {
+  if (req.path.endsWith('.html') || req.path === '/' || req.path === '') res.setHeader('Cache-Control', 'no-cache, must-revalidate');
+  next();
+});
 app.use(express.static(__dirname));
 
 const T = ['USDKRW=X','EURKRW=X','JPYKRW=X','CNYKRW=X','AUDKRW=X','GBPKRW=X','CADKRW=X','CHFKRW=X','HKDKRW=X','SGDKRW=X','GC=F','SI=F','PL=F','PA=F','CL=F','NG=F','HG=F','^TYX','^GSPC','^DJI','^IXIC','^VIX','^TNX','^KS11','^KQ11','^N225','^HSI','^FTSE','^GDAXI','^FCHI','^BSESN','^AXJO','^BVSP','BTC-USD','ETH-USD','XRP-USD','SOL-USD','DOGE-USD','ADA-USD','DOT-USD','AVAX-USD','LINK-USD','005930.KS','000660.KS','035420.KS','005380.KS','373220.KS','207940.KS','005490.KS','035720.KS','068270.KS','V','JPM','WMT','DIS','NFLX','AMD','KO','AVGO','AAPL','MSFT','NVDA','TSLA','GOOGL','AMZN','META'];
