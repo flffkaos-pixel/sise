@@ -362,6 +362,7 @@ const CATS=[
 ]}
 ];
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function jsStr(s){return "'"+String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'")+"'"}
 function fmt(n){return Math.round(n).toLocaleString()}
 function go(sym){location.href='detail.html?s='+encodeURIComponent(sym)}
 function cv(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
@@ -371,13 +372,13 @@ function qRow(x,rs,krg,intlDon){
   const rn='<td class="rn">'+(++rnSeq)+'</td>';
   if(x.kr){
     const g=krg||{},k=x.m==='sell'?'Sell':'Buy',v=g[x.kr+k],ch=g[x.kr+k+'Chg']||0,cp=g[x.kr+k+'ChgPct']||0;
-    if(!v)return '<tr class="row" data-q="'+esc(x.l)+'" onclick="go(\''+encodeURIComponent(x.t)+'\')">'+rn+'<td class="name"><span class="k">'+esc(x.l)+'</span><span class="t">한국시세</span></td><td class="num none">-</td><td class="num none">-</td><td class="num none">-</td></tr>';
-    return '<tr class="row" data-q="'+esc(x.l)+'" onclick="go(\''+encodeURIComponent(x.t)+'\')">'+rn+'<td class="name"><span class="k">'+esc(x.l)+'</span><span class="t">한국시세</span></td><td class="num">'+fmt(v)+'</td><td class="num chg '+(ch>=0?'up':'down')+'">'+(ch>=0?'+':'')+fmt(ch)+'</td><td class="num pct '+(ch>=0?'up':'down')+'">'+(ch>=0?'+':'')+cp.toFixed(2)+'%</td></tr>';
+    if(!v)return '<tr class="row" data-q="'+esc(x.l)+'" onclick="go('+jsStr(x.t)+')">'+rn+'<td class="name"><span class="k">'+esc(x.l)+'</span><span class="t">한국시세</span></td><td class="num none">-</td><td class="num none">-</td><td class="num none">-</td></tr>';
+    return '<tr class="row" data-q="'+esc(x.l)+'" onclick="go('+jsStr(x.t)+')">'+rn+'<td class="name"><span class="k">'+esc(x.l)+'</span><span class="t">한국시세</span></td><td class="num">'+fmt(v)+'</td><td class="num chg '+(ch>=0?'up':'down')+'">'+(ch>=0?'+':'')+fmt(ch)+'</td><td class="num pct '+(ch>=0?'up':'down')+'">'+(ch>=0?'+':'')+cp.toFixed(2)+'%</td></tr>';
   }
   const d=rs.find(r=>r.symbol===x.t||r.symbol===x.t.replace('^','%5E'));
-  if(!d)return '<tr class="row" data-q="'+esc(x.l)+'" onclick="go(\''+encodeURIComponent(x.t)+'\')">'+rn+'<td class="name"><span class="k">'+esc(x.l)+'</span><span class="t">'+esc(x.t)+'</span></td><td class="num none">-</td><td class="num none">-</td><td class="num none">-</td></tr>';
+  if(!d)return '<tr class="row" data-q="'+esc(x.l)+'" onclick="go('+jsStr(x.t)+')">'+rn+'<td class="name"><span class="k">'+esc(x.l)+'</span><span class="t">'+esc(x.t)+'</span></td><td class="num none">-</td><td class="num none">-</td><td class="num none">-</td></tr>';
   const h=x.h||1,p=d.priceKrw*h,ch=d.changeKrw*h,cp=d.changePercentKrw;
-  return '<tr class="row" data-q="'+esc(x.l)+'" onclick="go(\''+encodeURIComponent(x.t)+'\')">'+rn+'<td class="name"><span class="k">'+esc(x.l)+'</span><span class="t">'+esc(x.t)+'</span></td><td class="num">'+fmt(p)+'</td><td class="num chg '+(ch>=0?'up':'down')+'">'+(ch>=0?'+':'')+fmt(ch)+'</td><td class="num pct '+(ch>=0?'up':'down')+'">'+(ch>=0?'+':'')+cp.toFixed(2)+'%</td></tr>';
+  return '<tr class="row" data-q="'+esc(x.l)+'" onclick="go('+jsStr(x.t)+')">'+rn+'<td class="name"><span class="k">'+esc(x.l)+'</span><span class="t">'+esc(x.t)+'</span></td><td class="num">'+fmt(p)+'</td><td class="num chg '+(ch>=0?'up':'down')+'">'+(ch>=0?'+':'')+fmt(ch)+'</td><td class="num pct '+(ch>=0?'up':'down')+'">'+(ch>=0?'+':'')+cp.toFixed(2)+'%</td></tr>';
 }
 let curQ='';
 function searchStocks(q){curQ=(q||'').toLowerCase().trim();filterTable()}
