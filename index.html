@@ -182,6 +182,7 @@
 <link rel="dns-prefetch" href="https://www.yna.co.kr">
 <link rel="dns-prefetch" href="https://www.opinet.co.kr">
 <link rel="stylesheet" href="/theme.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <script>
 (function(){var t='vscode';try{t=localStorage.getItem('modu-theme')||'vscode'}catch(e){}document.documentElement.setAttribute('data-theme',t);
 window.__setTheme=function(x){document.documentElement.setAttribute('data-theme',x);try{localStorage.setItem('modu-theme',x)}catch(e){}var bs=document.querySelectorAll('.theme-toggle button');for(var i=0;i<bs.length;i++)bs[i].classList.toggle('on',bs[i].getAttribute('data-theme')===x);if(window.__onTheme)window.__onTheme(x)}})();
@@ -208,7 +209,17 @@ window.__setTheme=function(x){document.documentElement.setAttribute('data-theme'
   </nav>
 </header>
 
+<div class="app-body">
+<nav class="activity-bar" aria-label="메인 기능">
+  <a href="/" class="active" title="시세" aria-label="시세"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5.5v-6h-5v6H4a1 1 0 0 1-1-1Z"/></svg></a>
+  <a href="/oil.html" title="기름값" aria-label="기름값"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5S6 8.8 6 13.4a6 6 0 0 0 12 0C18 8.8 12 2.5 12 2.5Z"/></svg></a>
+</nav>
 <main role="main">
+  <div class="formula-bar">
+    <div class="fb-name" id="fb-name">A1</div>
+    <div class="fb-fx">fx</div>
+    <div class="fb-input" id="fb-input">행을 선택하면 현재가가 여기에 표시됩니다</div>
+  </div>
   <div class="wrap">
     <div class="page-head">
       <h1>실시간 시세 대시보드</h1>
@@ -220,15 +231,22 @@ window.__setTheme=function(x){document.documentElement.setAttribute('data-theme'
       <span>Yahoo Finance · 오피넷 · 원화·포인트 기준</span>
     </div>
 
+    <section class="box" id="news-box" style="display:none" aria-label="금융 뉴스">
+      <h2>오늘의 주요 금융 뉴스</h2>
+      <p class="sub">연합뉴스·전자신문·Google News에서 금융 키워드로 수집한 뉴스</p>
+      <div id="news-list"></div>
+    </section>
+
     <input id="search" class="search" type="text" placeholder="종목 검색 (이름 또는 티커)..." oninput="searchStocks(this.value)">
 
     <section class="table-wrap" style="margin-top:14px" aria-label="실시간 금융 시세">
       <table class="qt">
         <thead>
-          <tr><th>종목</th><th class="num">현재가</th><th class="num">전일대비</th><th class="num">등락률</th></tr>
+          <tr class="colletters"><th class="rn"></th><th>A</th><th class="num">B</th><th class="num">C</th><th class="num">D</th></tr>
+          <tr class="headrow"><th class="rn"></th><th>종목</th><th class="num">현재가</th><th class="num">전일대비</th><th class="num">등락률</th></tr>
         </thead>
         <tbody id="tbody">
-          <tr><td colspan="4" class="ld" style="padding:90px 20px"><span class="sp"></span></td></tr>
+          <tr><td colspan="5" class="ld" style="padding:90px 20px"><span class="sp"></span></td></tr>
         </tbody>
       </table>
     </section>
@@ -244,22 +262,47 @@ window.__setTheme=function(x){document.documentElement.setAttribute('data-theme'
 
     <section class="box" id="oil-box" style="display:none" aria-label="전국 주유소 기름값">
       <h2>기름값 — 전국 주유소 평균</h2>
-      <p class="sub"><span id="oil-update"></span> · 오피넷 고시 · 시도별 비교와 저가 주유소 확인은 <a href="/oil.html">기름값 상세</a></p>
+      <p class="sub"><span id="oil-update"></span> · 오피넷 고시 · 시도별 비교·차트·저가 주유소 전체 보기는 <a href="/oil.html">기름값 상세</a></p>
       <div class="table-wrap">
         <table class="qt">
-          <thead><tr><th>품목</th><th class="num">전국평균</th><th class="num">전일대비</th><th class="num">최저~최고</th></tr></thead>
+          <thead>
+            <tr class="colletters"><th class="rn"></th><th>A</th><th class="num">B</th><th class="num">C</th><th class="num">D</th></tr>
+            <tr class="headrow"><th class="rn"></th><th>품목</th><th class="num">전국평균</th><th class="num">전일대비</th><th class="num">최저~최고</th></tr>
+          </thead>
           <tbody id="oil-tbody"></tbody>
         </table>
       </div>
-    </section>
-
-    <section class="box" id="news-box" style="display:none" aria-label="금융 뉴스">
-      <h2>오늘의 주요 금융 뉴스</h2>
-      <p class="sub">연합뉴스·전자신문·Google News에서 금융 키워드로 수집한 뉴스</p>
-      <div id="news-list"></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px;margin-top:16px">
+        <div class="chart-wrap" style="margin-top:0">
+          <h2>휘발유 30일 전국평균 추이</h2>
+          <div class="chart-box"><canvas id="oil-chart"></canvas></div>
+        </div>
+        <div>
+          <div class="table-wrap">
+            <table class="qt">
+              <thead>
+                <tr class="colletters"><th class="rn"></th><th>A</th><th class="num">B</th><th class="num">C</th></tr>
+                <tr class="headrow"><th class="rn"></th><th>시도</th><th class="num">평균</th><th class="num">전일대비</th></tr>
+              </thead>
+              <tbody id="oil-sido-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="table-wrap" style="margin-top:16px">
+        <table class="qt">
+          <thead>
+            <tr class="colletters"><th class="rn"></th><th>A</th><th>B</th><th>C</th><th class="num">D</th></tr>
+            <tr class="headrow"><th class="rn"></th><th>브랜드</th><th>상호</th><th>구군</th><th class="num">가격(원/L)</th></tr>
+          </thead>
+          <tbody id="oil-top-tbody"><tr><td colspan="5" class="ld" style="padding:26px"><span class="sp"></span></td></tr></tbody>
+        </table>
+        <p class="sub" style="padding:10px 14px 0;margin:0">서울 · 휘발유 저가 주유소 TOP 5 (오피넷)</p>
+      </div>
     </section>
   </div>
 </main>
+</div>
 
 <footer class="site-footer" role="contentinfo">
   <div class="wrap" style="padding-top:0;padding-bottom:0">
@@ -273,6 +316,20 @@ window.__setTheme=function(x){document.documentElement.setAttribute('data-theme'
     <p>데이터 출처: <a href="https://finance.yahoo.com" rel="external nofollow">Yahoo Finance</a> · <a href="https://www.opinet.co.kr" rel="external nofollow">오피넷</a> · <a href="https://www.yna.co.kr" rel="external nofollow">연합뉴스</a> · <a href="https://www.etnews.com" rel="external nofollow">전자신문</a> · <a href="https://news.google.com" rel="external nofollow">Google News</a></p>
     <p>© 2025 모두의 시세. 본 서비스는 Yahoo Finance API와 오피넷 공개 정보를 활용하며, 각 기관과 제휴 관계가 아닙니다.</p>
     <p class="disclaimer">본 정보는 투자 참고용이며, 투자 판단과 책임은 이용자에게 있습니다. 과거 데이터 기반 예측은 실제 결과와 다를 수 있습니다.</p>
+  </div>
+</footer>
+
+<footer class="app-statusbar" role="status">
+  <div class="sb-left">
+    <span class="sb-sheet" aria-hidden="true"><span class="on">시트1</span><span>시트2</span><span>시트3</span></span>
+    <span class="sb-sep"></span>
+    <span class="sb-item" id="sb-l">모두의 시세</span>
+  </div>
+  <div class="sb-right">
+    <span class="sb-item" id="sb-excel">·</span>
+    <span class="sb-item" id="sb-r1">Yahoo Finance · 오피넷</span>
+    <span class="sb-sep"></span>
+    <span class="sb-item">100%</span>
   </div>
 </footer>
 
@@ -306,16 +363,20 @@ const CATS=[
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 function fmt(n){return Math.round(n).toLocaleString()}
 function go(sym){location.href='detail.html?s='+encodeURIComponent(sym)}
+function cv(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
+function hexRgba(h,a){h=h.replace('#','');if(h.length===3)h=h.split('').map(c=>c+c).join('');const n=parseInt(h,16);return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+a+')'}
+let rnSeq=0;
 function qRow(x,rs,krg,intlDon){
+  const rn='<td class="rn">'+(++rnSeq)+'</td>';
   if(x.kr){
     const g=krg||{},k=x.m==='sell'?'Sell':'Buy',v=g[x.kr+k],ch=g[x.kr+k+'Chg']||0,cp=g[x.kr+k+'ChgPct']||0;
-    if(!v)return '<tr class="row" data-q="'+esc(x.l)+'" onclick="go(\''+encodeURIComponent(x.t)+'\')"><td class="name"><span class="k">'+esc(x.l)+'</span><span class="t">한국시세</span></td><td class="num none">-</td><td class="num none">-</td><td class="num none">-</td></tr>';
-    return '<tr class="row" data-q="'+esc(x.l)+'" onclick="go(\''+encodeURIComponent(x.t)+'\')"><td class="name"><span class="k">'+esc(x.l)+'</span><span class="t">한국시세</span></td><td class="num">'+fmt(v)+'</td><td class="num chg '+(ch>=0?'up':'down')+'">'+(ch>=0?'+':'')+fmt(ch)+'</td><td class="num pct '+(ch>=0?'up':'down')+'">'+(ch>=0?'+':'')+cp.toFixed(2)+'%</td></tr>';
+    if(!v)return '<tr class="row" data-q="'+esc(x.l)+'" onclick="go(\''+encodeURIComponent(x.t)+'\')">'+rn+'<td class="name"><span class="k">'+esc(x.l)+'</span><span class="t">한국시세</span></td><td class="num none">-</td><td class="num none">-</td><td class="num none">-</td></tr>';
+    return '<tr class="row" data-q="'+esc(x.l)+'" onclick="go(\''+encodeURIComponent(x.t)+'\')">'+rn+'<td class="name"><span class="k">'+esc(x.l)+'</span><span class="t">한국시세</span></td><td class="num">'+fmt(v)+'</td><td class="num chg '+(ch>=0?'up':'down')+'">'+(ch>=0?'+':'')+fmt(ch)+'</td><td class="num pct '+(ch>=0?'up':'down')+'">'+(ch>=0?'+':'')+cp.toFixed(2)+'%</td></tr>';
   }
   const d=rs.find(r=>r.symbol===x.t||r.symbol===x.t.replace('^','%5E'));
-  if(!d)return '<tr class="row" data-q="'+esc(x.l)+'" onclick="go(\''+encodeURIComponent(x.t)+'\')"><td class="name"><span class="k">'+esc(x.l)+'</span><span class="t">'+esc(x.t)+'</span></td><td class="num none">-</td><td class="num none">-</td><td class="num none">-</td></tr>';
+  if(!d)return '<tr class="row" data-q="'+esc(x.l)+'" onclick="go(\''+encodeURIComponent(x.t)+'\')">'+rn+'<td class="name"><span class="k">'+esc(x.l)+'</span><span class="t">'+esc(x.t)+'</span></td><td class="num none">-</td><td class="num none">-</td><td class="num none">-</td></tr>';
   const h=x.h||1,p=d.priceKrw*h,ch=d.changeKrw*h,cp=d.changePercentKrw;
-  return '<tr class="row" data-q="'+esc(x.l)+'" onclick="go(\''+encodeURIComponent(x.t)+'\')"><td class="name"><span class="k">'+esc(x.l)+'</span><span class="t">'+esc(x.t)+'</span></td><td class="num">'+fmt(p)+'</td><td class="num chg '+(ch>=0?'up':'down')+'">'+(ch>=0?'+':'')+fmt(ch)+'</td><td class="num pct '+(ch>=0?'up':'down')+'">'+(ch>=0?'+':'')+cp.toFixed(2)+'%</td></tr>';
+  return '<tr class="row" data-q="'+esc(x.l)+'" onclick="go(\''+encodeURIComponent(x.t)+'\')">'+rn+'<td class="name"><span class="k">'+esc(x.l)+'</span><span class="t">'+esc(x.t)+'</span></td><td class="num">'+fmt(p)+'</td><td class="num chg '+(ch>=0?'up':'down')+'">'+(ch>=0?'+':'')+fmt(ch)+'</td><td class="num pct '+(ch>=0?'up':'down')+'">'+(ch>=0?'+':'')+cp.toFixed(2)+'%</td></tr>';
 }
 let curQ='';
 function searchStocks(q){curQ=(q||'').toLowerCase().trim();filterTable()}
@@ -332,14 +393,45 @@ function filterTable(){
   }
 }
 const OIL_PNAME={B027:'휘발유',D047:'경유',K015:'LPG'};
+const SIDOS={'01':'서울','02':'경기','03':'강원','04':'충북','05':'충남','06':'전북','08':'경북','09':'경남','10':'부산','11':'제주','14':'대구','15':'인천','17':'대전','18':'울산','19':'세종','20':'전남광주'};
+let oilChart=null;
+function oilLabels(ch){return (ch||[]).map(function(x){var s=String(x.date).replace(/\D/g,'');return s.length>=8?s.slice(4,6)+'/'+s.slice(6,8):s})}
+function renderOilChart(labels,data){
+  const el=document.getElementById('oil-chart');
+  if(!el||!Chart)return;
+  if(oilChart){try{oilChart.destroy()}catch(e){}oilChart=null}
+  const c={line:cv('--chart-line'),fill:hexRgba(cv('--chart-line'),.12),grid:cv('--grid'),tick:cv('--dim'),tipBg:cv('--surface2'),tipBorder:cv('--border'),tipTitle:cv('--muted'),tipBody:cv('--fg')};
+  oilChart=new Chart(el,{type:'line',data:{labels,datasets:[{data,borderColor:c.line,backgroundColor:c.fill,borderWidth:2,pointRadius:0,pointHitRadius:10,tension:.3,fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:c.tipBg,titleColor:c.tipTitle,bodyColor:c.tipBody,borderColor:c.tipBorder,borderWidth:1,padding:12,cornerRadius:4,callbacks:{label:ctx=>ctx.parsed.y.toFixed(1)+' 원'}}},scales:{x:{display:true,grid:{color:c.grid},ticks:{color:c.tick,font:{size:10},maxTicksLimit:6}},y:{display:true,grid:{color:c.grid},ticks:{color:c.tick,font:{size:10},callback:v=>v.toFixed(0)}}},interaction:{mode:'index',intersect:false}}});
+}
 async function renderOil(){
   const box=document.getElementById('oil-box'),tbody=document.getElementById('oil-tbody'),lbl=document.getElementById('oil-update');
   let j;
   try{const r=await fetch('/api/oil');if(!r.ok)return;j=await r.json()}catch(e){return}
   if(!j.products||!j.products.length){box.style.display='none';return}
   box.style.display='block';
+  window.__oilData=j;
   if(lbl)lbl.textContent='기준 '+(j.date||'')+' · 전국평균 (원/리터)';
-  tbody.innerHTML=j.products.map(p=>'<tr class="row" onclick="location.href=\'oil.html?prod='+p.code+'\'"><td class="name"><span class="k">'+OIL_PNAME[p.code]+'</span><span class="t">전국평균</span></td><td class="num">'+p.avg.toFixed(1)+'</td><td class="num chg '+(p.chg>=0?'up':'down')+'">'+(p.chg>=0?'+':'')+p.chg.toFixed(2)+'</td><td class="num none">'+p.min+'~'+p.max+'</td></tr>').join('');
+  tbody.innerHTML=j.products.map((p,i)=>'<tr class="row" onclick="location.href=\'oil.html?prod='+p.code+'\'"><td class="rn">'+(i+1)+'</td><td class="name"><span class="k">'+OIL_PNAME[p.code]+'</span><span class="t">전국평균</span></td><td class="num">'+p.avg.toFixed(1)+'</td><td class="num chg '+(p.chg>=0?'up':'down')+'">'+(p.chg>=0?'+':'')+p.chg.toFixed(2)+'</td><td class="num none">'+p.min+'~'+p.max+'</td></tr>').join('');
+  const bp=j.products.find(p=>p.code==='B027');
+  if(bp&&bp.sido){
+    const sb=document.getElementById('oil-sido-tbody');
+    if(sb){
+      sb.innerHTML=Object.keys(SIDOS).map((c,idx)=>{const v=bp.sido[c];if(!v)return null;return '<tr class="row" onclick="location.href=\'oil.html?prod=B027&sido='+c+'\'"><td class="rn">'+(idx+1)+'</td><td>'+SIDOS[c]+'</td><td class="num">'+v.avg.toFixed(1)+'</td><td class="num '+(v.chg>=0?'up':'down')+'">'+(v.chg>=0?'+':'')+v.chg.toFixed(2)+'</td></tr>'}).filter(Boolean).join('')||'<tr><td colspan="4" class="none" style="text-align:center;padding:24px">데이터 없음</td></tr>';
+    }
+  }
+  if(bp&&bp.chart)renderOilChart(oilLabels(bp.chart),bp.chart.map(x=>x.price));
+  loadTopStations();
+}
+async function loadTopStations(){
+  try{
+    const r=await fetch('/api/oil/stations?prod=B027&sido=01');
+    if(!r.ok)return;
+    const j=await r.json(),tb=document.getElementById('oil-top-tbody');
+    if(!tb)return;
+    const list=(j.stations||[]).slice(0,5);
+    if(!list.length){tb.innerHTML='<tr><td colspan="5" class="none" style="text-align:center;padding:20px">데이터 없음</td></tr>';return}
+    tb.innerHTML=list.map((s,i)=>'<tr class="row" onclick="location.href=\'oil.html?prod=B027&sido=01\'"><td class="rn">'+(i+1)+'</td><td>'+esc(s.brand)+'</td><td>'+esc(s.name)+'</td><td>'+esc(s.gun)+'</td><td class="num">'+s.price+'</td></tr>').join('');
+  }catch(e){}
 }
 function tf(ts){if(!ts)return'';const d=new Date(ts*1000),n=new Date(),s=(n-d)/1000;if(s<60)return'방금';if(s<3600)return Math.floor(s/60)+'분 전';if(s<86400)return Math.floor(s/3600)+'시간 전';return d.toLocaleDateString('ko-KR',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}
 async function f(){
@@ -353,21 +445,42 @@ async function f(){
     try{const kg=await fetch('/api/krgold');if(kg.ok)krg=await kg.json()}catch(e){}
     const gcR=rs.find(r=>r.symbol==='GC=F'),intlDon=gcR&&gcR.priceKrw?gcR.priceKrw/31.1035*3.75:0;
     let html='';
+    rnSeq=0;
     for(let ci=0;ci<CATS.length;ci++){
       const cat=CATS[ci];
-      html+='<tr class="cat"><td colspan="4">'+cat.name+'<span class="cnt">'+cat.items.length+'종목</span></td></tr>';
+      html+='<tr class="cat"><td colspan="5">'+cat.name+'<span class="cnt">'+cat.items.length+'종목</span></td></tr>';
       for(let ii=0;ii<cat.items.length;ii++)html+=qRow(cat.items[ii],rs,krg,intlDon);
     }
     tbody.innerHTML=html;
     filterTable();
     renderOil();
     tb.textContent='갱신 ' + new Date().toLocaleTimeString('ko-KR');
+    const numVals=rs.filter(r=>r.priceKrw!=null).map(r=>r.priceKrw);
+    const sbx=document.getElementById('sb-excel');
+    if(sbx&&numVals.length){const sum=numVals.reduce((a,b)=>a+b,0);sbx.textContent='합계: ₩'+fmt(sum)+' · 개수: '+numVals.length+' · 평균: ₩'+fmt(sum/numVals.length)}
     if(nRes.ok){const nd=await nRes.json();const nl=document.getElementById('news-list'),nb=document.getElementById('news-box');if(nd.news&&nd.news.length){nl.innerHTML=nd.news.slice(0,7).map(n=>'<div class="news-item"><a class="n-title" href="'+(n.link||'#')+'" target="_blank" rel="noopener">'+esc(n.title||'')+'</a><div class="n-meta">'+(n.publisher||'')+' · '+tf(n.time)+'</div></div>').join('');nb.style.display='block'}}
   }catch(e){
-    if(isInit){tbody.innerHTML='<tr><td colspan="4" style="text-align:center;padding:50px 20px"><p style="font-weight:700;color:var(--down)">불러오기 실패</p><p style="margin-top:8px;color:var(--muted);font-size:13px">'+esc(e.message)+'</p><button class="btn" style="margin-top:18px" onclick="f()">다시시도</button></td></tr>'}
+    if(isInit){tbody.innerHTML='<tr><td colspan="5" style="text-align:center;padding:50px 20px"><p style="font-weight:700;color:var(--down)">불러오기 실패</p><p style="margin-top:8px;color:var(--muted);font-size:13px">'+esc(e.message)+'</p><button class="btn" style="margin-top:18px" onclick="f()">다시시도</button></td></tr>'}
     tb.textContent='갱신 오류';
   }
 }
+window.__onTheme=function(){
+  if(window.__oilData){
+    const bp=window.__oilData.products.find(p=>p.code==='B027');
+    if(bp&&bp.chart)renderOilChart(oilLabels(bp.chart),bp.chart.map(x=>x.price));
+  }
+};
+document.addEventListener('mouseover',function(e){
+  const tr=e.target.closest('tr.row');
+  const fb=document.getElementById('fb-input');
+  if(!fb||!tr)return;
+  const k=tr.querySelector('.name .k');
+  const pr=tr.querySelector('td.num');
+  const rn=tr.querySelector('.rn');
+  const nb=document.getElementById('fb-name');
+  if(nb)nb.textContent='B'+(rn?rn.textContent:'1');
+  fb.innerHTML=k?(esc(k.textContent)+(pr?' <b class="'+(tr.querySelector('.chg')&&tr.querySelector('.chg').classList.contains('up')?'up':'down')+'">'+esc(pr.textContent)+'</b>':'')):esc(tr.textContent.trim());
+});
 f();setInterval(f,30000);
 </script>
 </body>

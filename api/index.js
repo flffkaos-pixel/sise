@@ -124,6 +124,7 @@ app.get('/api/krgold', async (req, res) => {
 app.get('/api/history', async (req, res) => {
   const symbol = req.query.symbol;
   if (!symbol) return res.status(400).json({ error: 'missing symbol' });
+  if (Date.now() - lastKrwFetch > 60000) { await updateKrwRate(); lastKrwFetch = Date.now(); }
   let data = await fetchQ(symbol, '2y', '1d');
   if (!data) return res.status(502).json({ error: 'fetch failed' });
   if (!data.timestamps || !data.timestamps.length) {

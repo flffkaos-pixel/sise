@@ -65,7 +65,17 @@ window.__setTheme=function(x){document.documentElement.setAttribute('data-theme'
   </nav>
 </header>
 
+<div class="app-body">
+<nav class="activity-bar" aria-label="메인 기능">
+  <a href="/" title="시세" aria-label="시세"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5.5v-6h-5v6H4a1 1 0 0 1-1-1Z"/></svg></a>
+  <a href="/oil.html" class="active" title="기름값" aria-label="기름값"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5S6 8.8 6 13.4a6 6 0 0 0 12 0C18 8.8 12 2.5 12 2.5Z"/></svg></a>
+</nav>
 <main role="main">
+  <div class="formula-bar">
+    <div class="fb-name" id="fb-name">A1</div>
+    <div class="fb-fx">fx</div>
+    <div class="fb-input" id="fb-input">주유소 행을 선택하면 가격이 여기에 표시됩니다</div>
+  </div>
   <div class="wrap">
     <div class="page-head">
       <h1>전국 주유소 기름값</h1>
@@ -92,8 +102,11 @@ window.__setTheme=function(x){document.documentElement.setAttribute('data-theme'
       <p class="sub" id="st-sub">선택한 시·도에서 가격이 저렴한 주유소 순으로 최대 30곳을 표시합니다. (오피넷 정보)</p>
       <div class="table-wrap">
         <table class="qt">
-          <thead><tr><th>브랜드</th><th>상호</th><th>구군</th><th class="num">가격(원/L)</th></tr></thead>
-          <tbody id="st-body"><tr><td colspan="4" class="ld" style="padding:40px"><span class="sp"></span></td></tr></tbody>
+          <thead>
+            <tr class="colletters"><th class="rn"></th><th>A</th><th>B</th><th>C</th><th class="num">D</th></tr>
+            <tr class="headrow"><th class="rn"></th><th>브랜드</th><th>상호</th><th>구군</th><th class="num">가격(원/L)</th></tr>
+          </thead>
+          <tbody id="st-body"><tr><td colspan="5" class="ld" style="padding:40px"><span class="sp"></span></td></tr></tbody>
         </table>
       </div>
     </section>
@@ -101,7 +114,7 @@ window.__setTheme=function(x){document.documentElement.setAttribute('data-theme'
     <div class="chart-wrap" style="margin-top:14px">
       <h2>전국평균 30일 가격 추이</h2>
       <p class="sub">오피넷 일별 전국평균 (원/리터)</p>
-      <canvas id="chart"></canvas>
+      <div class="chart-box"><canvas id="chart"></canvas></div>
     </div>
 
     <section class="box" aria-label="시도별 평균">
@@ -109,19 +122,36 @@ window.__setTheme=function(x){document.documentElement.setAttribute('data-theme'
       <p class="sub">오피넷 시도별 평균 · 전일대비</p>
       <div class="table-wrap">
         <table class="qt">
-          <thead><tr><th>시도</th><th class="num">평균</th><th class="num">전일대비</th></tr></thead>
-          <tbody id="sido-body"><tr><td colspan="3" class="ld" style="padding:40px"><span class="sp"></span></td></tr></tbody>
+          <thead>
+            <tr class="colletters"><th class="rn"></th><th>A</th><th class="num">B</th><th class="num">C</th></tr>
+            <tr class="headrow"><th class="rn"></th><th>시도</th><th class="num">평균</th><th class="num">전일대비</th></tr>
+          </thead>
+          <tbody id="sido-body"><tr><td colspan="4" class="ld" style="padding:40px"><span class="sp"></span></td></tr></tbody>
         </table>
       </div>
     </section>
   </div>
 </main>
+</div>
 
 <footer class="site-footer" role="contentinfo">
   <div class="wrap" style="padding-top:0;padding-bottom:0">
     <p>데이터 출처: <a href="https://www.opinet.co.kr" rel="external nofollow">오피넷(OPINET)</a> · 한국석유공사</p>
     <p>© 2025 모두의 시세 · 본 서비스는 오피넷 공개 정보를 활용하며 오피넷과 제휴 관계가 아닙니다.</p>
     <p class="disclaimer">주유소 가격은 오피넷 조사 시점 기준이며 실제 판매가와 다를 수 있습니다.</p>
+  </div>
+</footer>
+
+<footer class="app-statusbar" role="status">
+  <div class="sb-left">
+    <span class="sb-sheet" aria-hidden="true"><span class="on">시트1</span><span>시트2</span><span>시트3</span></span>
+    <span class="sb-sep"></span>
+    <span class="sb-item" id="sb-l">오피넷 고시</span>
+  </div>
+  <div class="sb-right">
+    <span class="sb-item">휘발유 · 경유 · LPG</span>
+    <span class="sb-sep"></span>
+    <span class="sb-item">100%</span>
   </div>
 </footer>
 

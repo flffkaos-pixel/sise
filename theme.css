@@ -1,9 +1,9 @@
-/* 모두의 시세 — 공용 테마 (VS Code / Excel) */
+/* 모두의 시세 — 공용 테마 (VS Code Dark+ / Microsoft Excel 365) */
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
   color-scheme:dark;
-  --font-ui:'Malgun Gothic','Segoe UI',-apple-system,sans-serif;
-  --font-num:'Consolas','Menlo','Cascadia Mono','Courier New',monospace;
+  --font-ui:'Segoe UI','Malgun Gothic',-apple-system,sans-serif;
+  --font-num:'Consolas','Cascadia Code','Menlo','Courier New',monospace;
   --bg:#1E1E1E;
   --surface:#1E1E1E;
   --surface2:#252526;
@@ -27,18 +27,35 @@
   --chart-line:#4FC1FF;
   --tb-main-bg:#323233;
   --tb-main-fg:#E5E5E5;
-  --tb-tabs-bg:#1E1E1E;
+  --tb-tabs-bg:#252526;
   --tb-tabs-border:#3C3C3C;
   --tb-link:#B8B8B8;
   --tb-link-hover:#FFFFFF;
   --tb-link-active:#FFFFFF;
+  --tab-active-bg:#1E1E1E;
+  --tab-inactive-bg:#2D2D30;
+  --tab-top:#007ACC;
+  --activity-bg:#333333;
+  --activity-fg:#858585;
+  --activity-fg-hover:#FFFFFF;
+  --activity-active:#FFFFFF;
+  --sb-bg:#007ACC;
+  --sb-fg:#FFFFFF;
+  --sb-hover:rgba(255,255,255,.18);
+  --sel-bg:#264F78;
+  --rn-bg:#2D2D30;
+  --rn-fg:#858585;
+  --cl-bg:#252526;
+  --cl-fg:#9D9D9D;
   --shadow:none;
   --input-bg:#1E1E1E;
-  --box-radius:8px;
+  --box-radius:0;
+  --btn-radius:0;
 }
 :root[data-theme="excel"]{
   color-scheme:light;
-  --bg:#F7F9FA;
+  --font-num:'Aptos','Calibri','Malgun Gothic',sans-serif;
+  --bg:#F3F3F3;
   --surface:#FFFFFF;
   --surface2:#F3F4F6;
   --surface3:#E7EAEC;
@@ -52,45 +69,98 @@
   --up:#217346;
   --down:#C00000;
   --link:#0F6CBD;
-  --hover:#E8F1EA;
+  --hover:#E2EFDA;
   --thead-bg:#F3F3F3;
-  --thead-fg:#3B3B3B;
+  --thead-fg:#333333;
   --cat-bg:#E2EFDA;
   --cat-fg:#1F6E43;
   --grid:rgba(0,0,0,.06);
   --chart-line:#217346;
-  --tb-main-bg:#217346;
-  --tb-main-fg:#FFFFFF;
+  --tb-main-bg:#FFFFFF;
+  --tb-main-fg:#1F2933;
   --tb-tabs-bg:#F3F3F3;
   --tb-tabs-border:#D9D9D9;
   --tb-link:#4A4A4A;
   --tb-link-hover:#1F2933;
-  --tb-link-active:#217346;
+  --tb-link-active:#1F2933;
+  --tab-active-bg:#FFFFFF;
+  --tab-inactive-bg:#F3F3F3;
+  --tab-top:#217346;
+  --activity-bg:#F3F3F3;
+  --activity-fg:#4A4A4A;
+  --activity-fg-hover:#1F2933;
+  --activity-active:#217346;
+  --sb-bg:#F1F1F1;
+  --sb-fg:#4A4A4A;
+  --sb-hover:rgba(0,0,0,.07);
+  --sel-bg:#C6E0B4;
+  --rn-bg:#F3F3F3;
+  --rn-fg:#595959;
+  --cl-bg:#F3F3F3;
+  --cl-fg:#595959;
   --shadow:0 1px 2px rgba(0,0,0,.06);
   --input-bg:#FFFFFF;
-  --box-radius:6px;
+  --box-radius:4px;
+  --btn-radius:2px;
 }
 html,body{background:var(--bg);color:var(--fg);font-family:var(--font-ui);min-height:100vh;overflow-x:clip}
+body{padding-bottom:26px}
 a{color:var(--link);text-decoration:none}
 a:hover{text-decoration:underline}
+::selection{background:var(--sel-bg)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 
 /* ── 상단 바 ─────────────────────────── */
 .topbar{position:sticky;top:0;z-index:60;box-shadow:var(--shadow)}
 .topbar-main{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:8px 20px;background:var(--tb-main-bg);color:var(--tb-main-fg);border-bottom:1px solid var(--tb-tabs-border)}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none !important;color:inherit}
-.brand-mark{width:26px;height:26px;border-radius:6px;background:var(--accent);color:var(--accent-fg);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-weight:800;font-size:14px}
+.brand-mark{width:26px;height:26px;border-radius:5px;background:var(--accent);color:var(--accent-fg);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-weight:800;font-size:14px}
 .brand-name{font-weight:800;font-size:15px;letter-spacing:.02em;white-space:nowrap}
 .brand-sub{font-size:11px;font-weight:600;color:var(--tb-main-fg);opacity:.75;white-space:nowrap}
-.theme-toggle{display:inline-flex;border:1px solid var(--tb-tabs-border);border-radius:8px;overflow:hidden;background:rgba(0,0,0,.08);flex-shrink:0}
+.theme-toggle{display:inline-flex;border:1px solid var(--tb-tabs-border);border-radius:4px;overflow:hidden;background:rgba(0,0,0,.15);flex-shrink:0}
 .theme-toggle button{background:transparent;border:none;color:var(--tb-link);font-family:var(--font-ui);font-size:12px;font-weight:700;padding:6px 12px;cursor:pointer;transition:background .15s,color .15s}
-:root[data-theme="excel"] .theme-toggle{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.5)}
-:root[data-theme="excel"] .theme-toggle button{color:rgba(255,255,255,.85)}
+:root[data-theme="excel"] .theme-toggle{background:#FFFFFF;border-color:#D9D9D9}
+:root[data-theme="excel"] .theme-toggle button{color:#4A4A4A}
 .theme-toggle button.on{background:var(--accent);color:var(--accent-fg)}
-:root[data-theme="excel"] .theme-toggle button.on{background:#FFFFFF;color:#217346}
-.topbar-tabs{display:flex;align-items:center;gap:2px;padding:0 14px;background:var(--tb-tabs-bg);border-bottom:1px solid var(--tb-tabs-border);overflow-x:auto}
-.topbar-tabs a{color:var(--tb-link);font-size:13px;font-weight:600;padding:10px 14px;border-bottom:2px solid transparent;white-space:nowrap;text-decoration:none}
-.topbar-tabs a:hover{color:var(--tb-link-hover);text-decoration:none}
-.topbar-tabs a.active{color:var(--tb-link-active);border-bottom-color:var(--accent)}
+:root[data-theme="excel"] .theme-toggle button.on{background:#E2EFDA;color:#217346}
+
+/* VS Code — 에디터 탭 형태 */
+.topbar-tabs{display:flex;align-items:stretch;gap:0;padding:0 10px;background:var(--tb-tabs-bg);border-bottom:1px solid var(--tb-tabs-border);overflow-x:auto;scrollbar-width:thin}
+.topbar-tabs a{color:var(--tb-link);font-size:12.5px;font-weight:600;padding:11px 16px;border:none;position:relative;white-space:nowrap;text-decoration:none;background:var(--tab-inactive-bg);border-right:1px solid var(--tb-tabs-border);border-top:1px solid transparent}
+.topbar-tabs a:first-child{border-left:1px solid var(--tb-tabs-border)}
+.topbar-tabs a:hover{color:var(--tb-link-hover);text-decoration:none;background:var(--tab-inactive-bg)}
+.topbar-tabs a.active{color:var(--tb-link-active);background:var(--tab-active-bg);border-top:1px solid var(--tab-top)}
+
+/* Excel — 리본 탭 형태 */
+:root[data-theme="excel"] .topbar-tabs{padding:0 8px;gap:0}
+:root[data-theme="excel"] .topbar-tabs a{background:var(--tab-inactive-bg);border:none;border-top:3px solid transparent;border-bottom:3px solid transparent;color:#333333;font-size:13px}
+:root[data-theme="excel"] .topbar-tabs a:hover{background:#FFFFFF;color:#1F2933;text-decoration:none}
+:root[data-theme="excel"] .topbar-tabs a.active{background:var(--tab-active-bg);color:#217346;font-weight:700;border-bottom:3px solid var(--tab-top)}
+:root[data-theme="excel"] .topbar-tabs a:first-child{border-left:none}
+
+/* ── 앱 바디 ─────────────────────────── */
+.app-body{min-height:calc(100vh - 96px)}
+.app-body>main{min-width:0}
+:root[data-theme="vscode"] body{padding-left:48px}
+:root[data-theme="excel"] body{padding-left:0}
+
+/* VS Code — 액티비티 바 (고정 좌측 스트립) */
+.activity-bar{position:fixed;left:0;top:0;bottom:0;width:48px;z-index:70;background:var(--activity-bg);border-right:1px solid var(--border);flex-direction:column;display:none}
+:root[data-theme="vscode"] .activity-bar{display:flex}
+.activity-bar a{display:flex;align-items:center;justify-content:center;height:48px;color:var(--activity-fg);position:relative;text-decoration:none}
+.activity-bar a:hover{color:var(--activity-fg-hover)}
+.activity-bar a.active{color:var(--activity-active)}
+.activity-bar a.active::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:2px;background:var(--activity-active)}
+
+/* ── Excel — 수식 입력줄 ──────────────── */
+.formula-bar{display:none;align-items:center;gap:0;border-bottom:1px solid var(--border);background:var(--tb-tabs-bg);font-family:var(--font-num);font-size:12px;height:30px}
+:root[data-theme="excel"] .formula-bar{display:flex}
+.fb-name{width:64px;flex-shrink:0;text-align:center;color:#333;background:var(--surface);border-right:1px solid var(--border);font-weight:600}
+.fb-fx{width:34px;flex-shrink:0;text-align:center;color:#217346;font-style:italic;font-weight:700;font-size:13px;border-right:1px solid var(--border)}
+.fb-input{flex:1;min-width:0;margin:4px 8px;padding:2px 8px;background:var(--surface);border:1px solid var(--border);color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:20px}
+.formula-bar .fb-input b{font-weight:700}
+.formula-bar .fb-input .up{color:var(--up)}
+.formula-bar .fb-input .down{color:var(--down)}
 
 /* ── 본문 ───────────────────────────── */
 .wrap{max-width:1100px;margin:0 auto;padding:18px 20px 60px}
@@ -101,12 +171,13 @@ a:hover{text-decoration:underline}
 .status .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--up);margin-right:6px;vertical-align:1px}
 .search{width:100%;max-width:460px;padding:9px 14px;border:1px solid var(--border);border-radius:var(--box-radius);background:var(--input-bg);color:var(--fg);font-family:var(--font-ui);font-size:14px;outline:none;transition:border-color .15s}
 .search:focus{border-color:var(--accent)}
+:root[data-theme="excel"] .search{border-radius:2px}
 
 /* ── 시세 테이블 ─────────────────────── */
 .table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--box-radius);overflow:auto;box-shadow:var(--shadow)}
 table.qt{width:100%;border-collapse:collapse;min-width:660px}
-table.qt thead th{position:sticky;top:0;z-index:2;background:var(--thead-bg);color:var(--thead-fg);font-size:12px;font-weight:700;letter-spacing:.05em;text-align:right;padding:10px 16px;border-bottom:2px solid var(--border);white-space:nowrap}
-table.qt thead th:first-child{text-align:left}
+table.qt thead .headrow th{position:sticky;top:0;z-index:2;background:var(--thead-bg);color:var(--thead-fg);font-size:12px;font-weight:700;letter-spacing:.05em;text-align:right;padding:10px 16px;border-bottom:2px solid var(--border);white-space:nowrap}
+table.qt thead .headrow th:first-child{text-align:left}
 table.qt td{padding:9px 16px;border-bottom:1px solid var(--border);font-size:14px;white-space:nowrap}
 table.qt td.num,table.qt th.num{text-align:right;font-family:var(--font-num)}
 table.qt td.none{color:var(--dim)}
@@ -122,6 +193,20 @@ tr.cat .cnt{color:var(--dim);font-weight:600;font-size:11px;margin-left:10px;fon
 .up{color:var(--up)}
 .down{color:var(--down)}
 
+/* Excel — 행 번호 + 열 머리글자 + 그리드라인 */
+.qt .colletters{display:none}
+.qt th.rn,.qt td.rn{display:none}
+:root[data-theme="excel"] .qt .colletters{display:table-row}
+:root[data-theme="excel"] .qt th.rn,:root[data-theme="excel"] .qt td.rn{display:table-cell}
+.qt th.rn,.qt td.rn{width:38px;min-width:38px;background:var(--rn-bg);color:var(--rn-fg);text-align:center;font-family:var(--font-num);font-size:11px;font-weight:400;padding:0;cursor:default}
+.qt td.rn{padding:8px 0}
+.qt .colletters th{background:var(--cl-bg);color:var(--cl-fg);text-align:center;font-size:11px;font-weight:400;padding:3px 0;border:none}
+.qt .colletters th.rn{background:var(--rn-bg)}
+:root[data-theme="excel"] table.qt td,:root[data-theme="excel"] table.qt .headrow th{border:1px solid #D9D9D9;border-bottom-width:1px}
+:root[data-theme="excel"] tr.cat td{border:1px solid #D9D9D9}
+:root[data-theme="excel"] tr.row:hover td{background:var(--hover)}
+:root[data-theme="excel"] tr.row:hover td.rn{background:var(--rn-bg)}
+
 /* ── 카드/박스 ───────────────────────── */
 .box{background:var(--surface);border:1px solid var(--border);border-radius:var(--box-radius);padding:18px;margin-top:20px;box-shadow:var(--shadow)}
 .box h2{font-size:15px;font-weight:800;color:var(--fg);margin-bottom:6px}
@@ -134,7 +219,7 @@ tr.cat .cnt{color:var(--dim);font-weight:600;font-size:11px;margin-left:10px;fon
 .news-empty{padding:36px 0;text-align:center;color:var(--dim);font-size:13px}
 
 /* ── 버튼/폼 ─────────────────────────── */
-.btn{font-family:var(--font-ui);font-weight:700;padding:9px 22px;background:var(--accent);color:var(--accent-fg);border:none;border-radius:var(--box-radius);cursor:pointer;font-size:13px;transition:opacity .15s}
+.btn{font-family:var(--font-ui);font-weight:700;padding:9px 22px;background:var(--accent);color:var(--accent-fg);border:none;border-radius:var(--btn-radius);cursor:pointer;font-size:13px;transition:opacity .15s}
 .btn:hover{opacity:.9}
 .btn.ghost{background:transparent;color:var(--fg);border:1px solid var(--border)}
 select.input,select.sel{padding:8px 10px;border:1px solid var(--border);border-radius:var(--box-radius);background:var(--input-bg);color:var(--fg);font-family:var(--font-ui);font-size:13px;outline:none}
@@ -160,6 +245,10 @@ select.sel:focus{border-color:var(--accent)}
 .pred-bar{height:6px;border-radius:4px;overflow:hidden;background:var(--surface3)}
 .pred-bar-fill{height:100%;border-radius:4px;transition:width 1s ease}
 
+/* ── 차트 (고정 높이 래퍼로 무한 확장 방지) ── */
+.chart-box{position:relative;height:300px;width:100%;overflow:hidden}
+#chart{position:absolute;inset:0;width:100% !important;height:100% !important}
+
 /* ── 오일 상세 ───────────────────────── */
 .oil-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}
 .oil-tabs a{padding:8px 18px;border:1px solid var(--border);border-radius:var(--box-radius);background:var(--surface);color:var(--fg);font-size:13px;font-weight:700;text-decoration:none}
@@ -174,10 +263,24 @@ select.sel:focus{border-color:var(--accent)}
 .filters select{min-width:150px}
 .chart-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--box-radius);padding:18px;margin-top:20px;box-shadow:var(--shadow)}
 .chart-wrap h2{font-size:15px;font-weight:800;margin-bottom:14px}
-#chart{height:280px}
+
+/* ── 상태 바 (VS Code: 파랑 / Excel: 회색) ── */
+.app-statusbar{position:fixed;left:0;right:0;bottom:0;height:24px;z-index:80;display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--sb-bg);color:var(--sb-fg);font-size:11px;font-family:var(--font-num);box-shadow:0 -1px 0 rgba(0,0,0,.1)}
+.sb-left,.sb-right{display:flex;align-items:center;height:100%;min-width:0}
+.sb-right{margin-left:auto}
+.sb-item{display:inline-flex;align-items:center;gap:6px;padding:0 9px;height:100%;white-space:nowrap;cursor:default}
+.sb-item:hover{background:var(--sb-hover)}
+.sb-sep{width:1px;height:16px;background:rgba(128,128,128,.35);flex-shrink:0}
+.sb-sheet{display:none;align-items:stretch;height:100%;cursor:default}
+:root[data-theme="excel"] .sb-sheet{display:flex}
+#sb-excel{display:none}
+:root[data-theme="excel"] #sb-excel{display:inline-flex}
+.sb-sheet span{display:inline-flex;align-items:center;padding:0 10px;border-top:2px solid transparent;color:#666}
+.sb-sheet span.on{color:#217346;font-weight:700;border-top-color:#217346;background:#FFFFFF}
+.sb-sheet .sb-sep{height:14px;align-self:center;background:rgba(0,0,0,.15)}
 
 /* ── 푸터 ────────────────────────────── */
-.site-footer{background:var(--surface);border-top:1px solid var(--border);padding:26px 20px;text-align:center;color:var(--muted);font-size:12px;line-height:1.9}
+.site-footer{background:var(--surface);border-top:1px solid var(--border);padding:26px 20px 10px;text-align:center;color:var(--muted);font-size:12px;line-height:1.9}
 .site-footer nav a{color:var(--link);margin:0 10px;font-size:12px}
 .site-footer .disclaimer{color:var(--dim);font-size:11px}
 
@@ -191,8 +294,10 @@ select.sel:focus{border-color:var(--accent)}
 /* ── 모바일 ──────────────────────────── */
 @media(max-width:640px){
   .topbar-main{padding:8px 12px}
-  .topbar-tabs{padding:0 6px}
+  .topbar-tabs{padding:0 4px}
   .brand-sub{display:none}
   .wrap{padding:14px 10px 50px}
-  table.qt td,table.qt thead th{padding:8px 10px;font-size:13px}
+  table.qt td,table.qt thead .headrow th{padding:8px 10px;font-size:13px}
+  :root[data-theme="vscode"] body{padding-left:0}
+  .activity-bar{display:none !important}
 }

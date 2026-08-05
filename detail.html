@@ -65,7 +65,17 @@ window.__setTheme=function(x){document.documentElement.setAttribute('data-theme'
   </nav>
 </header>
 
+<div class="app-body">
+<nav class="activity-bar" aria-label="메인 기능">
+  <a href="/" title="시세" aria-label="시세"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5.5v-6h-5v6H4a1 1 0 0 1-1-1Z"/></svg></a>
+  <a href="/oil.html" title="기름값" aria-label="기름값"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5S6 8.8 6 13.4a6 6 0 0 0 12 0C18 8.8 12 2.5 12 2.5Z"/></svg></a>
+</nav>
 <main role="main">
+  <div class="formula-bar">
+    <div class="fb-name" id="fb-name">A1</div>
+    <div class="fb-fx">fx</div>
+    <div class="fb-input" id="fb-input">30일 차트 · 내일 가격 예측</div>
+  </div>
   <div class="wrap">
     <div class="page-head">
       <h1 id="page-title">상세 차트·예측</h1>
@@ -76,11 +86,25 @@ window.__setTheme=function(x){document.documentElement.setAttribute('data-theme'
     </div>
   </div>
 </main>
+</div>
 
 <footer class="site-footer" role="contentinfo">
   <div class="wrap" style="padding-top:0;padding-bottom:0">
     <p>© 2025 모두의 시세 · 데이터 출처: <a href="https://finance.yahoo.com" rel="external nofollow">Yahoo Finance</a> · <a href="https://www.opinet.co.kr" rel="external nofollow">오피넷</a></p>
     <p class="disclaimer">본 정보는 투자 참고용이며, 과거 데이터 기반 예측은 실제 결과와 다를 수 있습니다.</p>
+  </div>
+</footer>
+
+<footer class="app-statusbar" role="status">
+  <div class="sb-left">
+    <span class="sb-sheet" aria-hidden="true"><span class="on">시트1</span><span>시트2</span><span>시트3</span></span>
+    <span class="sb-sep"></span>
+    <span class="sb-item" id="sb-l">상세 차트·예측</span>
+  </div>
+  <div class="sb-right">
+    <span class="sb-item">30일 선형회귀 · R² 신뢰도</span>
+    <span class="sb-sep"></span>
+    <span class="sb-item">100%</span>
   </div>
 </footer>
 
@@ -158,7 +182,7 @@ async function loadKr(root){
         '<div class="prev">전일: ₩'+fmt(pc)+'</div>'+
       '</div>'+
       allHtml+
-      (hasChart?'<div class="chart-wrap"><h2>국제 금(GC=F) 30일 등락 추이 — 국내 고시가 방향 참고지표</h2><p class="sub">국내 금 고시가는 국제 금 가격과 밀접하게 연동됩니다. 최근 30일 국제 금(원/트로이온스) 추이입니다.</p><canvas id="chart"></canvas></div>':'')+
+      (hasChart?'<div class="chart-wrap"><h2>국제 금(GC=F) 30일 등락 추이 — 국내 고시가 방향 참고지표</h2><p class="sub">국내 금 고시가는 국제 금 가격과 밀접하게 연동됩니다. 최근 30일 국제 금(원/트로이온스) 추이입니다.</p><div class="chart-box"><canvas id="chart"></canvas></div></div>':'')+
       (pred?'<div class="pred-box"><h2>등락예상 — 국제 금 동향으로 본 내일 국내 고시가 전망</h2><p class="sub">국제 금(GC=F) 30일 선형회귀 기반 예측 (R² 신뢰도) — 국내 고시가 방향의 참고 지표</p><div class="pred-dir '+(pred.direction==='up'?'up':'down')+'">'+(pred.direction==='up'?'상승 예상':'하락 예상')+'</div><div class="pred-price"><span class="won">₩</span>'+fmt(pred.pred)+'</div><div class="pred-detail">'+(pred.change>=0?'+':'')+fmt(pred.change)+' ('+(pred.changePct>=0?'+':'')+pred.changePct.toFixed(2)+'%) · 신뢰도 '+(pred.r2*100).toFixed(0)+'%</div><div class="pred-bar-wrap"><div class="pred-bar"><div class="pred-bar-fill" style="width:'+(pred.r2*100)+'%;background:'+(pred.direction==='up'?'var(--up)':'var(--down)')+'"></div></div></div></div>':'')+
       (premium?'<div class="box" style="background:var(--accent-soft);border-color:var(--accent)"><b>국내 소매가 vs 국제가:</b> 국내 순금 1돈(3.75g) 살 때 가격은 국제 금(원/그램 환산) 대비 약 <b style="color:var(--accent)">'+(premium>=0?'+':'')+premium.toFixed(0)+'%</b> 높습니다. 국내 소매가에는 부가세와 유통 프리미엄이 포함되어 국제 현물가보다 비싸게 책정됩니다.</div>':'')+
       renderButton();
@@ -185,7 +209,7 @@ async function load(){
     const labels=hasChart?d.history.map(hh=>{const dt=new Date(hh.date*1000);return dt.getMonth()+1+'/'+dt.getDate()}):[];
     const pred=hasChart?predictLR(closes):null;
     const chartHtml=hasChart
-      ?'<div class="chart-wrap"><h2>30일 등락 추이 — '+(lb+(assetLabel))+' 가격은 어떻게 변했나요?</h2><p class="sub">최근 30일간 일별 종가 기준 (Chart.js 라인 차트)</p><canvas id="chart"></canvas></div>'
+      ?'<div class="chart-wrap"><h2>30일 등락 추이 — '+(lb+(assetLabel))+' 가격은 어떻게 변했나요?</h2><p class="sub">최근 30일간 일별 종가 기준 (Chart.js 라인 차트)</p><div class="chart-box"><canvas id="chart"></canvas></div></div>'
       :'<div class="chart-wrap"><h2>30일 등락 추이 — '+(lb+(assetLabel))+'</h2><p class="sub">차트 데이터를 불러올 수 없습니다 (Yahoo Finance 데이터 제한)</p></div>';
     root.innerHTML=
       '<div class="price-box" itemscope itemtype="https://schema.org/FinancialProduct">'+
