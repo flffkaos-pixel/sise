@@ -249,12 +249,6 @@ select.sel:focus{border-color:var(--accent)}
 .chart-box{position:relative;height:300px;width:100%}
 #chart{display:block;width:100% !important;height:100% !important;min-height:280px}
 
-/* ── 홈 카테고리 탭 ──────────────────── */
-.home-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 0}
-.home-tabs a{padding:8px 18px;border:1px solid var(--border);border-radius:var(--box-radius);background:var(--surface);color:var(--fg);font-size:13px;font-weight:700;text-decoration:none;cursor:pointer}
-.home-tabs a:hover{text-decoration:none;border-color:var(--accent)}
-.home-tabs a.active{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
-
 /* ── 오일 상세 ───────────────────────── */
 .oil-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}
 .oil-tabs a{padding:8px 18px;border:1px solid var(--border);border-radius:var(--box-radius);background:var(--surface);color:var(--fg);font-size:13px;font-weight:700;text-decoration:none}
