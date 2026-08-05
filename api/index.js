@@ -132,6 +132,41 @@ app.get('/api/krgold', async (req, res) => {
   res.json(krGoldCache || { error: 'fetch failed' });
 });
 
+function fetchKrIndexPrevClose() {
+  return new Promise(async (ok) => {
+    try {
+      const urls = {
+        '^KS11': 'https://api.finance.naver.com/siseJson.naver?symbol=KOSPI&requestType=1&count=2&timeframe=day',
+        '^KQ11': 'https://api.finance.naver.com/siseJson.naver?symbol=KOSDAQ&requestType=1&count=2&timeframe=day'
+      };
+      const results = {};
+      for (const [sym, url] of Object.entries(urls)) {
+        try {
+          const r = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0', 'Referer': 'https://finance.naver.com/' }, timeout: 5000 });
+          const text = await r.text();
+          const arr = JSON.parse(text.replace(/^.*?(\[[\s\S]*\]).*$/, '$1'));
+          if (Array.isArray(arr) && arr.length >= 2) {
+            const yesterday = arr[1];
+            if (yesterday && typeof yesterday[4] === 'number') {
+              results[sym] = yesterday[4];
+            }
+          }
+        } catch (e) { console.error('Naver index fetch error:', sym, e.message); }
+      }
+      ok(results);
+    } catch (e) { ok({}); }
+  });
+}
+
+let krIndexCache = null, krIndexCacheT = 0;
+app.get('/api/kr-index-prev-close', async (req, res) => {
+  if (!krIndexCache || Date.now() - krIndexCacheT > 300000) {
+    krIndexCache = await fetchKrIndexPrevClose();
+    krIndexCacheT = Date.now();
+  }
+  res.json(krIndexCache || {});
+});
+
 app.get('/api/history', async (req, res) => {
   const symbol = req.query.symbol;
   if (!symbol) return res.status(400).json({ error: 'missing symbol' });
@@ -150,6 +185,24 @@ app.get('/api/history', async (req, res) => {
   const isKrwAsset = symbol.startsWith('^') || symbol.endsWith('KRW=X') || symbol.endsWith('.KS');
   const rate = isKrwAsset ? 1 : krwRate;
   const src = (quote && quote.regularMarketPrice != null) ? quote : data;
+  
+  // 한국 지수(^KS11, ^KQ11) 전일 종가 보정
+  let previousClose = (src.regularMarketPreviousClose || 0) * rate;
+  let change = (src.regularMarketChange || 0) * rate;
+  let changePercent = src.regularMarketChangePercent || 0;
+  if (symbol === '^KS11' || symbol === '^KQ11') {
+    try {
+      const krIdx = await fetchKrIndexPrevClose();
+      const correctedPrev = krIdx[symbol];
+      if (correctedPrev && correctedPrev > 0) {
+        const current = (src.regularMarketPrice || 0) * rate;
+        previousClose = correctedPrev;
+        change = current - correctedPrev;
+        changePercent = (change / correctedPrev) * 100;
+      }
+    } catch (e) { console.error('KR index correction error:', e.message); }
+  }
+  
   const history = (data.timestamps || []).map((t, i) => ({
     date: t,
     open: (data.opens?.[i] || 0) * rate,
@@ -158,7 +211,7 @@ app.get('/api/history', async (req, res) => {
     close: (data.closes?.[i] || 0) * rate,
     volume: data.volumes?.[i] || 0,
   })).filter(h => h.close > 0);
-res.json({ symbol: data.symbol, shortName: data.shortName, icon: data.icon, currentPrice: (src.regularMarketPrice || 0) * rate, change: (src.regularMarketChange || 0) * rate, changePercent: src.regularMarketChangePercent || 0, previousClose: (src.regularMarketPreviousClose || 0) * rate, krwRate, history });
+res.json({ symbol: data.symbol, shortName: data.shortName, icon: data.icon, currentPrice: (src.regularMarketPrice || 0) * rate, change, changePercent, previousClose, krwRate, history });
 });
 
 app.get('/api/news', async (req, res) => {
@@ -347,6 +400,65 @@ app.get('/sitemap.xml', (req, res) => {
 </urlset>`;
   res.set('Content-Type', 'application/xml').send(xml);
 });
+
+app.get('/rss.xml', async (req, res) => {
+  try {
+    const urls = [
+      'https://www.yna.co.kr/rss/economy.xml',
+      'https://www.yna.co.kr/rss/stock.xml',
+      'https://rss.etnews.com/Section902.xml',
+      'https://news.google.com/rss/search?q=%EA%B8%88%EC%9C%B5+%EC%A3%BC%EC%8B%9D&hl=ko&gl=KR&ceid=KR:ko',
+      'https://news.google.com/rss/search?q=%EB%B9%84%ED%8A%B8%EC%BD%94%EC%9D%B8+%EC%BD%94%EC%8A%A4%ED%94%BC+%ED%99%98%EC%9C%A8&hl=ko&gl=KR&ceid=KR:ko',
+      'https://news.google.com/rss/search?q=%EA%B8%80%EB%A1%9C%EB%B2%8C+%EC%A6%9D%EC%8B%9C+%EC%98%A4%EB%8A%98+%EA%B8%88&hl=ko&gl=KR&ceid=KR:ko'
+    ];
+    const results = await Promise.allSettled(urls.map(u => fetchRss(u)));
+    const seen = new Set();
+    const all = results.filter(r => r.status === 'fulfilled').flatMap(r => r.value);
+    const deduped = all.filter(n => { const k = n.link; if (seen.has(k)) return false; seen.add(k); return true; });
+
+    const financeKeywords = ['주식','증권','코스피','코스닥','나스닥','다우','S&P','환율','달러','엔화','위안','유로','금리','기준금리','한은','연준','Fed','채권','국채','회사채','펀드','ETF','공모주','IPO','유상증자','무상증자','배당','자사주','매수','매도','보유','지분','인수','합병','M&A','실적','영업이익','순이익','매출','어닝','실적발표','컨센서스','목표가','투자의견','상승','하락','급등','급락','상한가','하한가','시가총액','시총','PER','PBR','ROE','배당률','배당금','금','은','원유','WTI','브렌트','구리','비철','비트코인','이더리움','리플','코인','가상자산','암호화폐','블록체인','디파이','NFT','은행','카드','보험','증권사','자산운용','신탁','연금','ISA','연금저축','IRP','퇴직연금','공모','사모','헤지','파생','선물','옵션','ELS','DLS','ELW','워런트','커버드워런트','스왑','CDS','신용부도스왑','부도','부실','구조조정','워크아웃','회생','파산','PF','프로젝트파이낸싱','부동산PF','건설','시공','분양','청약','아파트','주택','전세','월세','임대','갭투자','전세사기','보증금','HUG','주택도시보증'];
+    const filtered = deduped.filter(n => {
+      const text = (n.title + ' ' + (n.summary || '')).toLowerCase();
+      return financeKeywords.some(k => text.includes(k.toLowerCase()));
+    });
+
+    const items = filtered.slice(0, 30).map(n => {
+      const pubDate = n.pubDate ? new Date(n.pubDate).toUTCString() : new Date().toUTCString();
+      const safeTitle = escapeXml(n.title || '제목 없음');
+      const safeSummary = escapeXml((n.summary || '').substring(0, 300));
+      const safeLink = n.link || '#';
+      return `
+    <item>
+      <title>${safeTitle}</title>
+      <link>${safeLink}</link>
+      <guid isPermaLink="true">${safeLink}</guid>
+      <pubDate>${pubDate}</pubDate>
+      <description>${safeSummary}</description>
+    </item>`;
+    }).join('');
+
+    const now = new Date().toUTCString();
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>모두의 시세 - 금융 뉴스</title>
+    <link>https://modu-sise.vercel.app/</link>
+    <description>실시간 환율·지수·금·원유·암호화폐 시세와 주요 금융 뉴스를 제공합니다.</description>
+    <language>ko</language>
+    <lastBuildDate>${now}</lastBuildDate>
+    <atom:link href="https://modu-sise.vercel.app/rss.xml" rel="self" type="application/rss+xml"/>
+    ${items}
+  </channel>
+</rss>`;
+    res.set('Content-Type', 'application/rss+xml; charset=utf-8').send(xml);
+  } catch (e) {
+    res.status(500).send('RSS 생성 실패');
+  }
+});
+
+function escapeXml(s) {
+  return String(s).replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>').replace(/"/g, '"').replace(/'/g, '&apos;');
+}
 
 app.get('/robots.txt', (req, res) => {
   const base = `https://${req.headers.host || 'modu-sise.vercel.app'}`;
