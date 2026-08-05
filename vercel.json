@@ -5,7 +5,7 @@
     "api/index.js": {
       "maxDuration": 30,
       "regions": ["icn1"],
-      "includeFiles": "{index.html,detail.html,oil.html,theme.css,privacy.html,terms.html,contact.html,robots.txt,llms.txt,favicon.svg,og-image.svg}"
+      "includeFiles": "{index.html,detail.html,oil.html,theme.css,js/chart.umd.min.js,privacy.html,terms.html,contact.html,robots.txt,llms.txt,favicon.svg,og-image.svg}"
     }
   },
   "routes": [

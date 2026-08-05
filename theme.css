@@ -246,8 +246,8 @@ select.sel:focus{border-color:var(--accent)}
 .pred-bar-fill{height:100%;border-radius:4px;transition:width 1s ease}
 
 /* ── 차트 (고정 높이 래퍼로 무한 확장 방지) ── */
-.chart-box{position:relative;height:300px;width:100%;overflow:hidden}
-#chart{position:absolute;inset:0;width:100% !important;height:100% !important}
+.chart-box{position:relative;height:300px;width:100%}
+#chart{display:block;width:100% !important;height:100% !important;min-height:280px}
 
 /* ── 오일 상세 ───────────────────────── */
 .oil-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}

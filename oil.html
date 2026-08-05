@@ -41,7 +41,8 @@
 </script>
 
 <link rel="stylesheet" href="/theme.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="/js/chart.umd.min.js"></script>
+<script>window.Chart||document.write('<scr'+'ipt src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"><\/scr'+'ipt>');</script>
 <script>
 (function(){var t='vscode';try{t=localStorage.getItem('modu-theme')||'vscode'}catch(e){}document.documentElement.setAttribute('data-theme',t);
 window.__setTheme=function(x){document.documentElement.setAttribute('data-theme',x);try{localStorage.setItem('modu-theme',x)}catch(e){}var bs=document.querySelectorAll('.theme-toggle button');for(var i=0;i<bs.length;i++)bs[i].classList.toggle('on',bs[i].getAttribute('data-theme')===x);if(window.__onTheme)window.__onTheme(x)}})();
