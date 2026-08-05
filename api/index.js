@@ -49,21 +49,28 @@ function fetchQ(symbol, range = '1d', interval = '1d') {
           const j = JSON.parse(d), result = j.chart?.result?.[0];
           if (!result || !result.meta) return ok(null);
           const m = result.meta;
-          const ch = m.regularMarketPrice - m.chartPreviousClose;
           const quotes = result.indicators?.quote?.[0];
+          const closes = quotes?.close;
+          const price = (m.regularMarketPrice != null && m.regularMarketPrice > 0) ? m.regularMarketPrice : null;
+          let prev = m.chartPreviousClose;
+          if (closes && closes.length > 1) {
+            const arr = closes.filter(v => v != null && v > 0);
+            if (arr.length > 1) prev = arr[arr.length - 2];
+          }
+          const ch = (price != null ? price : (prev || 0)) - (prev || 0);
           ok({
             symbol: m.symbol || symbol,
             shortName: NAMES[symbol] || m.symbol,
             icon: ICONS[symbol] || '',
-            regularMarketPrice: m.regularMarketPrice,
+            regularMarketPrice: price != null ? price : (prev || 0),
             regularMarketChange: ch,
-            regularMarketChangePercent: (ch / m.chartPreviousClose) * 100,
-            regularMarketPreviousClose: m.chartPreviousClose,
+            regularMarketChangePercent: prev ? (ch / prev) * 100 : 0,
+            regularMarketPreviousClose: prev,
             timestamps: result.timestamp,
             opens: quotes?.open,
             highs: quotes?.high,
             lows: quotes?.low,
-            closes: quotes?.close,
+            closes,
             volumes: quotes?.volume,
           });
         } catch { ok(null); }
@@ -125,7 +132,7 @@ app.get('/api/history', async (req, res) => {
   const symbol = req.query.symbol;
   if (!symbol) return res.status(400).json({ error: 'missing symbol' });
   if (Date.now() - lastKrwFetch > 60000) { await updateKrwRate(); lastKrwFetch = Date.now(); }
-  let data = await fetchQ(symbol, '2y', '1d');
+  let [data, quote] = await Promise.all([fetchQ(symbol, '2y', '1d'), fetchQ(symbol)]);
   if (!data) return res.status(502).json({ error: 'fetch failed' });
   if (!data.timestamps || !data.timestamps.length) {
     const fb = await fetchQ(symbol, 'max', '1d');
@@ -138,6 +145,7 @@ app.get('/api/history', async (req, res) => {
   }
   const isKrwAsset = symbol.startsWith('^') || symbol.endsWith('KRW=X') || symbol.endsWith('.KS');
   const rate = isKrwAsset ? 1 : krwRate;
+  const src = (quote && quote.regularMarketPrice != null) ? quote : data;
   const history = (data.timestamps || []).map((t, i) => ({
     date: t,
     open: (data.opens?.[i] || 0) * rate,
@@ -146,7 +154,7 @@ app.get('/api/history', async (req, res) => {
     close: (data.closes?.[i] || 0) * rate,
     volume: data.volumes?.[i] || 0,
   })).filter(h => h.close > 0);
-res.json({ symbol: data.symbol, shortName: data.shortName, icon: data.icon, currentPrice: data.regularMarketPrice * rate, change: data.regularMarketChange * rate, changePercent: data.regularMarketChangePercent, previousClose: data.regularMarketPreviousClose * rate, krwRate, history });
+res.json({ symbol: data.symbol, shortName: data.shortName, icon: data.icon, currentPrice: (src.regularMarketPrice || 0) * rate, change: (src.regularMarketChange || 0) * rate, changePercent: src.regularMarketChangePercent || 0, previousClose: (src.regularMarketPreviousClose || 0) * rate, krwRate, history });
 });
 
 app.get('/api/news', async (req, res) => {
