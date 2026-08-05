@@ -16,6 +16,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/theme.css">
+<script>
+(function(){var t='vscode';try{t=localStorage.getItem('modu-theme')||'vscode'}catch(e){}document.documentElement.setAttribute('data-theme',t);
+window.__setTheme=function(x){document.documentElement.setAttribute('data-theme',x);try{localStorage.setItem('modu-theme',x)}catch(e){}var bs=document.querySelectorAll('.theme-toggle button');for(var i=0;i<bs.length;i++)bs[i].classList.toggle('on',bs[i].getAttribute('data-theme')===x);if(window.__onTheme)window.__onTheme(x)}})();
+</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{background:var(--bg);font-family:'Kanit',sans-serif;color:var(--fg);min-height:100vh;line-height:1.7}

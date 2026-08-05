@@ -273,23 +273,21 @@ window.__setTheme=function(x){document.documentElement.setAttribute('data-theme'
           <tbody id="oil-tbody"></tbody>
         </table>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px;margin-top:16px">
-        <div class="chart-wrap" style="margin-top:0">
-          <h2>휘발유 30일 전국평균 추이</h2>
-          <div class="chart-box"><canvas id="oil-chart"></canvas></div>
-        </div>
-        <div>
-          <div class="table-wrap">
-            <table class="qt">
-              <thead>
-                <tr class="colletters"><th class="rn"></th><th>A</th><th class="num">B</th><th class="num">C</th></tr>
-                <tr class="headrow"><th class="rn"></th><th>시도</th><th class="num">평균</th><th class="num">전일대비</th></tr>
-              </thead>
-              <tbody id="oil-sido-tbody"></tbody>
-            </table>
-          </div>
-        </div>
+      <div class="chart-wrap" style="margin-top:0">
+        <h2>휘발유 30일 전국평균 추이</h2>
+        <div class="chart-box"><canvas id="oil-chart"></canvas></div>
       </div>
+
+      <div class="table-wrap" style="margin-top:16px">
+        <table class="qt" id="oil-sido-table">
+          <thead>
+            <tr class="colletters"><th class="rn"></th><th>A</th><th class="num">B</th><th class="num">C</th></tr>
+            <tr class="headrow"><th class="rn"></th><th>시도</th><th class="num">평균</th><th class="num">전일대비</th></tr>
+          </thead>
+          <tbody id="oil-sido-tbody"></tbody>
+        </table>
+      </div>
+
       <div class="table-wrap" style="margin-top:16px">
         <table class="qt">
           <thead>

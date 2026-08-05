@@ -300,4 +300,17 @@ select.sel:focus{border-color:var(--accent)}
   table.qt td,table.qt thead .headrow th{padding:8px 10px;font-size:13px}
   :root[data-theme="vscode"] body{padding-left:0}
   .activity-bar{display:none !important}
+/* 시도별 평균가 테이블 모바일 카드형 */
+  #oil-sido-table{display:block;width:100% !important;max-width:100% !important;min-width:0 !important;box-sizing:border-box;table-layout:fixed}
+  #oil-sido-tbody{display:block;width:100%;min-width:0}
+  #oil-sido-tbody tr{display:block;border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:8px;background:var(--surface);width:100%;min-width:0;box-sizing:border-box}
+  #oil-sido-tbody tr td{display:flex;justify-content:space-between;padding:6px 0;border:none;font-size:14px;white-space:nowrap;min-width:0;overflow:hidden}
+  #oil-sido-tbody tr td.rn{display:none}
+  #oil-sido-tbody tr td.num{font-variant-numeric:tabular-nums}
+  #oil-sido-tbody tr td:nth-child(2)::before{content:'시도: ';color:var(--muted);font-weight:500;flex-shrink:0}
+  #oil-sido-tbody tr td.num:nth-of-type(1)::before{content:'평균: ';color:var(--muted);font-weight:500;flex-shrink:0}
+  #oil-sido-tbody tr td.num:nth-of-type(2)::before{content:'전일대비: ';color:var(--muted);font-weight:500;flex-shrink:0}
+  #oil-sido-table thead{display:block;width:100%;min-width:0;overflow:hidden}
+  #oil-sido-table thead th{display:block;width:100%;min-width:0;box-sizing:border-box}
+  .table-wrap{overflow-x:visible !important;overflow-y:auto}
 }
