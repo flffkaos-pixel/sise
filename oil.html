@@ -193,7 +193,7 @@ async function loadOil(){
 }
 async function loadStations(){
   const tb=document.getElementById('st-body');
-  tb.innerHTML='<tr><td colspan="4" class="ld" style="padding:40px"><span class="sp"></span></td></tr>';
+  tb.innerHTML='<tr><td colspan="5" class="ld" style="padding:40px"><span class="sp"></span></td></tr>';
   try{
     const r=await fetch('/api/oil/stations?prod='+prod+'&sido='+sido);
     if(!r.ok)throw Error('fetch failed');
@@ -201,7 +201,7 @@ async function loadStations(){
     stations=j.stations||[];
     renderStations();
   }catch(e){
-    tb.innerHTML='<tr><td colspan="4" class="none" style="text-align:center;padding:40px">불러오기 실패 · <button class="btn ghost" onclick="loadStations()">다시시도</button></td></tr>';
+    tb.innerHTML='<tr><td colspan="5" class="none" style="text-align:center;padding:40px">불러오기 실패 · <button class="btn ghost" onclick="loadStations()">다시시도</button></td></tr>';
   }
 }
 function renderStations(){
@@ -210,8 +210,8 @@ function renderStations(){
   const list=gun?stations.filter(s=>s.gun===gun):stations;
   const tb=document.getElementById('st-body');
   document.getElementById('st-sub').textContent=SIDOS[sido]+' '+PRODS[prod]+' 저가 주유소 · 최대 30곳 · (오피넷 정보)';
-  if(!list.length){tb.innerHTML='<tr><td colspan="4" class="none" style="text-align:center;padding:40px">표시할 주유소가 없습니다.</td></tr>';return}
-  tb.innerHTML=list.map(s=>'<tr class="row"><td>'+esc(s.brand)+'</td><td>'+esc(s.name)+'</td><td>'+esc(s.gun)+'</td><td class="num">'+s.price+'</td></tr>').join('');
+  if(!list.length){tb.innerHTML='<tr><td colspan="5" class="none" style="text-align:center;padding:40px">표시할 주유소가 없습니다.</td></tr>';return}
+  tb.innerHTML=list.map((s,i)=>'<tr class="row"><td class="rn">'+(i+1)+'</td><td>'+esc(s.brand)+'</td><td>'+esc(s.name)+'</td><td>'+esc(s.gun)+'</td><td class="num">'+s.price+'</td></tr>').join('');
 }
 function renderMain(){
   const p=(oilData.products||[]).find(x=>x.code===prod);
