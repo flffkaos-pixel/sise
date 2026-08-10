@@ -294,7 +294,8 @@ select.sel:focus{border-color:var(--accent)}
 /* ── 모바일 ──────────────────────────── */
 @media(max-width:640px){
   .topbar-main{padding:8px 12px}
-  .topbar-tabs{padding:0 4px}
+  .topbar-tabs{padding:0 4px;flex-wrap:wrap}
+  .topbar-tabs a{padding:9px 10px;font-size:12px}
   .brand-sub{display:none}
   .wrap{padding:14px 10px 50px}
   table.qt td,table.qt thead .headrow th{padding:8px 10px;font-size:13px}
@@ -312,5 +313,40 @@ select.sel:focus{border-color:var(--accent)}
   #oil-sido-tbody tr td.num:nth-of-type(2)::before{content:'전일대비: ';color:var(--muted);font-weight:500;flex-shrink:0}
   #oil-sido-table thead{display:block;width:100%;min-width:0;overflow:hidden}
   #oil-sido-table thead th{display:block;width:100%;min-width:0;box-sizing:border-box}
-  .table-wrap{overflow-x:visible !important;overflow-y:auto}
+   .table-wrap{overflow-x:hidden !important;overflow-y:visible !important}
+   table.qt{min-width:0 !important}
+
+/* ── 메인 시세 테이블 카드형 ──────────── */
+   .table-wrap table.qt:has(#tbody) thead,
+   .table-wrap table.qt:has(#oil-tbody) thead,
+   .table-wrap table.qt:has(#oil-top-tbody) thead,
+   .table-wrap table.qt:has(#st-body) thead,
+   .table-wrap table.qt:has(#sido-body) thead{display:none}
+   #tbody,#oil-tbody,#oil-top-tbody,#st-body,#sido-body{display:block;width:100%}
+   #tbody tr.cat{display:block;background:var(--cat-bg);color:var(--cat-fg);font-weight:800;font-size:13px;letter-spacing:.06em;padding:10px 12px;border-radius:6px;margin:10px 0 6px}
+   #tbody tr.cat td{display:block;border:none;padding:0;text-align:left}
+   #tbody tr.row,#oil-tbody tr.row,#oil-top-tbody tr.row,#st-body tr.row,#sido-body tr.row{display:block;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:8px;box-shadow:var(--shadow)}
+   #tbody tr.row td,#oil-tbody tr.row td,#oil-top-tbody tr.row td,#st-body tr.row td,#sido-body tr.row td{display:block;border:none;padding:3px 0;text-align:left;white-space:normal}
+   #tbody tr.row td.rn,#oil-tbody tr.row td.rn,#oil-top-tbody tr.row td.rn,#st-body tr.row td.rn,#sido-body tr.row td.rn{display:none}
+   #tbody tr.row td.name,#oil-tbody tr.row td.name{font-size:15px;font-weight:600}
+   #tbody tr.row td.name::before{content:'종목: ';color:var(--muted);font-weight:500;font-size:12px}
+   #oil-tbody tr.row td.name::before{content:'품목: ';color:var(--muted);font-weight:500;font-size:12px}
+   #tbody tr.row td.name .t,#oil-tbody tr.row td.name .t{display:block;color:var(--dim);font-size:11px;font-family:var(--font-num);font-weight:400;margin-top:1px}
+   #tbody tr.row td.num:not(.chg):not(.pct)::before{content:'현재가: ';color:var(--muted);font-weight:500;font-size:12px}
+   #tbody tr.row td.chg::before{content:'전일대비: ';color:var(--muted);font-weight:500;font-size:12px}
+   #tbody tr.row td.pct::before{content:'등락률: ';color:var(--muted);font-weight:500;font-size:12px}
+   #oil-tbody tr.row td.num:not(.chg):not(.none)::before{content:'전국평균: ';color:var(--muted);font-weight:500;font-size:12px}
+   #oil-tbody tr.row td.chg::before{content:'전일대비: ';color:var(--muted);font-weight:500;font-size:12px}
+   #oil-tbody tr.row td.none::before{content:'최저~최고: ';color:var(--muted);font-weight:500;font-size:12px}
+   #oil-top-tbody tr.row td:nth-child(2)::before{content:'브랜드: ';color:var(--muted);font-weight:500;font-size:12px}
+   #oil-top-tbody tr.row td:nth-child(3)::before{content:'상호: ';color:var(--muted);font-weight:500;font-size:12px}
+   #oil-top-tbody tr.row td:nth-child(4)::before{content:'구군: ';color:var(--muted);font-weight:500;font-size:12px}
+   #oil-top-tbody tr.row td:nth-child(5)::before{content:'가격: ';color:var(--muted);font-weight:500;font-size:12px}
+   #st-body tr.row td:nth-child(2)::before{content:'브랜드: ';color:var(--muted);font-weight:500;font-size:12px}
+   #st-body tr.row td:nth-child(3)::before{content:'상호: ';color:var(--muted);font-weight:500;font-size:12px}
+   #st-body tr.row td:nth-child(4)::before{content:'구군: ';color:var(--muted);font-weight:500;font-size:12px}
+   #st-body tr.row td:nth-child(5)::before{content:'가격: ';color:var(--muted);font-weight:500;font-size:12px}
+   #sido-body tr.row td:nth-child(2)::before{content:'평균: ';color:var(--muted);font-weight:500;font-size:12px}
+   #sido-body tr.row td:nth-child(3)::before{content:'전일대비: ';color:var(--muted);font-weight:500;font-size:12px}
+   #tbody tr td[colspan],#oil-tbody tr td[colspan],#oil-top-tbody tr td[colspan],#st-body tr td[colspan],#sido-body tr td[colspan]{display:block;width:100%;text-align:center}
 }
