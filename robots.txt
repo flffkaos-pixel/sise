@@ -1,11 +1,11 @@
-User-agent: *
+﻿User-agent: *
 Allow: /
 Crawl-delay: 10
 Disallow: /api/
 Disallow: /node_modules/
 Disallow: /*.log
 
-# AI 크롤러
+# AI ?щ·??
 User-agent: GPTBot
 Allow: /
 Crawl-delay: 30
@@ -43,4 +43,6 @@ User-agent: NaverBot
 Allow: /
 Crawl-delay: 10
 
+Allow: /research/
 Sitemap: https://modu-sise.vercel.app/sitemap.xml
+
